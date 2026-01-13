@@ -1,0 +1,77 @@
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+
+body {
+    background-color: #333;
+
+    nav.navbar {
+        background-color: rgb(8, 126, 130);
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgb(10, 147, 152);
+        }
+    }
+
+    #main-container {
+        padding: 1rem;
+        color: white;
+
+        h1 {
+            margin: 1rem .5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #8f8e8e;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            margin: 1rem .5rem;
+            font-size: 1.2rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .text-muted {
+            color: rgb(225, 224, 224) !important;
+        }
+
+        .form-control,
+        .table tr td {
+            background-color: #4a4a4a;
+            color: white;
+        }
+
+        .form-floating {
+            textarea.form-control {
+                height: auto;
+                resize: none;
+            }
+
+            & > label,
+            & > textarea:focus~label::after,
+            & > textarea:not(:placeholder-shown)~label::after {
+                color: white;
+                background-color: transparent;
+            }
+        }
+
+        .table {
+            tr {
+                th {
+                    background-color: #303030;
+                    color: white;
+                }
+
+                .form-control {
+                    border: none;
+                    background-color: #363535;
+                }
+            }
+        }
+    }
+}
