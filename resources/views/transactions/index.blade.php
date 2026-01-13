@@ -4,11 +4,8 @@
     <div id="transactions-container">
         <h1>Transactions</h1>
 
-        <div className='mx-auto w-75 d-flex justify-content-end'>
-            <a
-                className='btn btn-sm btn-success'
-                href={route('transac_create')}
-            >
+        <div class='mx-auto w-75 d-flex justify-content-end'>
+            <a class="btn btn-sm btn-success" href="{{ route('transac_form') }}">
                 <i class="fas fa-plus-circle me-1" /> Créer
             </a>
         </div>
@@ -23,7 +20,7 @@
             </thead>
 
             <tbody>
-                @forelse ($transactions as $transactions)
+                @forelse ($transactions as $transaction)
                     <tr>
                         <td>{{ $transaction->amount }}</td>
                         <td>{{ $transaction->occurred_at }}</td>
@@ -31,7 +28,7 @@
                         <td class="text-center">
                             <a
                                 class="btn btn-sm btn-primary"
-                                href={{ route('transac_create', ['transac_id': $transaction->id]) }}"
+                                href="{{ route('transac_form', ['transac_id' => $transaction->id]) }}"
                             >
                                 <i class="fas fa-pencil" />
                             </a>

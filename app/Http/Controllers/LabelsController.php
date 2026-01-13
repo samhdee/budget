@@ -26,7 +26,7 @@ class LabelsController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function create(Request $request): View
+    public function form(Request $request): View
     {
         $label = null;
 

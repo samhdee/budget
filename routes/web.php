@@ -14,8 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('transactions')
         ->group(function () {
             Route::get('/', 'index')->name('transac_index');
-            Route::get('/create', 'create')->name('transac_create');
-            Route::post('/create', 'store')->name('transac_store');
+            Route::get('/form', 'form')->name('transac_form');
+            Route::post('/store', 'store')->name('transac_store');
             Route::post('/upload', 'upload')->name('transac_upload');
             Route::post('/update', 'update')->name('transac_update');
         });
@@ -23,18 +23,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(CategoriesController::class)
         ->prefix('categories')
         ->group(function () {
-            Route::get('/', 'index')->name('cat_index');
-            Route::get('/create', 'create')->name('cat_create');
-            Route::post('/create', 'store')->name('cat_store');
-            Route::post('/update', 'update')->name('cat_update');
+            Route::get('/', 'index')->name('categ_index');
+            Route::get('/form', 'form')->name('categ_form');
+            Route::post('/store', 'store')->name('categ_store');
+            Route::post('/update', 'update')->name('categ_update');
         });
 
     Route::controller(LabelsController::class)
         ->prefix('labels')
         ->group(function () {
             Route::get('/', 'index')->name('labels_index');
-            Route::get('/create', 'create')->name('labels_create');
-            Route::post('/create', 'store')->name('labels_store');
+            Route::get('/form', 'form')->name('label_form');
+            Route::post('/store', 'store')->name('labels_store');
             Route::post('/update', 'update')->name('labels_update');
         });
 });

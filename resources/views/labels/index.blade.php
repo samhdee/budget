@@ -1,56 +1,46 @@
-import { ReactNode } from 'react';
-import Table from 'react-bootstrap/Table';
-import { Link } from '@inertiajs/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+<div id="labels-wrapper">
+    <h1>Labels</h1>
 
-import Layout from '../includes/layout';
-import TableLine from './table-line';
-import { ILabel } from '@/types/labels';
+    <div class="d-flex justify-content-end mx-auto w-75">
+        <a
+            class="btn btn-sm btn-success"
+            href="{{ route('label_form') }}"
+        >
+            <i class="me-1 fas fa-plus-circle" /> Créer
+        </a>
+    </div>
 
-interface LabelsIndexProps {
-    labels?: ILabel[];
-}
+    <table class="table table-striped table-bordered mt-3 mx-auto w-75">
+        <thead>
+            <tr>
+                <th style="width: 12rem">Nom</th>
+                <th>Description</th>
+                <th style="width: 4rem"></th>
+            </tr>
+        </thead>
 
-const CategoriesIndex = (props: LabelsIndexProps) => {
-    const { labels } = props;
+        <tbody>
+            @forelse ($labels as $label)
+                <tr>
+                    <td>{{ $label->name }}</td>
+                    <td>{{ $label->description }}</td>
 
-    return (
-        <>
-            <h1>Labels</h1>
-
-            <div className='mx-auto w-75 d-flex justify-content-end'>
-                <Link
-                    className='btn btn-sm btn-success'
-                    href={route('labels_create')}
-                >
-                    <FontAwesomeIcon className='me-1' icon={faPlusCircle} /> Créer
-                </Link>
-            </div>
-
-            {labels && labels.length > 0 &&
-                <Table className='mt-3 mx-auto w-75' striped bordered>
-                    <thead>
-                        <tr>
-                            <th style={{ width: '12rem' }}>Nom</th>
-                            <th>Description</th>
-                            <th style={{ width: '4rem' }}></th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {labels.map((label) => {
-                            return (
-                                <TableLine key={label.id} label={label} />
-                            )
-                        })}
-                    </tbody>
-                </Table>
-            }
-        </>
-    )
-}
-
-CategoriesIndex.layout = (page: ReactNode) => <Layout children={page} title="Catégories" />
-
-export default CategoriesIndex;
+                    <td class="text-center">
+                        <a
+                            class="btn btn-sm btn-primary"
+                            href="{{ route('label_form', ['label_id' => $label->id]) }}"
+                        >
+                            <i class="fas fa-pencil" />
+                        </a>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3">
+                        <i class="fas fa-ban me-1"></i><span class="text-muted fst-italic">Aucun résultat</span>
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>

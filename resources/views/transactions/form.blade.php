@@ -3,7 +3,7 @@
 
     <div class="w-50 mt-5 mx-auto">
         <form id="transaction-form">
-            <input type="hidden" name="id" value={{ $transaction ?? $transaction->id}} />
+            <input type="hidden" name="id" value={{ !empty($transaction) ? $transaction->id : '' }} />
 
             <div class="form-control form-floating">
                 <label for="transac-amount">Montant</label>
@@ -32,13 +32,10 @@
                 />
             </div>
 
-            <button role="button" class="me-2 btn btn-success">
-                Sauvegarder
-            </button>
-
-            <a href="{{ route('transac_index') }}" class="btn btn-secondary">
-                Annuler
-            </a>
+            <div class="d-flex justify-content-between">
+                <button role="button" class="me-2 btn btn-success">Sauvegarder</button>
+                <a href="{{ route('transac_index') }}" class="btn btn-secondary">Annuler</a>
+            </div>
         </form>
     </div>
 </div>

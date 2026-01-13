@@ -13,7 +13,7 @@ class TransactionsController extends Controller
     /**
      * index
      *
-     * @return Response
+     * @return View
      */
     public function index(): View
     {
@@ -23,10 +23,10 @@ class TransactionsController extends Controller
     /**
      * create
      *
-     * @param  mixed $request
-     * @return void
+     * @param mixed $request
+     * @return View
      */
-    public function create(Request $request): View
+    public function form(Request $request): View
     {
         $transaction = null;
 
@@ -40,8 +40,8 @@ class TransactionsController extends Controller
     /**
      * store
      *
-     * @param  Request $request
-     * @return void
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store (Request $request): RedirectResponse
     {

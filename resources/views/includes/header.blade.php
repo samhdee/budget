@@ -6,7 +6,7 @@
 
         <div class="navbar-nav">
             <a class="nav-link" href="{{ route('transac_index') }}">Transactions</a>
-            <a class="nav-link" href="{{ route('cat_index') }}">Catégories</a>
+            <a class="nav-link" href="{{ route('categ_index') }}">Catégories</a>
             <a class="nav-link" href="{{ route('labels_index') }}">Labels</a>
         </div>
     </div>

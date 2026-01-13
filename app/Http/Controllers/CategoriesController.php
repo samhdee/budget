@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoryModel;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -20,7 +21,7 @@ class CategoriesController extends Controller
      * @param  mixed $request
      * @return View
      */
-    public function create(Request $request): View
+    public function form(Request $request): View
     {
         $category = null;
 
@@ -35,9 +36,10 @@ class CategoriesController extends Controller
      * store
      *
      * @param  Request $request
-     * @return void
+     * @return RedirectResponse
      */
-    public function store (Request $request) {
+    public function store (Request $request): RedirectResponse
+    {
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . CategoryModel::class],
             'name' => [
@@ -66,6 +68,6 @@ class CategoriesController extends Controller
             ]);
         }
 
-        return to_route('cat_index', ['updated' => $cat_id]);
+        return to_route('categ_index', ['updated' => $cat_id]);
     }
 }

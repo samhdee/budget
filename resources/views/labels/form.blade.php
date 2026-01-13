@@ -8,7 +8,7 @@
 
         <div class="w-50 mt-5 mx-auto">
             <form id="form-label">
-                <input type="hidden" name="id" value="{{ $label ? $label->id : '' }}" />
+                <input type="hidden" name="id" value="{{ !empty($label) ? $label->id : '' }}" />
 
                 <div class="form-control form-floating">
                     <input
@@ -16,10 +16,10 @@
                         type="text"
                         name="name"
                         @if (!empty($label))
-                            value={{ $label->name }}"
+                            value="{{ $label->name }}"
                         @endif
                         maxlength="100"
-                        autocomplte="off"
+                        autocomplete="off"
                         required
                     />
 
@@ -37,13 +37,10 @@
                     <label for="label-description">Description</label>
                 </div>
 
-                <input type="submit" class="me-2 btn btn-success">
-                    Sauvegarder
-                </input>
-
-                <a href={{ route('labels_index') }}" class="btn btn-secondary">
-                    Annuler
-                </Link>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="me-2 btn btn-success">Sauvegarder</button>
+                    <a href="{{ route('labels_index') }}" class="btn btn-secondary">Annuler</a>
+                </div>
             </form>
         </div>
     </div>

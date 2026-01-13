@@ -1,57 +1,54 @@
-import { ReactNode } from 'react';
-import Table from 'react-bootstrap/Table';
-import { Link } from '@inertiajs/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+<div id="categories-wrapper">
+    <h1>Coucou c&rsquo;est les catégoRIRES</h1>
 
-import Layout from '../includes/layout';
-import { ICategory } from '@/types/category';
-import TableLine from './table-line';
+    <div class="mx-auto w-75 d-flex justify-content-end">
+        <a class="btn btn-sm btn-success" href="{{ route('categ_form') }}">
+            <i class="me-1 fas fa-plus-circle" /> Créer
+        </a>
+    </div>
 
-interface CategoriesIndexProps {
-    categories?: ICategory[];
-}
+    <table class="mt-3 mx-auto w-75 table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 12rem">Nom</th>
+                <th>Description</th>
+                <th style="width: 5rem">Couleur</th>
+                <th style="width: 4rem"></th>
+            </tr>
+        </thead>
 
-const CategoriesIndex = (props: CategoriesIndexProps) => {
-    const { categories } = props;
+        <tbody>
+            @forelse ($categories as $categoy)
+                <tr>
+                    <td>{{ $category->name }}</td>
+                    <td>{{ $category->description }}</td>
 
-    return (
-        <>
-            <h1>Coucou c&apos;est les catégoRIRES</h1>
+                    <td class="text-center">
+                        <div class="form-control">
+                            <input>
+                                type="color"
+                                value="{{ !empty($category->color) ? $category->color : '#000000' }}"
+                                disabled
+                            />
+                        </div>
+                    </td>
 
-            <div className='mx-auto w-75 d-flex justify-content-end'>
-                <Link
-                    className='btn btn-sm btn-success'
-                    href={route('cat_create')}
-                >
-                    <FontAwesomeIcon className='me-1' icon={faPlusCircle} /> Créer
-                </Link>
-            </div>
-
-            {categories && categories.length > 0 &&
-                <Table className='mt-3 mx-auto w-75' striped bordered>
-                    <thead>
-                        <tr>
-                            <th style={{ width: '12rem' }}>Nom</th>
-                            <th>Description</th>
-                            <th style={{ width: '5rem' }}>Couleur</th>
-                            <th style={{ width: '4rem' }}></th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {categories.map((category) => {
-                            return (
-                                <TableLine key={category.id} category={category} />
-                            )
-                        })}
-                    </tbody>
-                </Table>
-            }
-        </>
-    )
-}
-
-CategoriesIndex.layout = (page: ReactNode) => <Layout children={page} title="Catégories" />
-
-export default CategoriesIndex;
+                    <td class="text-center">
+                        <a
+                            class="btn btn-sm btn-primary"
+                            href="{{ route('categ_form', ['cat_id' => $category->id ]) }}"
+                        >
+                            <FontAwesomeIcon icon={faPencil} />
+                        </a>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4">
+                        <i class="fas fa-ban"></i> <span class="text-muted fst-italic"></span>
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
