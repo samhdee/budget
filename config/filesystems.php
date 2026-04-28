@@ -26,7 +26,6 @@ return [
     |
     */
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
@@ -42,6 +41,12 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'statements' => [
+            'driver' => 'local',
+            'root' => storage_path('statements'),
+            'throw' => true,
+            'report' => true,
+        ]
     ],
 
     /*

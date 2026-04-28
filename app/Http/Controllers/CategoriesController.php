@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoryModel;
+use App\Models\Category;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class CategoriesController extends Controller
 {
     public function index(): View
     {
-        return view('categories.index', ['categories' => CategoryModel::all()]);
+        return view('categories.index', ['categories' => Category::all()]);
     }
 
     /**
@@ -26,7 +26,7 @@ class CategoriesController extends Controller
         $category = null;
 
         if (!empty($request->input('cat_id'))) {
-            $category = CategoryModel::find($request->input('cat_id'));
+            $category = Category::find($request->input('cat_id'));
         }
 
         return view('categories.form', ['category' => $category]);
@@ -41,13 +41,13 @@ class CategoriesController extends Controller
     public function store (Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'id' => ['nullable', 'integer', 'exists:' . CategoryModel::class],
+            'id' => ['nullable', 'integer', 'exists:' . Category::class],
             'name' => [
                 'required',
                 'max:100',
                 !empty($request->input('id'))
-                    ? Rule::unique(CategoryModel::class)->whereNull('deleted_at')->ignore($request->input('id'))
-                    : 'unique:' . CategoryModel::class
+                    ? Rule::unique(Category::class)->whereNull('deleted_at')->ignore($request->input('id'))
+                    : 'unique:' . Category::class
             ],
             'color' => ['nullable', 'max:9', 'hex_color'],
             'description' => ['nullable', 'max:255'],
@@ -55,13 +55,13 @@ class CategoriesController extends Controller
 
         if (!empty($data['id'])) {
             $cat_id = $data['id'];
-            $category = CategoryModel::find($data['id']);
+            $category = Category::find($data['id']);
             $category->name = trim($data['name']);
             $category->color = $data['color'];
             $category->description = trim($data['description']);
             $category->save();
         } else {
-            $cat_id = CategoryModel::create([
+            $cat_id = Category::create([
                 'name' => trim($data['name']),
                 'color' => $data['color'],
                 'description' => trim($data['description']),

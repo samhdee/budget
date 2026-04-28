@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LabelModel;
+use App\Models\Label;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -17,7 +17,7 @@ class LabelsController extends Controller
      */
     public function index(): View
     {
-        return view('labels.index', ['labels' => LabelModel::all()]);
+        return view('labels.index', ['labels' => Label::all()]);
     }
 
     /**
@@ -31,7 +31,7 @@ class LabelsController extends Controller
         $label = null;
 
         if (!empty($request->input('label_id'))) {
-            $label = LabelModel::find($request->input('label_id'));
+            $label = Label::find($request->input('label_id'));
         }
 
         return view('labels.form', ['label' => $label]);
@@ -46,25 +46,25 @@ class LabelsController extends Controller
     public function store (Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'id' => ['nullable', 'integer', 'exists:' . LabelModel::class],
+            'id' => ['nullable', 'integer', 'exists:' . Label::class],
             'name' => [
                 'required',
                 'max:100',
                 !empty($request->input('id'))
-                    ? Rule::unique(LabelModel::class)->whereNull('deleted_at')->ignore($request->input('id'))
-                    : 'unique:' . LabelModel::class
+                    ? Rule::unique(Label::class)->whereNull('deleted_at')->ignore($request->input('id'))
+                    : 'unique:' . Label::class
             ],
             'description' => ['nullable', 'max:255'],
         ]);
 
         if (!empty($data['id'])) {
             $label_id = $data['id'];
-            $label = LabelModel::find($data['id']);
+            $label = Label::find($data['id']);
             $label->name = trim($data['name']);
             $label->description = trim($data['description']);
             $label->save();
         } else {
-            $label_id = LabelModel::create([
+            $label_id = Label::create([
                 'name' => trim($data['name']),
                 'description' => trim($data['description']),
             ]);

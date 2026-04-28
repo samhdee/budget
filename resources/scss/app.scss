@@ -3,15 +3,21 @@
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
 
+@import "mixins";
+
 body {
-    background-color: #333;
-
     nav.navbar {
-        background-color: rgb(8, 126, 130);
+        background-color: $violet;
 
-        .nav-link:hover,
-        .nav-link.active {
-            background-color: rgb(10, 147, 152);
+        .nav-link {
+            border-radius: 5px;
+            color: white;
+
+            &:hover,
+            &.active {
+                background-color: white;
+                color: $violet;
+            }
         }
     }
 
@@ -37,13 +43,18 @@ body {
         }
 
         .text-muted {
-            color: rgb(225, 224, 224) !important;
+            color: #e1e0e0 !important;
         }
 
         .form-control,
         .table tr td {
-            background-color: #4a4a4a;
+            background-color: #292431;
             color: white;
+
+            &[type="file"] {
+                background: white;
+                color: black;
+            }
         }
 
         .form-floating {

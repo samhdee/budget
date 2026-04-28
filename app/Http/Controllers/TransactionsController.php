@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TransactionModel;
+use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class TransactionsController extends Controller
      */
     public function index(): View
     {
-        return view('transactions.index', ['transactions' => TransactionModel::all()]);
+        return view('transactions.index', ['transactions' => Transaction::all()]);
     }
 
     /**
@@ -31,7 +31,7 @@ class TransactionsController extends Controller
         $transaction = null;
 
         if (!empty($request->input('transac_id'))) {
-            $transaction = TransactionModel::find($request->input('transac_id'));
+            $transaction = Transaction::find($request->input('transac_id'));
         }
 
         return view('transactions.form', ['label' => $transaction]);
@@ -46,19 +46,19 @@ class TransactionsController extends Controller
     public function store (Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'id' => ['nullable', 'integer', 'exists:' . TransactionModel::class],
+            'id' => ['nullable', 'integer', 'exists:' . Transaction::class],
             'amount' => ['required', 'decimal:2'],
             'occurred_at' => ['required', 'date'],
         ]);
 
         if (!empty($data['id'])) {
             $transac_id = $data['id'];
-            $transaction = TransactionModel::find($data['id']);
+            $transaction = Transaction::find($data['id']);
             $transaction->occurred_at = $data['occurred_at'];
             $transaction->amount = $data['amount'];
             $transaction->save();
         } else {
-            $transac_id = TransactionModel::create([
+            $transac_id = Transaction::create([
                 'amount' => $data['amount'],
                 'occurred_at' => $data['occurred_at'],
             ]);

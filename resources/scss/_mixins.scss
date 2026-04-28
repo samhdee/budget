@@ -1,0 +1,38 @@
+@import "bootstrap-scss/functions";
+@import "bootstrap-scss/variables";
+@import "bootstrap-scss/mixins";
+
+// Couleurs
+$violet: #6247AA;
+$lavender: #a06cd5;
+
+$primary: #9cf6f6;
+$danger: #dd1155;
+$warning: #d4b483;
+$success: #159f7b;
+
+// Corps
+$body-bg: #231f2a;
+$body-color: white;
+
+// Tableaux
+$table-color: white;
+
+// Liens
+$link-color: $primary;
+
+// Cards
+$card-bg: $body-bg;
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+.btn-primary {
+    background-color: $primary !important;
+    border-color: $primary !important;
+}
+
+.btn-success {
+    background-color: $success !important;
+    border-color: $success !important;
+    color: black !important;
+}

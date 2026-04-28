@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\BeneficiaryModel;
+use App\Models\Beneficiary;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->date('occurred_at');
             $table->float('amount');
-            $table->foreignIdFor(BeneficiaryModel::class);
+            $table->foreignIdFor(Beneficiary::class);
             $table->timestamps();
         });
     }
