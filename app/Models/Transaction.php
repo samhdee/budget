@@ -36,6 +36,8 @@ class Transaction extends Model
         'amount',
         'beneficiary_id',
         'type',
+        'line',
+        'file',
     ];
 
     public function beneficiary(): HasOne
@@ -48,12 +50,14 @@ class Transaction extends Model
      */
     public static function getList(): Collection
     {
-        $results = self::query()
-            ->select(['transactions.id', 'amount', 'occurred_at', 'raw_name', 'pretty_name'])
+        return self::query()
+            ->select([
+                'transactions.id as transac_id', 'amount', 'occurred_at', 'type', 'line', 'file',
+                'b.id as benef_id', 'raw_name', 'pretty_name'
+            ])
             ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id')
             ->orderByDesc('occurred_at')
+            ->orderByDesc('line')
             ->get();
-
-        dd($results->toArray());
     }
 }

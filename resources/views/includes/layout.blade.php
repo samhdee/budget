@@ -14,6 +14,12 @@
         @include('includes.header')
 
         <main id="main-container" class="container">
+            @if (Session()->has('message'))
+                <div class="alert alert-success alert-dismissible">
+                    {{ Session::get('message') }}
+                </div>
+            @endif
+
             @yield('content')
         </main>
     </Container>
