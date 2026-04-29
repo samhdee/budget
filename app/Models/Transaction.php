@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -34,10 +35,25 @@ class Transaction extends Model
         'occurred_at',
         'amount',
         'beneficiary_id',
+        'type',
     ];
 
     public function beneficiary(): HasOne
     {
-        return $this->hasOne(Beneficiary::class, 'beneficiary_id', 'id');
+        return $this->hasOne(Beneficiary::class, 'beneficiary_id');
+    }
+
+    /**
+     * @return Collection
+     */
+    public static function getList(): Collection
+    {
+        $results = self::query()
+            ->select(['transactions.id', 'amount', 'occurred_at', 'raw_name', 'pretty_name'])
+            ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id')
+            ->orderByDesc('occurred_at')
+            ->get();
+
+        dd($results->toArray());
     }
 }

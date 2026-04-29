@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'Fira Sans Condensed';
+    src: url('../fonts/FiraSansCondensed-Bold.eot');
+    src: url('../fonts/FiraSansCondensed-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FiraSansCondensed-Bold.woff2') format('woff2'),
+        url('../fonts/FiraSansCondensed-Bold.woff') format('woff'),
+        url('../fonts/FiraSansCondensed-Bold.svg#FiraSansCondensed-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Fira Sans Condensed';
+    src: url('../fonts/FiraSansCondensed-BoldItalic.eot');
+    src: url('../fonts/FiraSansCondensed-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FiraSansCondensed-BoldItalic.woff2') format('woff2'),
+        url('../fonts/FiraSansCondensed-BoldItalic.woff') format('woff'),
+        url('../fonts/FiraSansCondensed-BoldItalic.svg#FiraSansCondensed-BoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Fira Sans Condensed';
+    src: url('../fonts/FiraSansCondensed-Regular.eot');
+    src: url('../fonts/FiraSansCondensed-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FiraSansCondensed-Regular.woff2') format('woff2'),
+        url('../fonts/FiraSansCondensed-Regular.woff') format('woff'),
+        url('../fonts/FiraSansCondensed-Regular.svg#FiraSansCondensed-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Fira Sans Condensed';
+    src: url('../fonts/FiraSansCondensed-Italic.eot');
+    src: url('../fonts/FiraSansCondensed-Italic.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FiraSansCondensed-Italic.woff2') format('woff2'),
+        url('../fonts/FiraSansCondensed-Italic.woff') format('woff'),
+        url('../fonts/FiraSansCondensed-Italic.svg#FiraSansCondensed-Italic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Instrument';
+    src: url('../fonts/InstrumentSerif-Italic.eot');
+    src: url('../fonts/InstrumentSerif-Italic.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/InstrumentSerif-Italic.woff2') format('woff2'),
+        url('../fonts/InstrumentSerif-Italic.woff') format('woff'),
+        url('../fonts/InstrumentSerif-Italic.svg#InstrumentSerif-Italic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Instrument';
+    src: url('../fonts/InstrumentSerif-Regular.eot');
+    src: url('../fonts/InstrumentSerif-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/InstrumentSerif-Regular.woff2') format('woff2'),
+        url('../fonts/InstrumentSerif-Regular.woff') format('woff'),
+        url('../fonts/InstrumentSerif-Regular.svg#InstrumentSerif-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}

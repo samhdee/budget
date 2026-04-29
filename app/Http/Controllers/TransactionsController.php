@@ -17,7 +17,7 @@ class TransactionsController extends Controller
      */
     public function index(): View
     {
-        return view('transactions.index', ['transactions' => Transaction::all()]);
+        return view('transactions.index', ['transactions' => Transaction::getList()]);
     }
 
     /**
@@ -43,7 +43,7 @@ class TransactionsController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function store (Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Transaction::class],

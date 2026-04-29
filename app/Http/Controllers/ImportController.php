@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TransactionType;
 use App\Models\Beneficiary;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -65,11 +66,13 @@ class ImportController extends Controller
             if ($handle = fopen(storage_path("statements/$file"), "r")) {
                 $i = 0;
 
-                while ($line = fgetcsv($handle)) {
+                // @TODO: Ajouter un param pour choisir le séparateur
+                while ($line = fgetcsv($handle, separator: ';')) {
                     if ($i === 0 || empty($line[self::COL_BENEFICIARY]) && empty($line[self::COL_BENEFICIARY_BIS])) {
                         $i++;
                         continue;
                     }
+
                     $benef = '';
                     $date = '';
                     $benef_value = !empty($line[self::COL_BENEFICIARY])
@@ -78,33 +81,40 @@ class ImportController extends Controller
 
                     switch ($line[self::COL_TRANSAC_TYPE]) {
                         case 'Carte':
+                            $type = TransactionType::card->value;
                             $has_match = preg_match(self::FIND_CB_BENEF, $benef_value, $benef_matches);
 
                             if ($has_match) {
-                                $benef = $benef_matches[1];
+                                $benef = trim($benef_matches[1]);
                                 $date = Carbon::createFromFormat('d/m/y', $benef_matches[2])->format('Y-m-d');
                             } else {
-                                $date = Carbon::createFromFormat('m-d-y', $line[self::COL_DATE])->format('Y-m-d');
+                                $date = Carbon::createFromFormat('d/m/Y', $line[self::COL_DATE])->format('Y-m-d');
                             }
 
                             break;
 
                         case 'Virement':
+                            $type = TransactionType::transfer->value;
+
                             if (!$has_match = preg_match(self::FIND_VIRT_BENEF, $benef_value, $benef_matches)) {
                                 $has_match = preg_match(self::FIND_PRLVT_BENEF, $benef_value, $benef_matches);
+                                $type = TransactionType::collection->value;
                             }
 
                             if ($has_match) {
-                                $benef = $benef_matches[1];
+                                $benef = trim($benef_matches[1]);
                             }
 
-                            $date = Carbon::createFromFormat('m-d-y', $line[self::COL_DATE])->format('Y-m-d');
+                            // @TODO : Permettre plusieurs formats de date
+                            $date = Carbon::createFromFormat('d/m/Y', $line[self::COL_DATE])->format('Y-m-d');
                             break;
 
                         case 'Retrait DAB':
                         default:
-                            $benef = $benef_value;
-                            $date = Carbon::createFromFormat('m-d-y', $line[self::COL_DATE])->format('Y-m-d');
+                            $type = TransactionType::withdrawal->value;
+                            $benef = trim($benef_value);
+                            // @TODO : Permettre plusieurs formats de date
+                            $date = Carbon::createFromFormat('d/m/Y', $line[self::COL_DATE])->format('Y-m-d');
                     }
 
                     $benef_result = Beneficiary::query()
@@ -120,6 +130,7 @@ class ImportController extends Controller
                         'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
                         'beneficiary_id' => $benef_result->id,
                         'occurred_at' => $date,
+                        'type' => $type,
                     ]);
 
                     $i++;

@@ -4,8 +4,27 @@
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
 
 @import "mixins";
+@import "font_face";
 
 body {
+    font-family: 'Fira Sans Condensed', Helvetica, sans-serif;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: Instrument, Arial, sans-serif;
+    }
+
+    h1 {
+        margin: 1rem .5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #8f8e8e;
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        margin: 1rem .5rem;
+        font-size: 1.2rem;
+    }
+
     nav.navbar {
         background-color: $violet;
 
@@ -25,18 +44,6 @@ body {
         padding: 1rem;
         color: white;
 
-        h1 {
-            margin: 1rem .5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #8f8e8e;
-            font-size: 1.5rem;
-        }
-
-        h2 {
-            margin: 1rem .5rem;
-            font-size: 1.2rem;
-        }
-
         a {
             text-decoration: none;
             color: white;
@@ -48,13 +55,8 @@ body {
 
         .form-control,
         .table tr td {
-            background-color: #292431;
+            background-color: $body-bg;
             color: white;
-
-            &[type="file"] {
-                background: white;
-                color: black;
-            }
         }
 
         .form-floating {
