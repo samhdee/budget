@@ -1,14 +1,10 @@
-@import "bootstrap-scss/functions";
-@import "bootstrap-scss/variables";
-@import "bootstrap-scss/mixins";
-
 // Couleurs
 $violet: #6247AA;
 $lavender: #a06cd5;
 
 $primary: #008dd5;
-$danger: #f56476;
-//$danger: #e43f6f; // Ou alors ça ?
+$danger: #e43f6f;
+$btn-color: white;
 $warning: #d4b483;
 $success: #159f7b;
 
@@ -25,15 +21,4 @@ $link-color: $primary;
 // Cards
 $card-bg: $body-bg;
 
-@import "../../node_modules/bootstrap/scss/bootstrap";
-
-.btn-primary {
-    background-color: $primary !important;
-    border-color: $primary !important;
-}
-
-.btn-success {
-    background-color: $success !important;
-    border-color: $success !important;
-    color: white !important;
-}
+@import "bootstrap/scss/bootstrap";

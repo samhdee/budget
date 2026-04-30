@@ -51,13 +51,26 @@ class Transaction extends Model
      */
     public static function getList(array $filters = []): Collection
     {
-        return self::query()
+        $query = self::query()
             ->select([
                 'transactions.id as transac_id', 'amount', 'occurred_at', 'type', 'line', 'file',
                 'b.id as benef_id', 'raw_name', 'pretty_name'
             ])
-            ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id')
-            ->orderByDesc('occurred_at')
+            ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id');
+
+        if (!empty($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        if (!empty($filters['date_start'])) {
+            $query->whereDate('occurred_at', '>=', $filters['date_start']);
+        }
+
+        if (!empty($filters['date_end'])) {
+            $query->whereDate('occurred_at', '<=', $filters['date_end']);
+        }
+
+        return $query->orderByDesc('occurred_at')
             ->orderByDesc('line')
             ->get();
     }

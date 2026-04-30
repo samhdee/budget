@@ -22,6 +22,7 @@ class TransactionsController extends Controller
 
     public function filter(Request $request)
     {
+        // @TODO: Ajouter des règles de validation
         return view('transactions.list', ['transactions' => Transaction::getList($request->input('filters'))]);
     }
 

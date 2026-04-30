@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 @endphp
 
-<table class="mt-3 mx-auto w-75 table table-striped table-bordered align-middle">
+<table class=" mx-auto w-75 table table-striped table-bordered align-middle">
     <thead>
         <tr>
             <th>Date</th>
@@ -18,10 +18,10 @@
         @forelse ($transactions as $transaction)
             <tr>
                 <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
-                <td>{{ $transaction->amount }}</td>
+                <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">{{ $transaction->amount }}€</td>
 
                 <td>
-                    @switch ($transaction->type)
+                @switch ($transaction->type)
                         @case (TransactionType::card->name)
                             CB
                             @break
@@ -49,8 +49,8 @@
 
                 <td class="text-center">
                     <a
-                            class="btn btn-sm btn-primary"
-                            href="{{ route('transac_form', ['transac_id' => $transaction->id]) }}"
+                        class="btn btn-sm btn-primary"
+                        href="{{ route('transac_form', ['transac_id' => $transaction->id]) }}"
                     >
                         <i class="fas fa-pencil"></i>
                     </a>
@@ -58,7 +58,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="3" class="text-muted fst-italic">
+                <td colspan="5" class="text-center text-muted fst-italic">
                     <i class="fa-solid fa-ban me-1"></i> Aucun résultat
                 </td>
             </tr>

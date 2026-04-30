@@ -7,7 +7,8 @@ export default defineConfig({
             input: [
                 'resources/scss/app.scss',
                 'resources/js/app.js',
-                'res'
+                'resources/js/filters.js',
+                'resources/js/transactions.js'
             ],
             refresh: true,
         }),

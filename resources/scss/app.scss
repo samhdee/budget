@@ -1,10 +1,15 @@
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
 
 @import "mixins";
 @import "font_face";
+@import "forms";
+@import "tables";
+
+:root {
+  color-scheme: dark;
+}
 
 body {
     font-family: 'Fira Sans Condensed', Helvetica, sans-serif;
@@ -51,40 +56,6 @@ body {
 
         .text-muted {
             color: #e1e0e0 !important;
-        }
-
-        .form-control,
-        .table tr td {
-            background-color: $body-bg;
-            color: white;
-        }
-
-        .form-floating {
-            textarea.form-control {
-                height: auto;
-                resize: none;
-            }
-
-            & > label,
-            & > textarea:focus~label::after,
-            & > textarea:not(:placeholder-shown)~label::after {
-                color: white;
-                background-color: transparent;
-            }
-        }
-
-        .table {
-            tr {
-                th {
-                    background-color: #303030;
-                    color: white;
-                }
-
-                .form-control {
-                    border: none;
-                    background-color: #363535;
-                }
-            }
         }
     }
 }

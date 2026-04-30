@@ -12,10 +12,12 @@
 </head>
 
 <body>
-    <Container>
+    <container>
         @include('includes.header')
 
         <main id="main-container" class="container">
+            @csrf
+
             @if (Session()->has('message'))
                 <div class="alert alert-success alert-dismissible">
                     {{ Session::get('message') }}
@@ -25,5 +27,5 @@
 
             @yield('content')
         </main>
-    </Container>
+    </container>
 </body>

@@ -1,0 +1,28 @@
+@import "mixins";
+
+body {
+    .form-control {
+        color: white;
+    }
+
+    .form-floating {
+        textarea.form-control {
+            height: auto;
+            resize: none;
+        }
+
+        & > label,
+        & > textarea:focus~label::after,
+        & > textarea:not(:placeholder-shown)~label::after {
+            color: white;
+        }
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+    }
+
+    .filter-reset {
+        margin-top: .45rem;
+    }
+}
