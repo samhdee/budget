@@ -10,11 +10,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Storage;
-use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
+use function parseDateMultiFormat;
 
 class ImportController extends Controller
 {
@@ -23,13 +21,13 @@ class ImportController extends Controller
     private const int COL_TRANSAC_TYPE = 2;
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
-    private const string FIND_CB_BENEF = '#CB\s+([\w.\-\s]+)\s(\d{2}/\d{2}/\d{2})#';
+    private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)\s(\d{2}/\d{2}/\d{2})#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_SEPA_BENEF = '#VIR\sSEPA\s([\w\-\s]+)#';
     private const string FIND_VIRT_SIMPLE_BENEF = '#VIREMENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_WERO_BENEF = '#VIR\sINST\sWero\s([\w\-\s]+)#';
-    private const string FIND_WITHDRAWAL_BENEF = '#CB\s+RETRAIT\sDU\s+(\d{2}/\d{2}(/\d{2})?)#';
+    private const string FIND_WITHDRAWAL = '#CB\s+RETRAIT\sDU\s+(\d{2}/\d{2}(?:/\d{2})?)#';
     private const string FIND_OTHER = '#([\w\-\s.]+)\s(\d{2}/\d{2}/\d{2})#';
 
     /**
@@ -87,22 +85,24 @@ class ImportController extends Controller
                     $transac_results = match ($line[self::COL_TRANSAC_TYPE]) {
                         'Carte' => $this->getCardTransacInfo($benef_raw, $line[self::COL_DATE]),
                         'Virement' => $this->getTransferTransacInfo($benef_raw, $line[self::COL_DATE]),
-                        'Retrait DAB' => $this->getWithdrawalTransacInfo($benef_raw, $line[self::COL_DATE]),
+                        'Retrait DAB' => $this->getWithdrawalTransacInfo($benef_raw),
                         default => $this->getOtherTransacInfo($benef_raw, $line[self::COL_DATE]),
                     };
 
-                    $benef_result = Beneficiary::query()
-                        ->select(['id', 'raw_name'])
-                        ->where('raw_name', $transac_results['benef'])
-                        ->first();
+                    if (!empty($transac_results['benef'])) {
+                        $benef_result = Beneficiary::query()
+                            ->select(['id', 'raw_name'])
+                            ->where('raw_name', $transac_results['benef'])
+                            ->first();
 
-                    if (empty($benef_result)) {
-                        $benef_result = Beneficiary::create(['raw_name' => $transac_results['benef']]);
+                        if (empty($benef_result)) {
+                            $benef_result = Beneficiary::create(['raw_name' => $transac_results['benef']]);
+                        }
                     }
 
                     Transaction::create([
                         'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
-                        'beneficiary_id' => $benef_result->id,
+                        'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,
                         'occurred_at' => $transac_results['date'],
                         'type' => $transac_results['type'],
                         'line' => $i,
@@ -132,9 +132,9 @@ class ImportController extends Controller
 
         if ($has_match) {
             $benef = trim($benef_matches[1]);
-            $date = Carbon::createFromFormat('d/m/y', $benef_matches[2])->format('Y-m-d');
+            $date = parseDateMultiFormat($benef_matches[2])->format('Y-m-d');
         } else {
-            $date = Carbon::createFromFormat('d/m/Y', $raw_date)->format('Y-m-d');
+            $date = parseDateMultiFormat('d/m/Y', $raw_date)->format('Y-m-d');
         }
 
         return ['type' => TransactionType::card->name, 'benef' => $benef, 'date' => $date];
@@ -164,25 +164,22 @@ class ImportController extends Controller
         return [
             'type' => $type,
             'benef' => !empty($has_match) ? trim($benef_matches[1]) : trim($benef_raw),
-            // @TODO : Permettre plusieurs formats de date
-            'date' => Carbon::createFromFormat('d/m/Y', $raw_date)->format('Y-m-d')
+            'date' => parseDateMultiFormat($raw_date)->format('Y-m-d')
         ];
     }
 
     /**
      * @param mixed $benef_raw
-     * @param string $raw_date
      * @return array
      */
-    public function getWithdrawalTransacInfo(mixed $benef_raw, string $raw_date): array
+    public function getWithdrawalTransacInfo(mixed $benef_raw): array
     {
-        preg_match(self::FIND_WITHDRAWAL_BENEF, $benef_raw, $benef_matches);
+        preg_match(self::FIND_WITHDRAWAL, $benef_raw, $benef_matches);
 
         return [
             'type' => TransactionType::withdrawal->name,
-            'benef' => trim($benef_matches[1]),
-            // @TODO : Permettre plusieurs formats de date (d/m/Y et d-m-y)
-            'date' => Carbon::createFromFormat('d/m/Y', $raw_date)->format('Y-m-d')
+            'benef' => '',
+            'date' => parseDateMultiFormat($benef_matches[1])->format('Y-m-d')
         ];
     }
 
@@ -197,7 +194,7 @@ class ImportController extends Controller
 
         if ($has_match) {
             $benef = $benef_matches[1];
-            $date = Carbon::createFromFormat('d/m/y', $benef_matches[2])->format('Y-m-d');
+            $date = parseDateMultiFormat($benef_matches[2])->format('Y-m-d');
         } else {
             $benef = trim($benef_raw);
             $date = Carbon::createFromFormat('d/m/Y', $raw_date)->format('Y-m-d');

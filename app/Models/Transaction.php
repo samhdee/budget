@@ -46,9 +46,10 @@ class Transaction extends Model
     }
 
     /**
+     * @param array $filters
      * @return Collection
      */
-    public static function getList(): Collection
+    public static function getList(array $filters = []): Collection
     {
         return self::query()
             ->select([

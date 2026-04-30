@@ -20,6 +20,11 @@ class TransactionsController extends Controller
         return view('transactions.index', ['transactions' => Transaction::getList()]);
     }
 
+    public function filter(Request $request)
+    {
+        return view('transactions.list', ['transactions' => Transaction::getList($request->input('filters'))]);
+    }
+
     /**
      * create
      *

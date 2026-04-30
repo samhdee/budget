@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('transactions')
         ->group(function () {
             Route::get('/', 'index')->name('transac_index');
+            Route::post('/filter', 'filter')->name('transac_filter');
             Route::get('/form', 'form')->name('transac_form');
             Route::post('/store', 'store')->name('transac_store');
             Route::post('/upload', 'upload')->name('transac_upload');

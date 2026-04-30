@@ -1,8 +1,10 @@
-@php
-    use Carbon\Carbon;
-@endphp
+@php use App\Enums\TransactionType; @endphp
 
 @extends('includes.layout')
+
+@section('vite_imports')
+    @vite([''])
+@endsection
 
 @section('content')
     <div id="transactions-container">
@@ -14,40 +16,18 @@
             </a>
         </div>
 
-        <table class="mt-3 mx-auto w-75 table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th style="width: 12rem">Montant</th>
-                    <th>Date</th>
-                    <th>Bénéficiaire</th>
-                    <th style="width: 4rem"></th>
-                </tr>
-            </thead>
+        <div id="transactions-filter-wrapper" class="d-flex gap-3">
+            <div>
+                <select id="transac-filter-type" class="form-select">
+                    <option>Tous</option>
 
-            <tbody>
-                @forelse ($transactions as $transaction)
-                    <tr>
-                        <td>{{ $transaction->amount }}</td>
-                        <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at) }}</td>
-                        <td>{{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}</td>
+                    @foreach(TransactionType::cases() as $transac_type)
+                        <option value="{{ $transac_type->name }}">{{ $transac_type->value }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
-                        <td class="text-center">
-                            <a
-                                class="btn btn-sm btn-primary"
-                                href="{{ route('transac_form', ['transac_id' => $transaction->id]) }}"
-                            >
-                                <i class="fas fa-pencil"></i>
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" class="text-muted fst-italic">
-                            <i class="fa-solid fa-ban me-1"></i> Aucun résultat
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+        @include('transactions.list')
     </div>
 @endsection
