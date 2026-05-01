@@ -23,5 +23,4 @@ function parseDateMultiFormat(string $date_string): ?Carbon
 
     // Aucun format valide
     dd("$date_string : Aucun format de date ne correspond !");
-    return null;
 }

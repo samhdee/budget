@@ -78,20 +78,21 @@ class ImportController extends Controller
 
                     $benef = '';
                     $date = '';
+                    $benef_result = null;
                     $benef_raw = !empty($line[self::COL_BENEFICIARY])
                         ? $line[self::COL_BENEFICIARY]
                         : $line[self::COL_BENEFICIARY_BIS];
 
                     $transac_results = match ($line[self::COL_TRANSAC_TYPE]) {
-                        'Carte' => $this->getCardTransacInfo($benef_raw, $line[self::COL_DATE]),
-                        'Virement' => $this->getTransferTransacInfo($benef_raw, $line[self::COL_DATE]),
-                        'Retrait DAB' => $this->getWithdrawalTransacInfo($benef_raw),
-                        default => $this->getOtherTransacInfo($benef_raw, $line[self::COL_DATE]),
+                        'Carte' => $this->getCardInfo($benef_raw, $line[self::COL_DATE]),
+                        'Virement' => $this->getTransferInfo($benef_raw, $line[self::COL_DATE]),
+                        'Retrait DAB' => $this->getWithdrawalInfo($benef_raw),
+                        default => $this->getOtherInfo($benef_raw, $line[self::COL_DATE]),
                     };
 
                     if (!empty($transac_results['benef'])) {
                         $benef_result = Beneficiary::query()
-                            ->select(['id', 'raw_name'])
+                            ->select(['id'])
                             ->where('raw_name', $transac_results['benef'])
                             ->first();
 
@@ -125,7 +126,7 @@ class ImportController extends Controller
      * @param string $raw_date
      * @return array
      */
-    public function getCardTransacInfo(mixed $benef_raw, string $raw_date): array
+    public function getCardInfo(mixed $benef_raw, string $raw_date): array
     {
         $benef = '';
         $has_match = preg_match(self::FIND_CB_BENEF, $benef_raw, $benef_matches);
@@ -145,14 +146,18 @@ class ImportController extends Controller
      * @param string $raw_date
      * @return array
      */
-    public function getTransferTransacInfo(mixed $benef_raw, string $raw_date): array
+    public function getTransferInfo(mixed $benef_raw, string $raw_date): array
     {
-        $type = TransactionType::transfer->name;
+        $type = TransactionType::perma_transfer->name;
 
         if (!$has_match = preg_match(self::FIND_VIRT_PERMA_BENEF, $benef_raw, $benef_matches)) {
+            $type = TransactionType::transfer->name;
+
             // @fixme : doit y avoir moyen de faire mieux è.è
             if (!$has_match = preg_match(self::FIND_VIRT_SIMPLE_BENEF, $benef_raw, $benef_matches)) {
                 if (!$has_match = preg_match(self::FIND_VIRT_SEPA_BENEF, $benef_raw, $benef_matches)) {
+                    $type = TransactionType::wero->name;
+
                     if (!$has_match = preg_match(self::FIND_VIRT_WERO_BENEF, $benef_raw, $benef_matches)) {
                         $has_match = preg_match(self::FIND_PRLVT_BENEF, $benef_raw, $benef_matches);
                         $type = TransactionType::collection->name;
@@ -172,7 +177,7 @@ class ImportController extends Controller
      * @param mixed $benef_raw
      * @return array
      */
-    public function getWithdrawalTransacInfo(mixed $benef_raw): array
+    public function getWithdrawalInfo(mixed $benef_raw): array
     {
         preg_match(self::FIND_WITHDRAWAL, $benef_raw, $benef_matches);
 
@@ -188,7 +193,7 @@ class ImportController extends Controller
      * @param string $raw_date
      * @return array
      */
-    public function getOtherTransacInfo(mixed $benef_raw, string $raw_date): array
+    public function getOtherInfo(mixed $benef_raw, string $raw_date): array
     {
         $has_match = preg_match(self::FIND_OTHER, $benef_raw, $benef_matches);
 
