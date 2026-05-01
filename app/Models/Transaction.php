@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -60,6 +61,13 @@ class Transaction extends Model
 
         if (!empty($filters['type'])) {
             $query->where('type', $filters['type']);
+        }
+
+        if (!empty($filters['benef_name'])) {
+            $query->where(function (Builder $query) use ($filters) {
+                $query->orWhereLike('b.raw_name', "%{$filters['benef_name']}%")
+                    ->orWhereLike('b.pretty_name', "%{$filters['benef_name']}%");
+            });
         }
 
         if (!empty($filters['date_start'])) {

@@ -1,7 +1,14 @@
 import {spinner} from "./helpers.js";
 
 $(function () {
-    $(document).on('change', '.filters-wrapper select, .filters-wrapper input', e => {
+    // Déclenche le filtrage
+    $(document).on('change keyup', '.filters-wrapper select, .filters-wrapper input', e => {
+        const input = $(e.target);
+
+        if ($(input).is('[type="text"]') && ($(input).val().length > 0 && $(input).val().length < 3)) {
+            return;
+        }
+
         const wrapper = $(e.target).parents('.filters-wrapper');
         const list_wrapper = $(wrapper).data('target');
         $(list_wrapper).html(spinner());
@@ -20,7 +27,13 @@ $(function () {
         );
     });
 
+    // Reset un filtre
     $(document).on('click', '.filter-reset', e => {
+        $($(e.currentTarget).data('target')).val('').trigger('change');
+    });
+
+    // Reset tous les filtres
+    $(document).on('click', '.all-filter-reset', e => {
         $('.filters-wrapper select, .filters-wrapper input')
             .val('')
             .trigger('change');

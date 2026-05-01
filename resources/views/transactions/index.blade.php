@@ -27,13 +27,20 @@
                     </select>
                 </div>
 
+                <div class="filter-wrapper">
+                    <input id="transac-filter-benef" type="text" name="benef_name" class="form-control" size="30" />
+                    <button type="button" class="filter-reset btn btn-sm btn-close-white" data-target="#transac-filter-benef">
+                        <i class="fas fa-xmark-circle"></i>
+                    </button>
+                </div>
+
                 <div class="d-flex gap-1">
                     <input id="transac-filter-date-start" name="date_start" type="date" class="form-control" />
                     <input id="transac-filter-date-end" name="date_end" type="date" class="form-control" />
                 </div>
 
                 <div>
-                    <button type="button" class="btn btn-sm btn-danger filter-reset">
+                    <button type="button" class="btn btn-sm btn-danger all-filter-reset">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>

@@ -22,7 +22,18 @@ body {
         cursor: pointer;
     }
 
-    .filter-reset {
+    .filter-wrapper {
+        position: relative;
+
+        .filter-reset {
+            position: absolute;
+            right: 0;
+            top: 7px;
+            padding-right: 7px;
+        }
+    }
+
+    .all-filter-reset {
         margin-top: .45rem;
     }
 }
