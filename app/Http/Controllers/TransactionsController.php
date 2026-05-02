@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Beneficiary;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +18,10 @@ class TransactionsController extends Controller
      */
     public function index(): View
     {
-        return view('transactions.index', ['transactions' => Transaction::getList()]);
+        return view('transactions.index', [
+            'transactions' => Transaction::getList(),
+            'beneficiaries' => Beneficiary::getList(),
+        ]);
     }
 
     public function filter(Request $request)
@@ -26,21 +30,9 @@ class TransactionsController extends Controller
         return view('transactions.list', ['transactions' => Transaction::getList($request->input('filters'))]);
     }
 
-    /**
-     * create
-     *
-     * @param mixed $request
-     * @return View
-     */
-    public function form(Request $request): View
+    public function get($id)
     {
-        $transaction = null;
-
-        if (!empty($request->input('transac_id'))) {
-            $transaction = Transaction::find($request->input('transac_id'));
-        }
-
-        return view('transactions.form', ['label' => $transaction]);
+        return response()->json(['transaction' => Transaction::getOne($id)]);
     }
 
     /**

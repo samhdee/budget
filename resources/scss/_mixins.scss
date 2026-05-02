@@ -4,16 +4,23 @@ $lavender: #a06cd5;
 
 $primary: #008dd5;
 $danger: #e43f6f;
-$btn-color: white;
 $warning: #d4b483;
 $success: #159f7b;
 
 // Corps
 $body-bg: #231f2a;
 $body-color: white;
+$body-secondary-bg: #322d3b;
 
 // Tableaux
 $table-color: white;
+
+// Boutons
+.btn-primary,
+.btn-success,
+.btn-danger {
+    color: white !important;
+}
 
 // Liens
 $link-color: $primary;

@@ -21,7 +21,7 @@
                 <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">{{ $transaction->amount }}€</td>
 
                 <td>
-                @switch ($transaction->type)
+                    @switch ($transaction->type)
                         @case (TransactionType::card->name)
                             CB
                             @break
@@ -42,18 +42,22 @@
                             @break
                         @default
                             Autre
-                    @endswitch
+                   @endswitch
                 </td>
 
                 <td>{{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}</td>
 
                 <td class="text-center">
-                    <a
+                    <button
+                        type="button"
                         class="btn btn-sm btn-primary"
-                        href="{{ route('transac_form', ['transac_id' => $transaction->id]) }}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal_transac_form"
+                        data-transac-id="{{ $transaction->id }}"
+                        data-action="edit"
                     >
                         <i class="fas fa-pencil"></i>
-                    </a>
+                    </button>
                 </td>
             </tr>
         @empty

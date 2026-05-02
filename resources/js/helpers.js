@@ -5,3 +5,8 @@ export const spinner = () => {
         '</div>' +
     '</div>';
 }
+
+export const formatSQLDate = (date_string) => {
+    const expl_date = date_string.split('-');
+    return `${expl_date[2]}/${expl_date[1]}/${expl_date[0]}`;
+}

@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -33,4 +34,16 @@ class Beneficiary extends Model
         'raw_name',
         'pretty_name',
     ];
+
+    /**
+     * @return Collection
+     */
+    public static function getList(): Collection
+    {
+        return self::query()
+            ->select(['id', 'raw_name', 'pretty_name'])
+            ->orderBy('pretty_name')
+            ->orderBy('raw_name')
+            ->get();
+    }
 }

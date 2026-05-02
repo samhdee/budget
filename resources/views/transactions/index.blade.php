@@ -47,9 +47,15 @@
             </div>
 
             <div>
-                <a class="btn btn-sm btn-success" href="{{ route('transac_form') }}">
-                    <i class="fas fa-plus-circle me-1"></i> Créer
-                </a>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal_transac_form"
+                    data-action="create"
+                >
+                    <i class="fas fa-plus-circle"></i> Créer
+                </button>
             </div>
         </div>
 
@@ -57,5 +63,7 @@
         <div id="transac-list-wrapper" class="mt-5">
             @include('transactions.list')
         </div>
+
+        @include('transactions.modal_form')
     </div>
 @endsection

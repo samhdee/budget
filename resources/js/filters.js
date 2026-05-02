@@ -20,7 +20,7 @@ $(function () {
 
         $.post(
             $(wrapper).data('url'),
-            {_token: $('input[name="_token"]').val(), filters},
+            {filters},
             response => {
                 $(list_wrapper).html(response);
             }

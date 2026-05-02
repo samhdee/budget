@@ -16,11 +16,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('transactions')
         ->group(function () {
             Route::get('/', 'index')->name('transac_index');
+            Route::get('/get/{id}', 'get')->name('transac_get');
             Route::post('/filter', 'filter')->name('transac_filter');
-            Route::get('/form', 'form')->name('transac_form');
             Route::post('/store', 'store')->name('transac_store');
-            Route::post('/upload', 'upload')->name('transac_upload');
-            Route::post('/update', 'update')->name('transac_update');
         });
 
     Route::controller(ImportController::class)
@@ -29,7 +27,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('categ_index');
             Route::get('/form', 'form')->name('categ_form');
             Route::post('/store', 'store')->name('categ_store');
-            Route::post('/update', 'update')->name('categ_update');
         });
 
     Route::controller(LabelsController::class)
@@ -46,6 +43,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->group(function () {
             Route::get('/', 'index')->name('import_index');
             Route::post('/store', 'store')->name('import_store');
-            Route::post('/update', 'update')->name('import_update');
         });
 });
