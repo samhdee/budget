@@ -18,8 +18,13 @@
                     </div>
 
                     <div class="mt-3 form-floating">
-                        <input id="transac-amount" type="number" name="amount" class="form-control" required/>
+                        <input id="transac-amount" type="number" name="amount" class="form-control" required />
                         <label for="transac-amount">Montant</label>
+                    </div>
+
+                    <div class="mt-3 form-floating">
+                        <textarea id="transac-note" name="note" class="form-control"></textarea>
+                        <label for="transac-note">Note</label>
                     </div>
 
                     <div class="mt-3 form-floating">
@@ -28,12 +33,8 @@
 
                             @php /** @var Beneficiary[] $beneficiaries */ @endphp
                             @foreach ($beneficiaries as $beneficiary)
-                                <option value="{{ $beneficiary->id }}">
-                                    @if (!empty($beneficiary->pretty_name))
-                                        {{ $beneficiary->pretty_name }} ({{ $beneficiary->raw_name }})
-                                    @else
-                                        {{ $beneficiary->raw_name }}
-                                    @endif
+                                <option value="{{ $beneficiary->id }}" data-pretty_name="{{ $beneficiary->pretty_name }}">
+                                    {{ $beneficiary->raw_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -41,12 +42,19 @@
                         <label for="transac-benef-id">Bénéficiaire</label>
                     </div>
 
-                    <div class="mt-3 form-floating">
+                    <div id="transac-new-benef-wrapper">
+                        <div class="mt-3 form-floating">
+                            <input id="transac-new-benef" type="text" name="pretty_name" class="form-control" />
+                            <label for="transac-new-benef">Nouveau bénéficiaire</label>
+                        </div>
+                    </div>
+
+                    <div id="transac-file-wrapper" class="mt-3 form-floating">
                         <input id="transac-file" type="text" name="file" class="form-control" disabled />
                         <label for="transac-file">Fichier</label>
                     </div>
 
-                    <div class="mt-3 form-floating">
+                    <div id="transac-line-wrapper" class="mt-3 form-floating">
                         <input id="transac-line" type="number" name="line" class="form-control" disabled />
                         <label for="transac-line">Ligne</label>
                     </div>

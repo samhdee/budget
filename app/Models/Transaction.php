@@ -54,7 +54,7 @@ class Transaction extends Model
     {
         $query = self::query()
             ->select([
-                'transactions.id as id', 'amount', 'occurred_at', 'type', 'line', 'file',
+                'transactions.id as id', 'amount', 'occurred_at', 'type', 'note', 'line', 'file',
                 'b.id as benef_id', 'raw_name', 'pretty_name'
             ])
             ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id');
@@ -90,7 +90,7 @@ class Transaction extends Model
     public static function getOne(int $id): Transaction
     {
         return self::query()
-            ->select(['amount', 'occurred_at', 'type', 'line', 'file', 'b.id as benef_id', 'raw_name', 'pretty_name'])
+            ->select(['amount', 'occurred_at', 'type', 'note', 'line', 'file', 'b.id as benef_id', 'raw_name', 'pretty_name'])
             ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id')
             ->where('transactions.id', $id)
             ->firstOrFail();

@@ -27,9 +27,9 @@
                     </select>
                 </div>
 
-                <div class="filter-wrapper">
+                <div class="filter-wrapper with-reset">
                     <input id="transac-filter-benef" type="text" name="benef_name" class="form-control" size="30" />
-                    <button type="button" class="filter-reset btn btn-sm btn-close-white" data-target="#transac-filter-benef">
+                    <button type="button" class="filter-reset d-none btn btn-sm btn-close-white" data-target="#transac-filter-benef">
                         <i class="fas fa-xmark-circle"></i>
                     </button>
                 </div>
