@@ -4,13 +4,47 @@ import './filters.js';
 import { formatSQLDate, formSerializeObject } from "./helpers.js";
 
 $(function () {
-    // Change la range de dates sélectionnables
+    // Filtres début/fin : change la range de dates sélectionnables
     $(document).on('change', 'input[type="date"]', e => {
         const prop_to_update = $(e.target).prop('name') === 'date_start' ? 'min' : 'max';
         $(e.target).siblings('input').prop(prop_to_update, $(e.target).val());
     });
 
-    // Renseigne ou vide le formulaire d'édition
+    /* --- Édition Transaction --- */
+    // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
+    $(document).on('show.bs.collapse', '#transac-new-benef-wrapper', () => {
+        const previous_value = $('#transac-benef-id').val();
+        $('#transac-benef-id')
+            // @FIXME: Marche pô
+            .data('previous_value', previous_value)
+            .prop('disabled', 'disabled')
+            .val('');
+    });
+
+    // Enlève le disabled du select Bénéficiaire si on cache le champ Nouveau bénéficiaire
+    $(document).on('hide.bs.collapse', '#transac-new-benef-wrapper', () => {
+        $('#transac-benef-id').prop('disabled', '');
+    });
+
+    // Soumet le formulaire
+    $(document).on('submit', 'form#transac-edit-form', e => {
+        e.preventDefault();
+
+        $.post(
+            $('#transac-edit-form').prop('action'),
+            formSerializeObject('#transac-edit-form'),
+            response => {
+                // Force le rechargement de la liste
+                $('#transac-filter-type').trigger('change');
+                if (response.updated.length > 0) {
+                    Modal.getInstance('#modal-transac-form').hide();
+                }
+            }
+        );
+    });
+
+    /* --- Édition Bénéficiaire --- */
+    // Renseigne ou vide le formulaire d'édition de transac
     $(document).on('show.bs.modal', '#modal-transac-form', e => {
         const open_button = $(e.relatedTarget);
         const form = $('#modal-transac-form #transac-edit-form');
@@ -44,31 +78,40 @@ $(function () {
         }
     });
 
-    // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
-    $(document).on('show.bs.collapse', '#transac-new-benef-wrapper', () => {
-        const previous_value = $('#transac-benef-id').val();
-        $('#transac-benef-id')
-            // @FIXME: Marche pô
-            .data('previous_value', previous_value)
-            .prop('disabled', 'disabled')
-            .val('');
-    });
+    // Renseigne le formulaire d'édition de benef
+    $(document).on('show.bs.modal', '#modal-benef-form', e => {
+        const open_button = $(e.relatedTarget);
+        const form = $('#modal-benef-form #benef-edit-form');
+        $(form).find('#benef-id').val($(open_button).data('benef-id'));
 
-    // Enlève le disabled du select Bénéficiaire si on cache le champ Nouveau bénéficiaire
-    $(document).on('hide.bs.collapse', '#transac-new-benef-wrapper', () => {
-        $('#transac-benef-id').prop('disabled', '');
+        $.get('benefs/get/' + $(open_button).data('benef-id')).then(response => {
+            for (const i in response.beneficiary) {
+                $(form)
+                    .find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`)
+                    .val(response.beneficiary[i]);
+            }
+
+            $(form)
+                .find('.modal-title')
+                .text(`Éditer ${response.beneficiary['raw_name']}`);
+        });
     });
 
     // Soumet le formulaire
-    $(document).on('submit', 'form#transac-edit-form', e => {
+    $(document).on('submit', 'form#benef-edit-form', e => {
         e.preventDefault();
-        console.log(formSerializeObject('#transac-edit-form'));
+
         $.post(
-            $('#transac-edit-form').prop('action'),
-            formSerializeObject('#transac-edit-form'),
+            $('#benef-edit-form').prop('action'),
+            formSerializeObject('#benef-edit-form'),
             response => {
+                // Force le rechargement de la liste
                 $('#transac-filter-type').trigger('change');
-                Modal.getInstance('#modal-transac-form').hide();
+                console.log(response);
+
+                if (response.updated.length > 0) {
+                    Modal.getInstance('#modal-benef-form').hide();
+                }
             }
         );
     });

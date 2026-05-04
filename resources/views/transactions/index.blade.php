@@ -67,5 +67,6 @@
         </div>
 
         @include('transactions.modal_transac_form')
+        @include('transactions.modal_benef_form')
     </div>
 @endsection

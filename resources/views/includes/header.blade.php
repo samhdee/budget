@@ -6,8 +6,8 @@
 
         <div class="navbar-nav">
             <a
-                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'transac_') ? 'active' : '' }}"
-                href="{{ route('transac_index') }}"
+                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'home') ? 'active' : '' }}"
+                href="{{ route('home') }}"
             >
                 Transactions
             </a>

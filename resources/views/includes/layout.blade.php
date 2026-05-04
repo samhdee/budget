@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>@yield('title', 'Budget')</title>
-
-    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-
-    @yield('vite_imports')
 </head>
 
 <body>
@@ -30,4 +26,8 @@
             @yield('content')
         </main>
     </container>
+
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+
+    @yield('vite_imports')
 </body>

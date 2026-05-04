@@ -1,5 +1,6 @@
 @php
     use App\Enums\TransactionType;
+    use App\Models\Transaction;
     use Carbon\Carbon;
 @endphp
 
@@ -16,6 +17,7 @@
     </thead>
 
     <tbody>
+        @php /** @var Transaction $transaction */ @endphp
         @forelse ($transactions as $transaction)
             <tr>
                 <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
@@ -23,8 +25,14 @@
                 <td>{{ getTransactionTypeLabel($transaction->type) }}</td>
 
                 <td>
-                    <a id="transac-list-benef-edit" href="#" data-bs-toggle="modal" data-bs-target="#modal-benef-form">
+                    <a
+                        href="javascript:void(0)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-benef-form"
+                        data-benef-id="{{ $transaction->beneficiary_id }}"
+                    >
                         {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
+                        <i class="text-small fas fa-person-through-window"></i>
                     </a>
                 </td>
 
@@ -45,7 +53,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="5" class="text-center text-muted fst-italic">
+                <td colspan="6" class="text-center text-muted fst-italic">
                     <i class="fa-solid fa-ban me-1"></i> Aucun résultat
                 </td>
             </tr>

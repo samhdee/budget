@@ -6,7 +6,7 @@ use App\Enums\TransactionType;
 use App\Models\Beneficiary;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -21,7 +21,7 @@ class TransactionsController extends Controller
     {
         return view('transactions.index', [
             'transactions' => Transaction::getList(),
-            'beneficiaries' => Beneficiary::getList(),
+            'beneficiaries' => Beneficiary::getDropdownList(),
         ]);
     }
 
@@ -40,9 +40,9 @@ class TransactionsController extends Controller
      * store
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         // @TODO: Ajouter une vérif sur l'unicité de benef pretty_name
         // @TODO: Ajouter une vérif sur le type
@@ -72,6 +72,6 @@ class TransactionsController extends Controller
             ]);
         }
 
-        return to_route('transac_index', ['updated' => $transac_id]);
+        return response()->json(['updated' => $transac_id]);
     }
 }
