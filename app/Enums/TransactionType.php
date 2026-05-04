@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum TransactionType: string
 {
-    case card = 'CB';
-    case wero = 'Wero';
-    case transfer = 'Virement';
-    case perma_transfer = 'Virement permanent';
-    case collection = 'Prélèvement SEPA';
-    case withdrawal = 'Retrait';
-    case other = 'Autre';
+    case card = 'card';
+    case wero = 'wero';
+    case transfer = 'transfer';
+    case perma_transfer = 'perma_transfer';
+    case collection = 'collection';
+    case withdrawal = 'withdrawal';
+    case other = 'other';
 }

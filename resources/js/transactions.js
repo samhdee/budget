@@ -1,5 +1,7 @@
+import { Modal } from "bootstrap";
+
 import './filters.js';
-import {formatSQLDate} from "@/helpers.js";
+import { formatSQLDate, formSerializeObject } from "./helpers.js";
 
 $(function () {
     // Change la range de dates sélectionnables
@@ -9,16 +11,23 @@ $(function () {
     });
 
     // Renseigne ou vide le formulaire d'édition
-    $(document).on('show.bs.modal', '#modal_transac_form', e => {
-        const form = $('#modal_transac_form #transac-edit-form');
+    $(document).on('show.bs.modal', '#modal-transac-form', e => {
+        const open_button = $(e.relatedTarget);
+        const form = $('#modal-transac-form #transac-edit-form');
+        $('#transac-new-benef-wrapper').removeClass('show');
+        $('#transac-benef-id').prop('disabled', '');
+        $('#transac-new-benef').val('');
 
-        if ($(e.relatedTarget).data('action') === 'edit') {
-            $(form).find('#transac-id').val($(e.relatedTarget).data('transac-id'));
-            $(form).find('#transac-file').removeClass('d-none');
-            $(form).find('#transac-line').removeClass('d-none');
-            $.get('transactions/get/' + $(e.relatedTarget).data('transac-id')).then(response => {
+        if ($(open_button).data('action') === 'edit') {
+            $('#transac-id').val($(open_button).data('transac-id'));
+            $('#transac-file').removeClass('d-none');
+            $('#transac-line').removeClass('d-none');
+
+            // Récupère et affiche les infos de la transactions
+            // @TODO: Ajouter la gestion d'erreur
+            $.get('transactions/get/' + $(open_button).data('transac-id')).then(response => {
                 for (const i in response.transaction) {
-                    $(form).find(`input[name="${i}"], select[name="${i}"]`).val(response.transaction[i]);
+                    $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.transaction[i]);
                 }
                 $(form)
                     .find('.modal-title')
@@ -27,16 +36,40 @@ $(function () {
                     );
             });
         } else {
-            $(form).find('#transac-new-benef-wrapper').addClass('d-none');
-            $(form).find('#transac-file-wrapper').addClass('d-none');
-            $(form).find('#transac-line-wrapper').addClass('d-none');
+            // Reset le formulaire
+            $('#transac-file-wrapper').addClass('d-none');
+            $('#transac-line-wrapper').addClass('d-none');
             $(form).find('input, select').val('');
             $(form).find('.modal-title').text('Ajouter une transaction');
         }
     });
 
-    // Update le champ pretty_name quand un bénéficiaire est sélectionné
-    $(document).on('change', '#transac-benef-id', e => {
-        $('#transac-benef-pretty').val($('#transac-benef-id option:selected').data('pretty_name'));
+    // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
+    $(document).on('show.bs.collapse', '#transac-new-benef-wrapper', () => {
+        const previous_value = $('#transac-benef-id').val();
+        $('#transac-benef-id')
+            // @FIXME: Marche pô
+            .data('previous_value', previous_value)
+            .prop('disabled', 'disabled')
+            .val('');
+    });
+
+    // Enlève le disabled du select Bénéficiaire si on cache le champ Nouveau bénéficiaire
+    $(document).on('hide.bs.collapse', '#transac-new-benef-wrapper', () => {
+        $('#transac-benef-id').prop('disabled', '');
+    });
+
+    // Soumet le formulaire
+    $(document).on('submit', 'form#transac-edit-form', e => {
+        e.preventDefault();
+        console.log(formSerializeObject('#transac-edit-form'));
+        $.post(
+            $('#transac-edit-form').prop('action'),
+            formSerializeObject('#transac-edit-form'),
+            response => {
+                $('#transac-filter-type').trigger('change');
+                Modal.getInstance('#modal-transac-form').hide();
+            }
+        );
     });
 });

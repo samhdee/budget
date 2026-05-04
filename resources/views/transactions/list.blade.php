@@ -6,10 +6,11 @@
 <table class=" mx-auto w-75 table table-striped table-bordered align-middle">
     <thead>
         <tr>
-            <th>Date</th>
-            <th style="width: 12rem">Montant</th>
+            <th style="width: 7rem">Date</th>
+            <th style="width: 7rem">Montant</th>
             <th>Type</th>
             <th>Bénéficiaire</th>
+            <th style="width: 12rem">Notes</th>
             <th style="width: 4rem"></th>
         </tr>
     </thead>
@@ -19,40 +20,22 @@
             <tr>
                 <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
                 <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">{{ $transaction->amount }}€</td>
+                <td>{{ getTransactionTypeLabel($transaction->type) }}</td>
 
                 <td>
-                    @switch ($transaction->type)
-                        @case (TransactionType::card->name)
-                            CB
-                            @break
-                        @case (TransactionType::collection->name)
-                            Prélèvement
-                            @break
-                        @case (TransactionType::wero->name)
-                            Wero
-                            @break
-                        @case (TransactionType::transfer->name)
-                            Virement
-                            @break
-                        @case (TransactionType::perma_transfer->name)
-                            Virement permanent
-                            @break
-                        @case (TransactionType::withdrawal->name)
-                            Retrait
-                            @break
-                        @default
-                            Autre
-                   @endswitch
+                    <a id="transac-list-benef-edit" href="#" data-bs-toggle="modal" data-bs-target="#modal-benef-form">
+                        {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
+                    </a>
                 </td>
 
-                <td>{{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}</td>
+                <td>{{ $transaction->notes }}</td>
 
                 <td class="text-center">
                     <button
                         type="button"
                         class="btn btn-sm btn-primary"
                         data-bs-toggle="modal"
-                        data-bs-target="#modal_transac_form"
+                        data-bs-target="#modal-transac-form"
                         data-transac-id="{{ $transaction->id }}"
                         data-action="edit"
                     >

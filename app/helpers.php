@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TransactionType;
 use Carbon\Carbon;
 
 function parseDateMultiFormat(string $date_string): ?Carbon
@@ -23,4 +24,21 @@ function parseDateMultiFormat(string $date_string): ?Carbon
 
     // Aucun format valide
     dd("$date_string : Aucun format de date ne correspond !");
+}
+
+/**
+ * @param $transaction_type
+ * @return string
+ */
+function getTransactionTypeLabel($transaction_type): string
+{
+    return match ($transaction_type) {
+        TransactionType::card->name => 'CB',
+        TransactionType::collection->name => 'Prélèvement',
+        TransactionType::wero->name => 'Wero',
+        TransactionType::transfer->name => 'Virement',
+        TransactionType::perma_transfer->name => 'Virement permanent',
+        TransactionType::withdrawal->name => 'Retrait',
+        default => 'Autre',
+    };
 }

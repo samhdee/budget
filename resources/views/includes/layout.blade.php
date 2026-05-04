@@ -18,12 +18,14 @@
         <main id="main-container" class="container">
             @csrf
 
-            @if (Session()->has('message'))
-                <div class="alert alert-success alert-dismissible">
-                    {{ Session::get('message') }}
-                    <button type="button" class="btn btn-close"></button>
-                </div>
-            @endif
+            <div id="global-alert-wrapper">
+                @if (Session()->has('message'))
+                    <div class="alert alert-success alert-dismissible">
+                        {{ Session::get('message') }}
+                        <button type="button" class="btn btn-close"></button>
+                    </div>
+                @endif
+            </div>
 
             @yield('content')
         </main>

@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->string('note')->nullable();
+        Schema::table('beneficiaries', function (Blueprint $table) {
+            $table->string('pretty_name', 255)->nullable()->unique()->change();
         });
     }
 
     public function down(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
+        Schema::table('beneficiaries', function (Blueprint $table) {
             //
         });
     }

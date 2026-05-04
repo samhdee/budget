@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionType;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,20 +14,24 @@ use Illuminate\Support\Collection;
  * @property int $id
  * @property string $occurred_at
  * @property numeric $amount
+ * @property TransactionType $type
+ * @property string $notes
  * @property int $beneficiary_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property int $category_id
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereBeneficiaryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereOccurredAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Transaction whereUpdatedAt($value)
+ * @method static Builder<static>|Transaction newModelQuery()
+ * @method static Builder<static>|Transaction newQuery()
+ * @method static Builder<static>|Transaction query()
+ * @method static Builder<static>|Transaction whereAmount($value)
+ * @method static Builder<static>|Transaction whereType($value)
+ * @method static Builder<static>|Transaction whereNotes($value)
+ * @method static Builder<static>|Transaction whereBeneficiaryId($value)
+ * @method static Builder<static>|Transaction whereCategoryId($value)
+ * @method static Builder<static>|Transaction whereCreatedAt($value)
+ * @method static Builder<static>|Transaction whereId($value)
+ * @method static Builder<static>|Transaction whereOccurredAt($value)
+ * @method static Builder<static>|Transaction whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Transaction extends Model
@@ -35,6 +40,7 @@ class Transaction extends Model
     protected $fillable = [
         'occurred_at',
         'amount',
+        'notes',
         'beneficiary_id',
         'type',
         'line',
@@ -54,8 +60,8 @@ class Transaction extends Model
     {
         $query = self::query()
             ->select([
-                'transactions.id as id', 'amount', 'occurred_at', 'type', 'note', 'line', 'file',
-                'b.id as benef_id', 'raw_name', 'pretty_name'
+                'transactions.id as id', 'amount', 'occurred_at', 'type', 'notes', 'line', 'file',
+                'beneficiary_id', 'raw_name', 'pretty_name'
             ])
             ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id');
 
@@ -90,7 +96,9 @@ class Transaction extends Model
     public static function getOne(int $id): Transaction
     {
         return self::query()
-            ->select(['amount', 'occurred_at', 'type', 'note', 'line', 'file', 'b.id as benef_id', 'raw_name', 'pretty_name'])
+            ->select([
+                'amount', 'occurred_at', 'type', 'notes', 'line', 'file', 'beneficiary_id', 'raw_name', 'pretty_name'
+            ])
             ->join('beneficiaries as b', 'b.id', 'transactions.beneficiary_id')
             ->where('transactions.id', $id)
             ->firstOrFail();
