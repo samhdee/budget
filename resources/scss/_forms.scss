@@ -10,18 +10,29 @@ body {
             height: auto;
             resize: none;
         }
-
-        & > label,
-        & > textarea:focus~label::after,
-        & > textarea:not(:placeholder-shown)~label::after {
-            color: white;
-        }
     }
 
     input[type="date"]::-webkit-calendar-picker-indicator {
         cursor: pointer;
     }
 
+    .form-field.form-error {
+        .form-error-message,
+        label,
+        input,
+        select,
+        textarea {
+            color: $danger;
+        }
+
+        input,
+        select,
+        textarea {
+            border-color: $danger;
+        }
+    }
+
+    /* -- Filters --*/
     .filter-wrapper {
         position: relative;
 

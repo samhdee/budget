@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container justify-content-start">
-        <a class="text-light navbar-brand" href="{{ route('home') }}">
+        <a class="text-light navbar-brand" href="{{ route('transac_index') }}">
             <i class="fas fa-home"></i>
         </a>
 
         <div class="navbar-nav">
             <a
-                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'home') ? 'active' : '' }}"
-                href="{{ route('home') }}"
+                class="me-2 nav-link {{ str_starts_with(Route::currentRouteName(), 'transac_index') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
+                href="{{ route('transac_index') }}"
             >
                 Transactions
             </a>

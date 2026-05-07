@@ -2,9 +2,17 @@
     use App\Enums\TransactionType;
     use App\Models\Transaction;
     use Carbon\Carbon;
+    use Illuminate\Pagination\LengthAwarePaginator;
+    /** @var LengthAwarePaginator $transactions */
 @endphp
 
-<table class=" mx-auto w-75 table table-striped table-bordered align-middle">
+@if ($transactions->lastPage() > 1)
+    <div class="pagination-wrapper">
+        {{ $transactions->links() }}
+    </div>
+@endif
+
+<table class="table table-striped table-bordered align-middle">
     <thead>
         <tr>
             <th style="width: 7rem">Date</th>
@@ -30,6 +38,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#modal-benef-form"
                         data-benef-id="{{ $transaction->beneficiary_id }}"
+                        title="{{ $transaction->raw_name }}"
                     >
                         {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
                         <i class="text-small fas fa-person-through-window"></i>
@@ -60,3 +69,12 @@
         @endforelse
     </tbody>
 </table>
+
+@if ($transactions->lastPage() > 1)
+    <div class="pagination-wrapper">
+        {{ $transactions->links() }}
+    </div>
+@endif
+
+@include('transactions.modal_transac_form')
+@include('transactions.modal_benef_form')

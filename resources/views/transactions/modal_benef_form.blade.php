@@ -16,12 +16,12 @@
                     </div>
 
                     <div class="mt-3 form-floating">
-                        <input id="benef-pretty_name" type="text" name="pretty_name" class="form-control" step=".01" required />
+                        <input id="benef-pretty_name" type="text" name="pretty_name" class="form-control" />
                         <label for="benef-pretty_name">Label joli</label>
                     </div>
 
                     <div class="mt-3 form-floating">
-                        <textarea id="benef-notes" name="notes" class="form-control"></textarea>
+                        <textarea id="benef-notes" name="notes" class="form-control" maxlength="255"></textarea>
                         <label for="benef-notes">Notes</label>
                     </div>
                 </div>

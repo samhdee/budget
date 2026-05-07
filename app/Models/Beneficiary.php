@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -42,16 +43,16 @@ class Beneficiary extends Model
     {
         return self::query()
             ->select(['id', 'raw_name', 'pretty_name'])
-            ->orderBy('pretty_name')
             ->orderBy('raw_name')
             ->get();
     }
 
     /**
      * @param $benef_id
-     * @return Beneficiary|null
+     * @return Beneficiary
+     * @throws ModelNotFoundException
      */
-    public static function getOne($benef_id): ?Beneficiary
+    public static function getOne($benef_id): Beneficiary
     {
         return self::query()
             ->select(['raw_name', 'pretty_name', 'notes'])

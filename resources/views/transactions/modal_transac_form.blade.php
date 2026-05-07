@@ -15,14 +15,14 @@
                 <div class="modal-body">
                     <input type="hidden" id="transac-id" name="id"/>
 
-                    <div class="mt-4 form-floating">
+                    <div class="mt-4 form-floating form-field">
                         <input id="transac-occurred-at" type="date" name="occurred_at" class="form-control" required />
                         <label for="transac-occurred-at">Date</label>
                     </div>
 
-                    <div class="mt-3 form-floating">
-                        <select id="transac-form-type" name="type" class="form-select">
-                            <option value="">Tous</option>
+                    <div class="mt-3 form-floating form-field">
+                        <select id="transac-form-type" name="type" class="form-select" required>
+                            <option value=""></option>
 
                             @foreach(TransactionType::cases() as $transac_type)
                                 <option value="{{ $transac_type->name }}">
@@ -34,25 +34,23 @@
                         <label for="transac-form-type">Type</label>
                     </div>
 
-                    <div class="mt-3 form-floating">
+                    <div class="mt-3 form-floating form-field">
                         <input id="transac-amount" type="number" name="amount" class="form-control" step=".01" required />
                         <label for="transac-amount">Montant</label>
                     </div>
 
-                    <div class="mt-3 form-floating">
-                        <textarea id="transac-notes" name="notes" class="form-control"></textarea>
-                        <label for="transac-notes">Notes</label>
-                    </div>
-
                     <div class="mt-3 position-relative">
-                        <div class="pe-5 form-floating">
+                        <div class="pe-5 form-floating form-field">
                             <select id="transac-benef-id" name="beneficiary_id" class="form-select" required>
                                 <option value=""></option>
 
                                 @php /** @var Beneficiary[] $beneficiaries */ @endphp
                                 @foreach ($beneficiaries as $beneficiary)
-                                    <option value="{{ $beneficiary->id }}" data-pretty_name="{{ $beneficiary->pretty_name }}">
-                                        {{ $beneficiary->raw_name }}
+                                    <option value="{{ $beneficiary->id }}">
+                                        {{ !empty($beneficiary->pretty_name)
+                                            ? $beneficiary->pretty_name :
+                                            $beneficiary->raw_name
+                                        }}
                                     </option>
                                 @endforeach
                             </select>
@@ -74,17 +72,22 @@
                         </div>
                     </div>
 
-                    <div id="transac-new-benef-wrapper" class="mt-3 collapse form-floating">
+                    <div id="transac-new-benef-wrapper" class="mt-3 collapse form-floating form-field">
                         <input id="transac-new-benef" type="text" name="new_benef" class="form-control" />
                         <label for="transac-new-benef">Nouveau bénéficiaire</label>
                     </div>
 
-                    <div id="transac-file-wrapper" class="mt-3 form-floating">
-                        <input id="transac-file" type="text" name="file" class="form-control" disabled />
+                    <div class="mt-3 form-floating form-field">
+                        <textarea id="transac-notes" name="notes" class="form-control" maxlength="255"></textarea>
+                        <label for="transac-notes">Notes</label>
+                    </div>
+
+                    <div id="transac-file-wrapper" class="mt-3 form-floating form-field">
+                        <input id="transac-file" type="text" name="file" class="form-control" disabled/>
                         <label for="transac-file">Fichier</label>
                     </div>
 
-                    <div id="transac-line-wrapper" class="mt-3 form-floating">
+                    <div id="transac-line-wrapper" class="mt-3 form-floating form-field">
                         <input id="transac-line" type="number" name="line" class="form-control" disabled />
                         <label for="transac-line">Ligne</label>
                     </div>

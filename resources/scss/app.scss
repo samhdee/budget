@@ -67,5 +67,10 @@ body {
         .text-small {
             font-size: .6rem;
         }
+
+        .page-item.active .page-link {
+            border-color: $lavender;
+            background: $lavender;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
@@ -7,7 +7,7 @@ export default defineConfig({
             input: [
                 'resources/scss/app.scss',
                 'resources/js/app.js',
-                'resources/js/filters.js',
+                'resources/js/helpers/filters.js',
                 'resources/js/transactions.js'
             ],
             refresh: true,
@@ -17,5 +17,12 @@ export default defineConfig({
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                silenceDeprecations: ['mixed-decls', 'color-functions', 'global-builtin', 'import']
+            },
+        }
     },
 });

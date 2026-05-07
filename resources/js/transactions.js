@@ -1,7 +1,8 @@
 import { Modal } from "bootstrap";
 
-import './filters.js';
-import { formatSQLDate, formSerializeObject } from "./helpers.js";
+import './helpers/filters.js';
+import { formatSQLDate } from "./helpers/helpers.js";
+import { formSerializeObject, showFormErrors } from "./helpers/forms.js";
 
 $(function () {
     // Filtres début/fin : change la range de dates sélectionnables
@@ -13,10 +14,10 @@ $(function () {
     /* --- Édition Transaction --- */
     // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
     $(document).on('show.bs.collapse', '#transac-new-benef-wrapper', () => {
-        const previous_value = $('#transac-benef-id').val();
+        // const previous_value = $('#transac-benef-id').val();
         $('#transac-benef-id')
             // @FIXME: Marche pô
-            .data('previous_value', previous_value)
+            // .data('previous_value', previous_value)
             .prop('disabled', 'disabled')
             .val('');
     });
@@ -32,15 +33,19 @@ $(function () {
 
         $.post(
             $('#transac-edit-form').prop('action'),
-            formSerializeObject('#transac-edit-form'),
+            formSerializeObject('#transac-edit-form')
+        ).done(
             response => {
                 // Force le rechargement de la liste
                 $('#transac-filter-type').trigger('change');
+
                 if (response.updated.length > 0) {
                     Modal.getInstance('#modal-transac-form').hide();
                 }
             }
-        );
+        ).fail(response => {
+            showFormErrors('#transac-edit-form', response.responseJSON.errors);
+        });
     });
 
     /* --- Édition Bénéficiaire --- */
@@ -103,16 +108,17 @@ $(function () {
 
         $.post(
             $('#benef-edit-form').prop('action'),
-            formSerializeObject('#benef-edit-form'),
-            response => {
+            formSerializeObject('#benef-edit-form')
+        ).then(response => {
                 // Force le rechargement de la liste
                 $('#transac-filter-type').trigger('change');
-                console.log(response);
 
                 if (response.updated.length > 0) {
                     Modal.getInstance('#modal-benef-form').hide();
                 }
             }
-        );
+        ).fail(response => {
+            showFormErrors('#benef-edit-form', response.responseJSON.errors);
+        });
     });
 });

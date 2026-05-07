@@ -6,9 +6,10 @@ use App\Enums\TransactionType;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -36,12 +37,15 @@ use Illuminate\Support\Collection;
  */
 class Transaction extends Model
 {
+    protected $perPage = 50;
+    protected string $paginationTheme = 'bootstrap';
     protected $table = 'transactions';
     protected $fillable = [
         'occurred_at',
         'amount',
         'notes',
         'beneficiary_id',
+        'category_id',
         'type',
         'line',
         'file',
@@ -52,11 +56,16 @@ class Transaction extends Model
         return $this->hasOne(Beneficiary::class, 'beneficiary_id');
     }
 
+    public function category(): HasOne
+    {
+        return $this->hasOne(Category::class, 'category_id');
+    }
+
     /**
      * @param array $filters
-     * @return Collection
+     * @return LengthAwarePaginator
      */
-    public static function getList(array $filters = []): Collection
+    public static function getList(array $filters = []): LengthAwarePaginator
     {
         $query = self::query()
             ->select([
@@ -87,12 +96,13 @@ class Transaction extends Model
 
         return $query->orderByDesc('occurred_at')
             ->orderByDesc('line')
-            ->get();
+            ->paginate(50);
     }
 
     /**
      * @param int $id
      * @return Transaction
+     * @throws ModelNotFoundException
      */
     public static function getOne(int $id): Transaction
     {
