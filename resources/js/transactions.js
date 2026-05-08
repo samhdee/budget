@@ -34,16 +34,15 @@ $(function () {
         $.post(
             $('#transac-edit-form').prop('action'),
             formSerializeObject('#transac-edit-form')
-        ).done(
-            response => {
-                // Force le rechargement de la liste
-                $('#transac-filter-type').trigger('change');
+        ).done(response => {
+            // Force le rechargement de la liste
+            $('#transac-filter-type').trigger('change');
 
-                if (response.updated.length > 0) {
-                    Modal.getInstance('#modal-transac-form').hide();
-                }
+            // @TODO: else : afficher une erreur
+            if (response.updated.length > 0) {
+                $('.modal-backdrop').remove();
             }
-        ).fail(response => {
+        }).fail(response => {
             showFormErrors('#transac-edit-form', response.responseJSON.errors);
         });
     });
@@ -110,15 +109,17 @@ $(function () {
             $('#benef-edit-form').prop('action'),
             formSerializeObject('#benef-edit-form')
         ).then(response => {
-                // Force le rechargement de la liste
-                $('#transac-filter-type').trigger('change');
+            // Force le rechargement de la liste
+            $('#transac-filter-type').trigger('change');
 
-                if (response.updated.length > 0) {
-                    Modal.getInstance('#modal-benef-form').hide();
-                }
+            // @TODO: else : afficher une erreur
+            if (response.updated.length > 0) {
+                $('.modal-backdrop').remove();
             }
-        ).fail(response => {
-            showFormErrors('#benef-edit-form', response.responseJSON.errors);
+        }).fail(response => {
+            if (typeof response.responseJSON !== 'undefined' && typeof response.responseJSON.errors !== 'undefined') {
+                showFormErrors('#benef-edit-form', response.responseJSON.errors);
+            }
         });
     });
 });

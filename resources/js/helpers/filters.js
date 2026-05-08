@@ -12,6 +12,7 @@ const getFilteredList = (page = null) => {
 
     let url = $(wrapper).data('url');
 
+    // @FIXME: Récupérer la page active
     if (page) {
         url += `?page=${page}`;
     }
