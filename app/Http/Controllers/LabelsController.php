@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Label;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,63 +14,73 @@ class LabelsController extends Controller
     /**
      * index
      *
-     * @return Response
+     * @return View
      */
     public function index(): View
     {
-        return view('labels.index', ['labels' => Label::all()]);
+        return view('labels.index', ['labels' => Label::query()
+            ->select(['id', 'appellation', 'color', 'description'])
+            ->orderBy('appellation')
+            ->get()
+        ]);
     }
 
     /**
      * create
      *
-     * @param  mixed $request
-     * @return void
+     * @param $label_id
+     * @return JsonResponse
      */
-    public function form(Request $request): View
+    public function get($label_id): JsonResponse
     {
-        $label = null;
-
-        if (!empty($request->input('label_id'))) {
-            $label = Label::find($request->input('label_id'));
-        }
-
-        return view('labels.form', ['label' => $label]);
+        return response()->json(['item' => Label::query()
+            ->select(['appellation', 'color', 'description'])
+            ->where('id', $label_id)
+            ->firstOrFail()
+        ]);
     }
 
     /**
      * store
      *
      * @param  Request $request
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|View
      */
-    public function store (Request $request): RedirectResponse
+    public function store (Request $request): View
     {
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Label::class],
-            'name' => [
+            'appellation' => [
                 'required',
                 'max:100',
                 !empty($request->input('id'))
                     ? Rule::unique(Label::class)->whereNull('deleted_at')->ignore($request->input('id'))
                     : 'unique:' . Label::class
             ],
+            'color' => ['nullable', 'hex_color'],
             'description' => ['nullable', 'max:255'],
         ]);
 
         if (!empty($data['id'])) {
             $label_id = $data['id'];
-            $label = Label::find($data['id']);
-            $label->name = trim($data['name']);
+            // @FIXME: gestion d’erreur
+            $label = Label::findOrFail($data['id']);
+            $label->appellation = trim($data['appellation']);
+            $label->color = trim($data['color']);
             $label->description = trim($data['description']);
             $label->save();
         } else {
             $label_id = Label::create([
-                'name' => trim($data['name']),
+                'appellation' => trim($data['appellation']),
+                'color' => trim($data['color']),
                 'description' => trim($data['description']),
             ]);
         }
 
-        return to_route('labels_index', ['updated' => $label_id]);
+        return view('labels.list', ['labels' => Label::query()
+            ->select(['id', 'appellation', 'color'])
+            ->orderBy('appellation')
+            ->get()
+        ]);
     }
 }

@@ -44,9 +44,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('labels')
         ->group(function () {
             Route::get('/', 'index')->name('labels_index');
-            Route::get('/form', 'form')->name('label_form');
-            Route::post('/store', 'store')->name('labels_store');
-            Route::post('/update', 'update')->name('labels_update');
+            Route::get('/get/{id}', 'get')->name('label_get');
+            Route::post('/store', 'store')->name('label_store');
         });
 
     Route::controller(ImportController::class)
