@@ -47,7 +47,6 @@ $(function () {
         });
     });
 
-    /* --- Édition Bénéficiaire --- */
     // Renseigne ou vide le formulaire d'édition de transac
     $(document).on('show.bs.modal', '#modal-transac-form', e => {
         const open_button = $(e.relatedTarget);
@@ -82,6 +81,7 @@ $(function () {
         }
     });
 
+    /* --- Édition Bénéficiaire --- */
     // Renseigne le formulaire d'édition de benef
     $(document).on('show.bs.modal', '#modal-benef-form', e => {
         const open_button = $(e.relatedTarget);

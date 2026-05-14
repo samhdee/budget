@@ -16,19 +16,29 @@ body {
         cursor: pointer;
     }
 
-    .form-field.form-error {
-        .form-error-message,
-        label,
-        input,
-        select,
-        textarea {
-            color: $danger;
+    .form-field {
+        .error-icon {
+            display: none;
         }
 
-        input,
-        select,
-        textarea {
-            border-color: $danger;
+        &.form-error {
+            .error-icon {
+                display: inline;
+            }
+
+            .form-error-message,
+            label,
+            input,
+            select,
+            textarea {
+                color: $danger;
+            }
+
+            input,
+            select,
+            textarea {
+                border-color: $danger;
+            }
         }
     }
 
@@ -46,5 +56,18 @@ body {
 
     .all-filter-reset {
         margin-top: 1.5rem;
+    }
+
+    input[type="color"] {
+        display: block;
+        width: 50px;
+        height: 30px;
+
+        &:disabled {
+            padding: 0;
+            width: 40px;
+            border-color: transparent;
+            background-color: transparent;
+        }
     }
 }

@@ -36,7 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('categories')
         ->group(function () {
             Route::get('/', 'index')->name('categ_index');
-            Route::get('/form', 'form')->name('categ_form');
+            Route::get('/get/{id}', 'get')->name('categ_get');
             Route::post('/store', 'store')->name('categ_store');
         });
 

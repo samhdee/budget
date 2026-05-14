@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -12,62 +13,67 @@ class CategoriesController extends Controller
 {
     public function index(): View
     {
-        return view('categories.index', ['categories' => Category::all()]);
+        return view('categories.index', ['categories' => Category::query()
+            ->select(['id', 'appellation', 'color'])
+            ->orderBy('appellation')
+            ->get()
+        ]);
     }
 
     /**
      * create
      *
-     * @param  mixed $request
-     * @return View
+     * @param $categ_id
+     * @return JsonResponse
      */
-    public function form(Request $request): View
+    public function get($categ_id): JsonResponse
     {
-        $category = null;
-
-        if (!empty($request->input('cat_id'))) {
-            $category = Category::find($request->input('cat_id'));
-        }
-
-        return view('categories.form', ['category' => $category]);
+        return response()->json(['item' => Category::query()
+            ->select(['id', 'appellation', 'color', 'description'])
+            ->where('id', $categ_id)
+            ->firstOrFail()
+        ]);
     }
 
     /**
      * store
      *
-     * @param  Request $request
-     * @return RedirectResponse
+     * @param Request $request
+     * @return View
      */
-    public function store (Request $request): RedirectResponse
+    public function store (Request $request): View
     {
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Category::class],
-            'name' => [
+            'appellation' => [
                 'required',
                 'max:100',
                 !empty($request->input('id'))
                     ? Rule::unique(Category::class)->whereNull('deleted_at')->ignore($request->input('id'))
                     : 'unique:' . Category::class
             ],
-            'color' => ['nullable', 'max:9', 'hex_color'],
+            'color' => ['nullable', 'hex_color'],
             'description' => ['nullable', 'max:255'],
         ]);
 
         if (!empty($data['id'])) {
-            $cat_id = $data['id'];
             $category = Category::find($data['id']);
-            $category->name = trim($data['name']);
+            $category->appellation = trim($data['appellation']);
             $category->color = $data['color'];
             $category->description = trim($data['description']);
             $category->save();
         } else {
-            $cat_id = Category::create([
-                'name' => trim($data['name']),
+            Category::create([
+                'appellation' => trim($data['appellation']),
                 'color' => $data['color'],
                 'description' => trim($data['description']),
             ]);
         }
 
-        return to_route('categ_index', ['updated' => $cat_id]);
+        return view('categories.list', ['categories' => Category::query()
+            ->select(['id', 'appellation', 'color'])
+            ->orderBy('appellation')
+            ->get()
+        ]);
     }
 }
