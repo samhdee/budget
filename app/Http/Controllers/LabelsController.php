@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Throwable;
 
 class LabelsController extends Controller
 {
@@ -84,8 +85,22 @@ class LabelsController extends Controller
         ]);
     }
 
-    public function delete()
+    /**
+     * @throws Throwable
+     */
+    public function delete(Request $request)
     {
+        $data = $request->validate([
+            'id' => ['required', 'integer', 'exists:' . Label::class],
+        ]);
 
+        return response()->json([
+            'deleted' => Label::where('id', $data['id'])->delete(),
+            'view' => view('labels.list', ['labels' => Label::query()
+                ->select(['id', 'appellation', 'color', 'description'])
+                ->orderBy('appellation')
+                ->get()
+            ])->render()
+        ]);
     }
 }

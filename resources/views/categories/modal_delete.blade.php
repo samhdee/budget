@@ -7,13 +7,14 @@
 >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="categ-edit-form" method="DELETE" action="{{ route('categ_delete') }}">
+            <form id="categ-delete-form" method="DELETE" action="{{ route('categ_delete') }}">
                 <div class="modal-header">
                     <h3 class="modal-title fs-4" id="categ-delete-title"></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
+                    <input type="hidden" id="label-id" name="id"/>
                     <div>Confirmer la suppression ?</div>
                 </div>
 

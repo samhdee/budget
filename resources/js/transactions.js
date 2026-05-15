@@ -1,6 +1,5 @@
 import './helpers/filters.js';
 import './helpers/forms.js';
-import { formatSQLDate } from "./helpers/helpers.js";
 import { formSerializeObject, showFormErrors } from "./helpers/forms.js";
 import { getFilteredList } from "./helpers/filters.js";
 
@@ -13,8 +12,13 @@ $(function () {
 
     /* --- Édition Transaction --- */
     $(document).on('show.bs.modal', '#modal-transac-form', e => {
-        $('#transac-line-wrapper').addClass('d-none');
-        $('#transac-file-wrapper').addClass('d-none');
+        if ($(e.relatedTarget).data('action') === 'edit') {
+            $('#transac-line-wrapper').removeClass('d-none');
+            $('#transac-file-wrapper').removeClass('d-none');
+        } else {
+            $('#transac-line-wrapper').addClass('d-none');
+            $('#transac-file-wrapper').addClass('d-none');
+        }
     });
 
     // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
@@ -46,6 +50,25 @@ $(function () {
             }
         }).fail(response => {
             showFormErrors('#transac-edit-form', response.responseJSON.errors);
+        });
+    });
+
+    // Soumet le formulaire de suppression
+    $(document).on('submit', '#transac-delete-form', e => {
+        e.preventDefault();
+
+        $.ajax({
+            method: 'DELETE',
+            url: $('#transac-delete-form').prop('action'),
+            data: {
+                id: $('#transac-delete-form input[name="id"]').val()
+            },
+            success: response => {
+                if (response.deleted) {
+                    $('#modal-transac-delete .btn-close').trigger('click');
+                    getFilteredList($('#transac-list-wrapper .page-item.active .page-link').first().text());
+                }
+            }
         });
     });
 

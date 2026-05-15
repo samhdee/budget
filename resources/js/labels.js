@@ -15,4 +15,23 @@ $(function () {
             showFormErrors('#label-edit-form', response.responseJSON.errors);
         });
     });
+
+    // Soumet le formulaire de suppression
+    $(document).on('submit', '#label-delete-form', e => {
+        e.preventDefault();
+
+        $.ajax({
+            method: 'DELETE',
+            url: $('#label-delete-form').prop('action'),
+            data: {
+                id: $('#label-delete-form input[name="id"]').val()
+            },
+            success: response => {
+                if (response.deleted) {
+                    $('#modal-label-delete .btn-close').trigger('click');
+                    $('#labels-list-wrapper').html(response.view);
+                }
+            }
+        });
+    });
 });

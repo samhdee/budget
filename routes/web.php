@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', 'filter')->name('transac_filter');
             Route::get('/get/{id}', 'get')->name('transac_get');
             Route::post('/store', 'store')->name('transac_store');
+            Route::delete('/delete', 'delete')->name('transac_delete');
         });
 
     Route::controller(BeneficiariesController::class)

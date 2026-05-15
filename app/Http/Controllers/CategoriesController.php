@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 class CategoriesController extends Controller
 {
@@ -77,8 +78,22 @@ class CategoriesController extends Controller
         ]);
     }
 
-    public function delete()
+    /**
+     * @throws Throwable
+     */
+    public function delete(Request $request)
     {
+        $data = $request->validate([
+            'id' => ['required', 'integer', 'exists:' . Category::class],
+        ]);
 
+        return response()->json([
+            'deleted' => Category::where('id', $data['id'])->delete(),
+            'view' => view('categories.list', ['categories' => Category::query()
+                ->select(['id', 'appellation', 'color', 'description'])
+                ->orderBy('appellation')
+                ->get()
+            ])->render()
+        ]);
     }
 }

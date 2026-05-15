@@ -7,7 +7,7 @@
 >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="label-edit-form" method="DELETE" action="{{ route('label_delete') }}">
+            <form id="label-delete-form" method="DELETE" action="{{ route('label_delete') }}">
                 <div class="modal-header">
                     <h3 class="modal-title fs-4" id="label-delete-title">
                         Effacer le label <span id="label-delete-appellation"></span> ?

@@ -85,4 +85,13 @@ class TransactionsController extends Controller
 
         return response()->json(['updated' => $transac_id]);
     }
+
+    public function delete(Request $request)
+    {
+        $data = $request->validate([
+            'id' => ['required', 'integer', 'exists:' . Transaction::class],
+        ]);
+
+        return response()->json(['deleted' => Transaction::where('id', $data['id'])->delete()]);
+    }
 }
