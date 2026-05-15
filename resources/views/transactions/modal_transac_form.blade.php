@@ -4,7 +4,7 @@
     use App\Models\Category;
 @endphp
 
-<div class="modal fade" id="modal-transac-form" tabindex="-1" aria-labelledby="transac-form-title" aria-hidden="true">
+<div class="modal fade modal-form" id="modal-transac-form" tabindex="-1" aria-labelledby="transac-form-title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">

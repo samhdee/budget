@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('categ_index');
             Route::get('/get/{id}', 'get')->name('categ_get');
             Route::post('/store', 'store')->name('categ_store');
+            Route::delete('/delete', 'delete')->name('categ_delete');
         });
 
     Route::controller(LabelsController::class)
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('labels_index');
             Route::get('/get/{id}', 'get')->name('label_get');
             Route::post('/store', 'store')->name('label_store');
+            Route::delete('/delete', 'delete')->name('label_delete');
         });
 
     Route::controller(ImportController::class)

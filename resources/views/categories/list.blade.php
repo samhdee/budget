@@ -4,7 +4,7 @@
             <th style="width: 12rem">Nom</th>
             <th style="width: 5rem">Couleur</th>
             <th>Description</th>
-            <th style="width: 4rem"></th>
+            <th style="width: 6rem"></th>
         </tr>
     </thead>
 
@@ -35,6 +35,17 @@
                         data-type="catégorie"
                     >
                         <i class="fas fa-pencil"></i>
+                    </a>
+
+                    <a
+                        class="ms-1 btn btn-sm btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-categ-delete"
+                        data-action="delete"
+                        data-url="{{ route('categ_get', $category->id) }}"
+                        data-type="catégorie"
+                    >
+                        <i class="fas fa-trash"></i>
                     </a>
                 </td>
             </tr>

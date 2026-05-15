@@ -1,6 +1,5 @@
-import { Modal } from "bootstrap";
-
 import './helpers/filters.js';
+import './helpers/forms.js';
 import { formatSQLDate } from "./helpers/helpers.js";
 import { formSerializeObject, showFormErrors } from "./helpers/forms.js";
 import { getFilteredList } from "./helpers/filters.js";
@@ -13,36 +12,9 @@ $(function () {
     });
 
     /* --- Édition Transaction --- */
-    // Renseigne ou vide le formulaire d'édition de transac
     $(document).on('show.bs.modal', '#modal-transac-form', e => {
-        const open_button = $(e.relatedTarget);
-        const form = $('#modal-transac-form #transac-edit-form');
-        $('#transac-new-benef-wrapper').removeClass('show');
-        $('#transac-benef-id').prop('disabled', '');
-        $('#transac-new-benef').val('');
-
-        if ($(open_button).data('action') === 'edit') {
-            $('#transac-line-wrapper').removeClass('d-none');
-            $('#transac-file-wrapper').removeClass('d-none');
-
-            // Récupère et affiche les infos de la transaction
-            // @TODO: Ajouter la gestion d'erreur
-            $.get('transactions/get/' + $(open_button).data('transac-id')).then(response => {
-                for (const i in response.transaction) {
-                    $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.transaction[i]);
-                }
-                $('#modal-transac-form .modal-title')
-                    .text(`Éditer ${response.transaction['type']} du ` +
-                        formatSQLDate(response.transaction['occurred_at'])
-                    );
-            });
-        } else {
-            // Reset le formulaire
-            $('#transac-file-wrapper').addClass('d-none');
-            $('#transac-line-wrapper').addClass('d-none');
-            $(form).find('input, select').val('');
-            $('#modal-transac-form .modal-title').text('Ajouter une transaction');
-        }
+        $('#transac-line-wrapper').addClass('d-none');
+        $('#transac-file-wrapper').addClass('d-none');
     });
 
     // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
@@ -78,25 +50,6 @@ $(function () {
     });
 
     /* --- Édition Bénéficiaire --- */
-    // Renseigne le formulaire d'édition de benef
-    $(document).on('show.bs.modal', '#modal-benef-form', e => {
-        const open_button = $(e.relatedTarget);
-        const form = $('#modal-benef-form #benef-edit-form');
-        $(form).find('#benef-id').val($(open_button).data('benef-id'));
-
-        $.get('benefs/get/' + $(open_button).data('benef-id')).then(response => {
-            for (const i in response.beneficiary) {
-                $(form)
-                    .find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`)
-                    .val(response.beneficiary[i]);
-            }
-
-            $(form)
-                .find('.modal-title')
-                .text(`Éditer ${response.beneficiary['raw_name']}`);
-        });
-    });
-
     // Soumet le formulaire
     $(document).on('submit', 'form#benef-edit-form', e => {
         e.preventDefault();

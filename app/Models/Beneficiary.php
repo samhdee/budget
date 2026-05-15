@@ -55,7 +55,7 @@ class Beneficiary extends Model
     public static function getOne($benef_id): Beneficiary
     {
         return self::query()
-            ->select(['raw_name', 'pretty_name', 'notes'])
+            ->select(['id', 'raw_name', 'pretty_name', 'notes'])
             ->where('id', $benef_id)
             ->firstOrFail();
     }

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-benef-form" tabindex="-1" aria-labelledby="benef-form-label" aria-hidden="true">
+<div class="modal fade modal-form" id="modal-benef-form" tabindex="-1" aria-labelledby="benef-form-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="benef-edit-form" class="mt-4" method="POST" action="{{ route('benef_store') }}">

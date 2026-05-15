@@ -69,8 +69,8 @@ class Transaction extends Model
     {
         $query = self::query()
             ->select([
-                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id',
-                'b.raw_name', 'b.pretty_name', 'b.notes as benef_notes', 'c.appellation', 'c.color',
+                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 'b.raw_name',
+                'b.pretty_name', 'b.notes as benef_notes', 'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->from('transactions as t')
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
@@ -110,11 +110,10 @@ class Transaction extends Model
         return self::query()
             ->select([
                 't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 't.category_id',
-                'b.raw_name', 'b.pretty_name', 'c.appellation', 'c.color',
+                'b.raw_name', 'b.pretty_name',
             ])
             ->from('transactions as t')
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
-            ->leftJoin('categories as c', 'c.id', 't.category_id')
             ->where('t.id', $id)
             ->firstOrFail();
     }

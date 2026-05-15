@@ -38,7 +38,10 @@
                         href="javascript:void(0)"
                         data-bs-toggle="modal"
                         data-bs-target="#modal-benef-form"
-                        data-benef-id="{{ $transaction->beneficiary_id }}"
+                        data-item_id="{{ $transaction->beneficiary_id }}"
+                        data-url="{{ route('benef_get', $transaction->beneficiary_id) }}"
+                        data-action="edit"
+                        data-type="bénéficiaire"
                         title="{{ $transaction->raw_name }}"
                     >
                         {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
@@ -46,7 +49,7 @@
                     </a>
                 </td>
 
-                <td>{{ $transaction->appellation }}</td>
+                <td>{{ $transaction->c_appellation }}</td>
                 <td>{{ $transaction->notes }}</td>
 
                 <td class="text-center">
@@ -55,7 +58,8 @@
                         class="btn btn-sm btn-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#modal-transac-form"
-                        data-transac-id="{{ $transaction->id }}"
+                        data-url="{{ route('transac_get', $transaction->id) }}"
+                        data-type="transaction"
                         data-action="edit"
                     >
                         <i class="fas fa-pencil"></i>
@@ -66,7 +70,9 @@
                         class="ms-1 btn btn-sm btn-danger"
                         data-bs-toggle="modal"
                         data-bs-target="#modal-transac-delete"
-                        data-transac-id="{{ $transaction->id }}"
+                        data-url="{{ route('transac_get', $transaction->id) }}"
+                        data-type="transaction"
+                        data-action="delete"
                     >
                         <i class="fas fa-trash"></i>
                     </button>

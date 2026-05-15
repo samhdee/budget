@@ -76,4 +76,9 @@ class CategoriesController extends Controller
             ->get()
         ]);
     }
+
+    public function delete()
+    {
+
+    }
 }

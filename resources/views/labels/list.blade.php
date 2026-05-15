@@ -4,7 +4,7 @@
             <th style="width: 12rem">Nom</th>
             <th style="width: 5rem;">Couleur</th>
             <th>Description</th>
-            <th style="width: 4rem"></th>
+            <th style="width: 6rem"></th>
         </tr>
     </thead>
 
@@ -34,6 +34,17 @@
                         data-url="{{ route('label_get', $label->id) }}"
                     >
                         <i class="fas fa-pencil"></i>
+                    </a>
+
+                    <a
+                        class="ms-1 btn btn-sm btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-label-delete"
+                        data-url="{{ route('label_get', $label->id) }}"
+                        data-action="delete"
+                        data-type="étiquette"
+                    >
+                        <i class="fas fa-trash"></i>
                     </a>
                 </td>
             </tr>

@@ -27,4 +27,5 @@
     </div>
 
     @include('categories.modal_form')
+    @include('categories.modal_delete')
 @endsection

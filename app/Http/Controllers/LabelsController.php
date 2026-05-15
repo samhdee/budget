@@ -34,7 +34,7 @@ class LabelsController extends Controller
     public function get($label_id): JsonResponse
     {
         return response()->json(['item' => Label::query()
-            ->select(['appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'color', 'description'])
             ->where('id', $label_id)
             ->firstOrFail()
         ]);
@@ -82,5 +82,10 @@ class LabelsController extends Controller
             ->orderBy('appellation')
             ->get()
         ]);
+    }
+
+    public function delete()
+    {
+
     }
 }

@@ -11,7 +11,7 @@ class BeneficiariesController extends Controller
 {
     public function get($id)
     {
-        return response()->json(['beneficiary' => Beneficiary::getOne($id)]);
+        return response()->json(['item' => Beneficiary::getOne($id)]);
     }
 
     /**

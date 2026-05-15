@@ -39,7 +39,7 @@ class TransactionsController extends Controller
 
     public function get($id)
     {
-        return response()->json(['transaction' => Transaction::getOne($id)]);
+        return response()->json(['item' => Transaction::getOne($id)]);
     }
 
     /**

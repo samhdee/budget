@@ -61,23 +61,26 @@ $(function () {
         $(form).find('.form-error-message').remove();
         $(form).find('.form-error').removeClass('form-error');
 
-        if ($(open_button).data('action') === 'edit') {
-            $(form).find('input[name="id"]').val($(open_button).data('item_id'));
-
+        if ($(open_button).data('action') === 'create') {
+            // Reset le formulaire
+            $(form).find('input, select, textarea').val('');
+            $(form).find('.modal-title').text(`Ajouter ${type}`);
+        } else {
             // Récupère et affiche les infos de la categorie
             // @TODO: Ajouter la gestion d'erreur
             $.get($(open_button).data('url')).then(response => {
                 for (const i in response.item) {
                     $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.item[i]);
                 }
-                $(form)
-                    .find('.modal-title')
-                    .html(`Éditer la ${type} <span class="fst-italic">${response.item['appellation']}</span>`);
+
+                let title = ($(open_button).data('action') === 'delete' ? 'Supprimer ' : 'Éditer ') + type;
+
+                if (typeof response.item['appellation'] !== 'undefined') {
+                    title += ` <span class="fst-italic">${response.item['appellation']}</span>`;
+                }
+
+                $(e.currentTarget).find('.modal-title').html(title);
             });
-        } else {
-            // Reset le formulaire
-            $(form).find('input, select').val('');
-            $(form).find('.modal-title').text(`Ajouter une ${type}`);
         }
     });
 });

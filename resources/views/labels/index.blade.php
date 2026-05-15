@@ -29,4 +29,5 @@
     </div>
 
     @include('labels.modal_form')
+    @include('labels.modal_delete')
 @endsection
