@@ -5,20 +5,20 @@
  */
 export const formSerializeObject = function (form_selector) {
     const results = {},
-        arr = $(form_selector).serializeArray();
+        serialized_form = $(form_selector).serializeArray();
 
-    for (let i = 0, len = arr.length; i < len; i++) {
-        const obj = arr[i];
+    for (let i = 0, len = serialized_form.length; i < len; i++) {
+        const form_element = serialized_form[i];
 
         // Check if results have a property with given name
-        if (results.hasOwnProperty(obj.name)) {
+        if (results.hasOwnProperty(form_element.name)) {
             // Check if given object is an array
-            if (!results[obj.name].push) {
-                results[obj.name] = [results[obj.name]];
+            if (!results[form_element.name].push) {
+                results[form_element.name] = [results[form_element.name]];
             }
-            results[obj.name].push(obj.value || '');
+            results[form_element.name].push(form_element.value || '');
         } else {
-            results[obj.name] = obj.value || '';
+            results[form_element.name] = form_element.value || '';
         }
     }
 

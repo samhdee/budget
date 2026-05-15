@@ -69,11 +69,12 @@ class Transaction extends Model
     {
         $query = self::query()
             ->select([
-                't.id as id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file',
-                'beneficiary_id', 'raw_name', 'pretty_name', 'b.notes as benef_notes',
+                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id',
+                'b.raw_name', 'b.pretty_name', 'b.notes as benef_notes', 'c.appellation', 'c.color',
             ])
             ->from('transactions as t')
-            ->join('beneficiaries as b', 'b.id', 't.beneficiary_id');
+            ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
+            ->leftJoin('categories as c', 'c.id', 't.category_id');
 
         if (!empty($filters['type'])) {
             $query->where('type', $filters['type']);
@@ -108,10 +109,12 @@ class Transaction extends Model
     {
         return self::query()
             ->select([
-                'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 'raw_name', 'pretty_name'
+                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 't.category_id',
+                'b.raw_name', 'b.pretty_name', 'c.appellation', 'c.color',
             ])
             ->from('transactions as t')
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
+            ->leftJoin('categories as c', 'c.id', 't.category_id')
             ->where('t.id', $id)
             ->firstOrFail();
     }

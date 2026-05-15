@@ -44,7 +44,7 @@ class Category extends Model
     public static function getDropdownList(): Collection
     {
         return self::query()
-            ->select(['appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'color', 'description'])
             ->orderBy('appellation')
             ->get();
     }

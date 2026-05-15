@@ -1,6 +1,6 @@
 import { spinner } from "./helpers.js";
 
-const getFilteredList = (page = null) => {
+export const getFilteredList = (page = null) => {
     const wrapper = $('.filters-wrapper');
     const list_wrapper = $(wrapper).data('target');
     $(list_wrapper).html(spinner());

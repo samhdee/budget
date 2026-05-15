@@ -3,6 +3,7 @@ import { Modal } from "bootstrap";
 import './helpers/filters.js';
 import { formatSQLDate } from "./helpers/helpers.js";
 import { formSerializeObject, showFormErrors } from "./helpers/forms.js";
+import { getFilteredList } from "./helpers/filters.js";
 
 $(function () {
     // Filtres début/fin : change la range de dates sélectionnables
@@ -12,6 +13,38 @@ $(function () {
     });
 
     /* --- Édition Transaction --- */
+    // Renseigne ou vide le formulaire d'édition de transac
+    $(document).on('show.bs.modal', '#modal-transac-form', e => {
+        const open_button = $(e.relatedTarget);
+        const form = $('#modal-transac-form #transac-edit-form');
+        $('#transac-new-benef-wrapper').removeClass('show');
+        $('#transac-benef-id').prop('disabled', '');
+        $('#transac-new-benef').val('');
+
+        if ($(open_button).data('action') === 'edit') {
+            $('#transac-line-wrapper').removeClass('d-none');
+            $('#transac-file-wrapper').removeClass('d-none');
+
+            // Récupère et affiche les infos de la transaction
+            // @TODO: Ajouter la gestion d'erreur
+            $.get('transactions/get/' + $(open_button).data('transac-id')).then(response => {
+                for (const i in response.transaction) {
+                    $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.transaction[i]);
+                }
+                $('#modal-transac-form .modal-title')
+                    .text(`Éditer ${response.transaction['type']} du ` +
+                        formatSQLDate(response.transaction['occurred_at'])
+                    );
+            });
+        } else {
+            // Reset le formulaire
+            $('#transac-file-wrapper').addClass('d-none');
+            $('#transac-line-wrapper').addClass('d-none');
+            $(form).find('input, select').val('');
+            $('#modal-transac-form .modal-title').text('Ajouter une transaction');
+        }
+    });
+
     // Vide le select Bénéficiaire si on clique sur Nouveau bénéficiaire
     $(document).on('show.bs.collapse', '#transac-new-benef-wrapper', () => {
         // const previous_value = $('#transac-benef-id').val();
@@ -28,57 +61,20 @@ $(function () {
     });
 
     // Soumet le formulaire
-    $(document).on('submit', 'form#transac-edit-form', e => {
+    $(document).on('click', '#transac-form-submit', e => {
         e.preventDefault();
 
         $.post(
             $('#transac-edit-form').prop('action'),
             formSerializeObject('#transac-edit-form')
         ).done(response => {
-            // Force le rechargement de la liste
-            $('#transac-filter-type').trigger('change');
-
-            // @TODO: else : afficher une erreur
-            if (response.updated.length > 0) {
-                $('.modal-backdrop').remove();
+            if (typeof response.updated !== 'undefined') {
+                $('#modal-transac-form .btn-close').trigger('click');
+                getFilteredList($('#transac-list-wrapper .page-item.active .page-link').first().text());
             }
         }).fail(response => {
             showFormErrors('#transac-edit-form', response.responseJSON.errors);
         });
-    });
-
-    // Renseigne ou vide le formulaire d'édition de transac
-    $(document).on('show.bs.modal', '#modal-transac-form', e => {
-        const open_button = $(e.relatedTarget);
-        const form = $('#modal-transac-form #transac-edit-form');
-        $('#transac-new-benef-wrapper').removeClass('show');
-        $('#transac-benef-id').prop('disabled', '');
-        $('#transac-new-benef').val('');
-
-        if ($(open_button).data('action') === 'edit') {
-            $('#transac-id').val($(open_button).data('transac-id'));
-            $('#transac-file').removeClass('d-none');
-            $('#transac-line').removeClass('d-none');
-
-            // Récupère et affiche les infos de la transactions
-            // @TODO: Ajouter la gestion d'erreur
-            $.get('transactions/get/' + $(open_button).data('transac-id')).then(response => {
-                for (const i in response.transaction) {
-                    $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.transaction[i]);
-                }
-                $(form)
-                    .find('.modal-title')
-                    .text(`Éditer ${response.transaction['type']} du ` +
-                        formatSQLDate(response.transaction['occurred_at'])
-                    );
-            });
-        } else {
-            // Reset le formulaire
-            $('#transac-file-wrapper').addClass('d-none');
-            $('#transac-line-wrapper').addClass('d-none');
-            $(form).find('input, select').val('');
-            $(form).find('.modal-title').text('Ajouter une transaction');
-        }
     });
 
     /* --- Édition Bénéficiaire --- */
@@ -109,12 +105,10 @@ $(function () {
             $('#benef-edit-form').prop('action'),
             formSerializeObject('#benef-edit-form')
         ).then(response => {
-            // Force le rechargement de la liste
-            $('#transac-filter-type').trigger('change');
-
             // @TODO: else : afficher une erreur
             if (response.updated.length > 0) {
-                $('.modal-backdrop').remove();
+                $('#modal-benef-form .btn-close').trigger('click');
+                getFilteredList($('#transac-list-wrapper .page-item.active .page-link').first().text());
             }
         }).fail(response => {
             if (typeof response.responseJSON !== 'undefined' && typeof response.responseJSON.errors !== 'undefined') {

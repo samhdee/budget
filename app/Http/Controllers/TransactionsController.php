@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\TransactionType;
 use App\Models\Beneficiary;
+use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -22,6 +23,7 @@ class TransactionsController extends Controller
         return view('transactions.index', [
             'transactions' => Transaction::getList(),
             'beneficiaries' => Beneficiary::getDropdownList(),
+            'categories' => Category::getDropdownList(),
         ]);
     }
 
@@ -31,6 +33,7 @@ class TransactionsController extends Controller
         return view('transactions.list', [
             'transactions' => Transaction::getList($request->input('filters')),
             'beneficiaries' => Beneficiary::getDropdownList(),
+            'categories' => Category::getDropdownList(),
         ]);
     }
 
@@ -55,6 +58,7 @@ class TransactionsController extends Controller
             'type' => ['required', Rule::enum(TransactionType::class)],
             'occurred_at' => ['required', 'date'],
             'beneficiary_id' => ['required', 'exists:' . Beneficiary::class . ',id'],
+            'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
             'notes' => ['nullable', 'max:255'],
         ]);
 
@@ -64,6 +68,8 @@ class TransactionsController extends Controller
             $transaction->occurred_at = $data['occurred_at'];
             $transaction->amount = $data['amount'];
             $transaction->type = $data['type'];
+            $transaction->beneficiary_id = $data['beneficiary_id'];
+            $transaction->category_id = $data['category_id'];
             $transaction->notes = $data['notes'];
             $transaction->save();
         } else {
@@ -71,6 +77,8 @@ class TransactionsController extends Controller
                 'amount' => $data['amount'],
                 'occurred_at' => $data['occurred_at'],
                 'type' => $data['type'],
+                'beneficiary_id' => $data['beneficiary_id'],
+                'category_id' => $data['category_id'],
                 'notes' => $data['notes'],
             ]);
         }

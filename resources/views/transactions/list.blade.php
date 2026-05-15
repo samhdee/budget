@@ -19,8 +19,9 @@
             <th style="width: 7rem">Montant</th>
             <th>Type</th>
             <th>Bénéficiaire</th>
+            <th>Catégorie</th>
             <th style="width: 12rem">Notes</th>
-            <th style="width: 4rem"></th>
+            <th style="width: 6rem"></th>
         </tr>
     </thead>
 
@@ -45,6 +46,7 @@
                     </a>
                 </td>
 
+                <td>{{ $transaction->appellation }}</td>
                 <td>{{ $transaction->notes }}</td>
 
                 <td class="text-center">
@@ -57,6 +59,16 @@
                         data-action="edit"
                     >
                         <i class="fas fa-pencil"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ms-1 btn btn-sm btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-transac-delete"
+                        data-transac-id="{{ $transaction->id }}"
+                    >
+                        <i class="fas fa-trash"></i>
                     </button>
                 </td>
             </tr>
@@ -77,4 +89,5 @@
 @endif
 
 @include('transactions.modal_transac_form')
+@include('transactions.modal_transac_delete')
 @include('transactions.modal_benef_form')
