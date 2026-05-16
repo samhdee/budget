@@ -44,10 +44,11 @@ class LabelsController extends Controller
     /**
      * store
      *
-     * @param  Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|View
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
      */
-    public function store (Request $request): View
+    public function store (Request $request): JsonResponse
     {
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Label::class],
@@ -78,10 +79,14 @@ class LabelsController extends Controller
             ]);
         }
 
-        return view('labels.list', ['labels' => Label::query()
-            ->select(['id', 'appellation', 'color'])
-            ->orderBy('appellation')
-            ->get()
+        return response()->json([
+            'updated' => $label_id,
+            'view' => view('labels.list', ['labels' => Label::query()
+                ->select(['id', 'appellation', 'color'])
+                ->orderBy('appellation')
+                ->get()
+            ])
+            ->render()
         ]);
     }
 

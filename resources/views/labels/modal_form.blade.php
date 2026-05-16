@@ -14,6 +14,8 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="d-none alert alert-danger"></div>
+
                     <input type="hidden" id="label-id" name="id"/>
 
                     <div class="mt-4 form-floating form-field">
@@ -31,7 +33,7 @@
 
                     <div class="mt-3 form-field">
                         <label for="label-color">Jolie couleur</label>
-                        <input id="label-color" type="color" name="color" class="mt-1" required />
+                        <input id="label-color" type="color" name="color" class="mt-1 form-control-color" required />
                     </div>
 
                     <div class="mt-3 form-floating form-field">

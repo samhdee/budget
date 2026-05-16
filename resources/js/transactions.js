@@ -36,60 +36,8 @@ $(function () {
         $('#transac-benef-id').prop('disabled', '');
     });
 
-    // Soumet le formulaire
-    $(document).on('click', '#transac-form-submit', e => {
-        e.preventDefault();
-
-        $.post(
-            $('#transac-edit-form').prop('action'),
-            formSerializeObject('#transac-edit-form')
-        ).done(response => {
-            if (typeof response.updated !== 'undefined') {
-                $('#modal-transac-form .btn-close').trigger('click');
-                getFilteredList($('#transac-list-wrapper .page-item.active .page-link').first().text());
-            }
-        }).fail(response => {
-            showFormErrors('#transac-edit-form', response.responseJSON.errors);
-        });
-    });
-
-    // Soumet le formulaire de suppression
-    $(document).on('submit', '#transac-delete-form', e => {
-        e.preventDefault();
-
-        $.ajax({
-            method: 'DELETE',
-            url: $('#transac-delete-form').prop('action'),
-            data: {
-                id: $('#transac-delete-form input[name="id"]').val()
-            },
-            success: response => {
-                if (response.deleted) {
-                    $('#modal-transac-delete .btn-close').trigger('click');
-                    getFilteredList($('#transac-list-wrapper .page-item.active .page-link').first().text());
-                }
-            }
-        });
-    });
-
     /* --- Édition Bénéficiaire --- */
-    // Soumet le formulaire
-    $(document).on('submit', 'form#benef-edit-form', e => {
-        e.preventDefault();
-
-        $.post(
-            $('#benef-edit-form').prop('action'),
-            formSerializeObject('#benef-edit-form')
-        ).then(response => {
-            // @TODO: else : afficher une erreur
-            if (response.updated.length > 0) {
-                $('#modal-benef-form .btn-close').trigger('click');
-                getFilteredList($('#transac-list-wrapper .page-item.active .page-link').first().text());
-            }
-        }).fail(response => {
-            if (typeof response.responseJSON !== 'undefined' && typeof response.responseJSON.errors !== 'undefined') {
-                showFormErrors('#benef-edit-form', response.responseJSON.errors);
-            }
-        });
+    $(document).on('show.bs.modal', '#modal-benef-form', e => {
+        $('#benef-raw-name').prop('disabled', 'disabled');
     });
 });

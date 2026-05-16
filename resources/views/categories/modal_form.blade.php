@@ -14,6 +14,8 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="d-none alert alert-danger"></div>
+
                     <input type="hidden" id="categ-id" name="id"/>
 
                     <div class="mt-4 form-floating form-field">

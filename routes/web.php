@@ -23,13 +23,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', 'filter')->name('transac_filter');
             Route::get('/get/{id}', 'get')->name('transac_get');
             Route::post('/store', 'store')->name('transac_store');
-            Route::delete('/delete', 'delete')->name('transac_delete');
+            Route::post('/delete', 'delete')->name('transac_delete');
         });
 
     Route::controller(BeneficiariesController::class)
         ->prefix('benefs')
         ->group(function () {
+            Route::get('/', 'index')->name('benef_index');
             Route::get('/get/{id}', 'get')->name('benef_get');
+            Route::post('/filter', 'filter')->name('benef_filter');
             Route::post('/store', 'store')->name('benef_store');
         });
 
@@ -39,7 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('categ_index');
             Route::get('/get/{id}', 'get')->name('categ_get');
             Route::post('/store', 'store')->name('categ_store');
-            Route::delete('/delete', 'delete')->name('categ_delete');
+            Route::post('/delete', 'delete')->name('categ_delete');
         });
 
     Route::controller(LabelsController::class)
@@ -48,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('labels_index');
             Route::get('/get/{id}', 'get')->name('label_get');
             Route::post('/store', 'store')->name('label_store');
-            Route::delete('/delete', 'delete')->name('label_delete');
+            Route::post('/delete', 'delete')->name('label_delete');
         });
 
     Route::controller(ImportController::class)

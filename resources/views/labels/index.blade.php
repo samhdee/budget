@@ -23,7 +23,7 @@
             </button>
         </div>
 
-        <div id="labels-list-wrapper">
+        <div id="labels-list-wrapper" class="list-wrapper">
             @include('labels.list')
         </div>
     </div>

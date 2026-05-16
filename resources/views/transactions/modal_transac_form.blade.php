@@ -14,6 +14,8 @@
 
             <div class="modal-body">
                 <form id="transac-edit-form" method="POST" action="{{ route('transac_store') }}">
+                    <div class="d-none alert alert-danger"></div>
+
                     <input type="hidden" id="transac-id" name="id"/>
 
                     <div class="form-floating form-field">

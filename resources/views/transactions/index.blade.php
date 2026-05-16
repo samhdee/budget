@@ -10,7 +10,7 @@
 
         @include('transactions.filters')
 
-        <div id="transac-list-wrapper" class="mt-5">
+        <div id="transac-list-wrapper" class="mt-5 list-wrapper">
             @include('transactions.list')
         </div>
     </div>

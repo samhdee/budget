@@ -40,9 +40,10 @@ class CategoriesController extends Controller
      * store
      *
      * @param Request $request
-     * @return View
+     * @return JsonResponse
+     * @throws Throwable
      */
-    public function store (Request $request): View
+    public function store (Request $request): JsonResponse
     {
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Category::class],
@@ -71,10 +72,15 @@ class CategoriesController extends Controller
             ]);
         }
 
-        return view('categories.list', ['categories' => Category::query()
-            ->select(['id', 'appellation', 'color'])
-            ->orderBy('appellation')
-            ->get()
+        return response()->json([
+            'updated' => true,
+            'view' => view('categories.list', [
+                'categories' => Category::query()
+                    ->select(['id', 'appellation', 'color'])
+                    ->orderBy('appellation')
+                    ->get()
+                ])
+                ->render()
         ]);
     }
 

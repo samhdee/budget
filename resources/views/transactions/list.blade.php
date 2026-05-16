@@ -96,4 +96,4 @@
 
 @include('transactions.modal_transac_form')
 @include('transactions.modal_transac_delete')
-@include('transactions.modal_benef_form')
+@include('beneficiaries.modal_form')

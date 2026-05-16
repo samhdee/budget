@@ -14,6 +14,8 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="d-none alert alert-danger"></div>
+
                     <input type="hidden" id="label-id" name="id"/>
                     <div>Confirmer la suppression ?</div>
                 </div>

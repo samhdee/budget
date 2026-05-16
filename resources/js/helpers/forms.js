@@ -1,3 +1,5 @@
+import { getFilteredList } from "./filters.js";
+
 /**
  * Renvoie un objet contenant les input du formulaire
  * @param form_selector
@@ -58,6 +60,7 @@ $(function () {
         const form = $(e.currentTarget).find('form');
         const type = $(open_button).data('type');
 
+        $(e.currentTarget).find('.alert-danger').addClass('d-none');
         $(form).find('.form-error-message').remove();
         $(form).find('.form-error').removeClass('form-error');
 
@@ -82,5 +85,35 @@ $(function () {
                 $(e.currentTarget).find('.modal-title').html(title);
             });
         }
+    });
+
+    $(document).on('click', '.modal-form *[type="submit"]', e => {
+        e.preventDefault();
+        const modal = $(e.currentTarget).parents('.modal-form');
+        const form = $(modal).find('form');
+
+        $.post(
+            $(form).prop('action'),
+            formSerializeObject(form)
+        ).done(response => {
+            if (typeof response.errors === 'undefined') {
+                $(modal).find('.btn-close').trigger('click');
+
+                if (typeof response.view !== 'undefined') {
+                    $('.list-wrapper').html(response.view);
+                } else {
+                    const page = $('.pagination-wrapper .page-item.active .page-link').length > 0
+                        ? $('.pagination-wrapper .page-item.active .page-link').first().text()
+                        : null;
+                    getFilteredList(page);
+                }
+            }
+        }).fail(response => {
+            if (typeof response.responseJSON.errors !== 'undefined') {
+                showFormErrors($(form).attr('id'), response.responseJSON.errors);
+            } else {
+                $(form).find('.alert-danger').html(response.responseJSON.message).removeClass('d-none');
+            }
+        });
     });
 });

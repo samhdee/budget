@@ -8,6 +8,8 @@
 
             <form id="transac-delete-form" method="DELETE" action="{{ route('transac_delete') }}">
                 <div class="modal-body">
+                    <div class="d-none alert alert-danger"></div>
+
                     <input type="hidden" id="transac-id" name="id"/>
 
                     <div>Supprimer la transaction ?</div>

@@ -13,6 +13,13 @@
             </a>
 
             <a
+                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'benef_') ? 'active' : '' }}"
+                href="{{ route('benef_index') }}"
+            >
+                Bénéficiaires
+            </a>
+
+            <a
                 class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'categ_') ? 'active' : '' }}"
                 href="{{ route('categ_index') }}"
             >

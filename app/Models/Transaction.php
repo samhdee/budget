@@ -37,9 +37,9 @@ use Illuminate\Support\Carbon;
  */
 class Transaction extends Model
 {
+    protected $table = 'transactions';
     protected $perPage = 50;
     protected string $paginationTheme = 'bootstrap';
-    protected $table = 'transactions';
     protected $fillable = [
         'occurred_at',
         'amount',

@@ -21,7 +21,7 @@
             </button>
         </div>
 
-        <div id="categories-list-wrapper">
+        <div id="categories-list-wrapper" class="list-wrapper">
             @include('categories.list')
         </div>
     </div>
