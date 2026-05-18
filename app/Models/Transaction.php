@@ -80,6 +80,10 @@ class Transaction extends Model
             $query->where('type', $filters['type']);
         }
 
+        if (!empty($filters['category_id'])) {
+            $query->where('t.category_id', $filters['category_id']);
+        }
+
         if (!empty($filters['benef_name'])) {
             $query->where(function (Builder $query) use ($filters) {
                 $query->orWhereLike('b.raw_name', "%{$filters['benef_name']}%")

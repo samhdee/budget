@@ -1,4 +1,7 @@
-@php use App\Enums\TransactionType; @endphp
+@php
+    use App\Enums\TransactionType;
+    use App\Models\Category;
+@endphp
 
 <div class="d-flex justify-content-between align-items-center">
     <div
@@ -14,6 +17,21 @@
                 @foreach(TransactionType::cases() as $transac_type)
                     <option value="{{ $transac_type->name }}">
                         {{ getTransactionTypeLabel($transac_type->name) }}
+                    </option>
+                @endforeach
+            </select>
+
+            <label for="transac-filter-type">Type</label>
+        </div>
+
+        <div class="form-floating">
+            <select id="transac-filter-category" name="category_id" class="form-select">
+                <option value="">Tous</option>
+
+                @php /** @var Category $category */ @endphp
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">
+                        {{ $category->appellation }}
                     </option>
                 @endforeach
             </select>
