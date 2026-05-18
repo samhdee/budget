@@ -1,11 +1,9 @@
 @php use App\Models\Beneficiary; @endphp
 
 <div>
-    @if ($beneficiaries->lastPage() > 1)
-        <div class="pagination-wrapper">
-            {{ $beneficiaries->links() }}
-        </div>
-    @endif
+    <div class="pagination-wrapper">
+        {{ $beneficiaries->links() }}
+    </div>
 
     <div class="d-flex justify-content-end">
         <div id="bulk-action-wrapper" class="d-none">
@@ -26,7 +24,7 @@
         </div>
     </div>
 
-    <table class="mt-3 table table-striped table-bordered align-middle">
+    <table class="mt-2 table table-striped table-bordered align-middle">
         <thead>
             <th style="width: 2rem;">
                 <input id="bulk-select-all" type="checkbox" class="form-check" />
@@ -35,8 +33,9 @@
             <th>Nom moche</th>
             <th>Nom joli</th>
             <th>Catégorie par défaut</th>
+            <th style="width: 6.5rem;">Transactions</th>
             <th>Description</th>
-            <th style="width: 9rem;"></th>
+            <th style="width: 6rem;"></th>
         </thead>
 
         <tbody>
@@ -54,6 +53,7 @@
                     <td>{{ $beneficiary->raw_name }}</td>
                     <td>{{ $beneficiary->pretty_name }}</td>
                     <td>{{ $beneficiary->c_appellation }}</td>
+                    <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
                     <td>{{ $beneficiary->description }}</td>
 
                     <td class="text-center">
@@ -80,23 +80,19 @@
                             </button>
                         @endif
 
-                        <button
-                            type="button"
-                            class="ms-1 btn btn-sm btn-danger delete-benef"
-                            data-url="{{ route('benef_delete', $beneficiary->id) }}"
-                            data-raw_name="{{ $beneficiary->raw_name }}"
-                        >
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        @if (empty($beneficiary->nb_transactions))
+                            <button
+                                type="button"
+                                class="ms-1 btn btn-sm btn-danger delete-benef"
+                                data-url="{{ route('benef_delete', $beneficiary->id) }}"
+                                data-raw_name="{{ $beneficiary->raw_name }}"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    @if ($beneficiaries->lastPage() > 1)
-        <div class="pagination-wrapper">
-            {{ $beneficiaries->links() }}
-        </div>
-    @endif
 </div>

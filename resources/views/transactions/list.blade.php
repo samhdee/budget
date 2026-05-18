@@ -6,13 +6,11 @@
     /** @var LengthAwarePaginator $transactions */
 @endphp
 
-@if ($transactions->lastPage() > 1)
-    <div class="pagination-wrapper">
-        {{ $transactions->links() }}
-    </div>
-@endif
+<div class="pagination-wrapper">
+    {{ $transactions->links() }}
+</div>
 
-<table class="table table-striped table-bordered align-middle">
+<table class="mt-2 table table-striped table-bordered align-middle">
     <thead>
         <tr>
             <th style="width: 7rem">Date</th>
@@ -87,12 +85,6 @@
         @endforelse
     </tbody>
 </table>
-
-@if ($transactions->lastPage() > 1)
-    <div class="pagination-wrapper">
-        {{ $transactions->links() }}
-    </div>
-@endif
 
 @include('transactions.modal_transac_form')
 @include('transactions.modal_transac_delete')

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-md">
     <div class="container justify-content-start">
         <a class="text-light navbar-brand" href="{{ route('transac_index') }}">
             <i class="fas fa-home"></i>

@@ -1,5 +1,7 @@
 @extends('includes.layout')
 
+@section('title') Transactions @endsection
+
 @section('vite_imports')
     @vite(['resources/js/transactions.js'])
 @endsection

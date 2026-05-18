@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="mt-3 form-floating form-field">
-                        <select id="transac-category-id" name="category_id" class="form-select" required>
+                        <select id="benef-category-id" name="category_id" class="form-select" required>
                             <option value=""></option>
 
                             @php /** @var Category[] $category */ @endphp
@@ -59,7 +59,7 @@
                             @endforeach
                         </select>
 
-                        <label for="transac-category-id">Catégorie par défaut</label>
+                        <label for="benef-category-id">Catégorie par défaut</label>
                     </div>
 
                     <div class="mt-3 form-floating form-field">

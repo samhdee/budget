@@ -35,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/store', 'store')->name('benef_store');
             Route::post('/delete/{benef_id}', 'delete')->name('benef_delete');
             Route::post('/sync', 'syncCategories')->name('benef_sync');
-            Route::post('/bulk-sync-edit', 'storeInBulk')->name('benef_bulk_sync');
+            Route::post('/bulk-sync-edit', 'storeInBulk')->name('benef_bulk_edit');
         });
 
     Route::controller(CategoriesController::class)

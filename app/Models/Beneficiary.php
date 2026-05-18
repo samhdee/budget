@@ -55,7 +55,7 @@ class Beneficiary extends Model
                 'beneficiaries.id', 'raw_name', 'pretty_name', 'beneficiaries.description', 'category_id',
                 'c.appellation as c_appellation', 'c.color as c_color',
             ])
-            ->withSum('transactions as nb_transactions', 'id')
+            ->withCount('transactions as nb_transactions')
             ->leftJoin('categories as c', 'c.id', 'category_id');
 
         if (!empty($filters['either_name'])) {

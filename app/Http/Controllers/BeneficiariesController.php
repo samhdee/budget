@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Transaction;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -108,6 +107,23 @@ class BeneficiariesController extends Controller
         $transactions = Transaction::whereIn('beneficiary_id', $benef_id)
             ->update(['category_id' => $categ_id]);
         return response()->json(['updated' => $transactions]);
+    }
+
+    public function storeInBulk(Request $request)
+    {
+        $data = $request->validate([
+            'benef_ids.*' => Rule::forEach(function ($value, string $attribute) {
+                return [
+                    Rule::exists(Beneficiary::class, 'id'),
+                ];
+            }),
+            'category_id' => ['required', 'exists:' . Category::class . ',id']
+        ]);
+
+        $updated = Beneficiary::whereIn('id', $data['benef_ids'])
+            ->update(['category_id' => $data['category_id']]);
+
+        return response()->json(['updated' => $updated]);
     }
 
     /**
