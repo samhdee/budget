@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Beneficiary;
 use App\Models\Category;
+use App\Models\Transaction;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -68,5 +70,52 @@ class BeneficiariesController extends Controller
         }
 
         return response()->json(['updated' => $benef_id]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function syncCategories(Request $request): JsonResponse
+    {
+        $benefs = Beneficiary::query()
+            ->select(['id', 'category_id'])
+            ->whereIn('id', $request->input('benef_ids'))
+            ->get();
+
+        $nb_updated = 0;
+
+        foreach ($benefs as $benef) {
+            if (empty($benef->category_id)) {
+                continue;
+            }
+
+            $nb_updated += Transaction::where('beneficiary_id', $benef->id)
+                ->update(['category_id' => $benef->category_id]);
+        }
+
+        return response()->json(['updated' => $nb_updated]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $benef_id
+     * @param int $categ_id
+     * @return JsonResponse
+     */
+    public function syncCategoriesInBulk(Request $request, int $benef_id, int $categ_id): JsonResponse
+    {
+        $transactions = Transaction::whereIn('beneficiary_id', $benef_id)
+            ->update(['category_id' => $categ_id]);
+        return response()->json(['updated' => $transactions]);
+    }
+
+    /**
+     * @param int $benef_id
+     * @return void
+     */
+    public function delete(int $benef_id)
+    {
+
     }
 }

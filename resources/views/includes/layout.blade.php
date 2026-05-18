@@ -25,6 +25,8 @@
                         <button type="button" class="btn btn-close"></button>
                     </div>
                 @endif
+
+                <div id="alert-message-wrapper"></div>
             </div>
 
             @yield('content')

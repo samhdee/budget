@@ -33,6 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/get/{id}', 'get')->name('benef_get');
             Route::post('/filter', 'filter')->name('benef_filter');
             Route::post('/store', 'store')->name('benef_store');
+            Route::post('/delete/{benef_id}', 'delete')->name('benef_delete');
+            Route::post('/sync', 'syncCategories')->name('benef_sync');
+            Route::post('/bulk-sync-edit', 'storeInBulk')->name('benef_bulk_sync');
         });
 
     Route::controller(CategoriesController::class)

@@ -18,4 +18,5 @@
     </div>
 
     @include('beneficiaries.modal_form')
+    @include('beneficiaries.modal_bulk_form')
 @endsection

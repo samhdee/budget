@@ -10,3 +10,11 @@ export const formatSQLDate = (date_string) => {
     const expl_date = date_string.split('-');
     return `${expl_date[2]}/${expl_date[1]}/${expl_date[0]}`;
 }
+
+export const showFlashMessage = (type, message) => {
+    $('#alert-message-wrapper').html(`<div class="alert alert-${type} alert-dismissible">
+            ${message}
+            <button type="button" class="btn btn-close"></button>
+        </div>`
+    )
+}

@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -42,14 +43,19 @@ class Beneficiary extends Model
         'description',
     ];
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'beneficiary_id');
+    }
+
     public static function getList($filters = []): LengthAwarePaginator
     {
         $query = self::query()
             ->select([
-                'b.id', 'raw_name', 'pretty_name', 'b.description', 'category_id',
+                'beneficiaries.id', 'raw_name', 'pretty_name', 'beneficiaries.description', 'category_id',
                 'c.appellation as c_appellation', 'c.color as c_color',
             ])
-            ->from('beneficiaries as b')
+            ->withSum('transactions as nb_transactions', 'id')
             ->leftJoin('categories as c', 'c.id', 'category_id');
 
         if (!empty($filters['either_name'])) {
