@@ -14,20 +14,26 @@ use Illuminate\Support\Collection;
 /**
  * @property int $id
  * @property string $raw_name
- * @property string $pretty_name
- * @property int|null $category_id
+ * @property string|null $expression Formule permettant de reconnaître le bénéficiaire dans les futures extractions
  * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property string|null $pretty_name
+ * @property int|null $category_id
+ * @property string|null $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transaction> $transactions
+ * @property-read int|null $transactions_count
  * @method static Builder<static>|Beneficiary newModelQuery()
  * @method static Builder<static>|Beneficiary newQuery()
  * @method static Builder<static>|Beneficiary query()
- * @method static Builder<static>|Beneficiary whereId($value)
- * @method static Builder<static>|Beneficiary whereRawName($value)
- * @method static Builder<static>|Beneficiary wherePrettyName($value)
  * @method static Builder<static>|Beneficiary whereCategoryId($value)
- * @method static Builder<static>|Beneficiary whereDescription($value)
  * @method static Builder<static>|Beneficiary whereCreatedAt($value)
+ * @method static Builder<static>|Beneficiary whereDescription($value)
+ * @method static Builder<static>|Beneficiary whereExpression($value)
+ * @method static Builder<static>|Beneficiary whereId($value)
+ * @method static Builder<static>|Beneficiary whereNotes($value)
+ * @method static Builder<static>|Beneficiary wherePrettyName($value)
+ * @method static Builder<static>|Beneficiary whereRawName($value)
  * @method static Builder<static>|Beneficiary whereUpdatedAt($value)
  * @mixin Eloquent
  */

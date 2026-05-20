@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/js/categories.js',
                 'resources/js/helpers/filters.js',
                 'resources/js/helpers/forms.js',
+                'resources/js/recurrences.js',
                 'resources/js/labels.js',
                 'resources/js/transactions.js'
             ],

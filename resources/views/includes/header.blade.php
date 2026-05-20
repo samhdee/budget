@@ -4,41 +4,78 @@
             <i class="fas fa-home"></i>
         </a>
 
-        <div class="navbar-nav">
-            <a
-                class="me-2 nav-link {{ str_starts_with(Route::currentRouteName(), 'transac_index') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
-                href="{{ route('transac_index') }}"
-            >
-                Transactions
-            </a>
+        <ul class="navbar-nav">
+            <li>
+                <a
+                    class="me-2 nav-link {{ str_starts_with(Route::currentRouteName(), 'transac_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
+                    href="{{ route('transac_index') }}"
+                >
+                    Transactions
+                </a>
+            </li>
 
-            <a
-                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'benef_') ? 'active' : '' }}"
-                href="{{ route('benef_index') }}"
-            >
-                Bénéficiaires
-            </a>
+            <li>
+                <a
+                    class="me-2 nav-link {{ str_starts_with(Route::currentRouteName(), 'dashboard_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
+                    href="{{ route('dashboard_index') }}"
+                >
+                    Dashboard
+                </a>
+            </li>
 
-            <a
-                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'categ_') ? 'active' : '' }}"
-                href="{{ route('categ_index') }}"
-            >
-                Catégories
-            </a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    Gérer
+                </a>
 
-            <a
-                class="me-2 nav-link {{ str_starts_with (Route::currentRouteName(), 'labels_') ? 'active' : '' }}"
-                href="{{ route('labels_index') }}"
-            >
-                Labels
-            </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a
+                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'recurrences_') ? 'active' : '' }}"
+                            href="{{ route('recurrences_index') }}"
+                        >
+                            Récurrences
+                        </a>
+                    </li>
 
-            <a
-                class="nav-link {{ str_starts_with (Route::currentRouteName(), 'import_') ? 'active' : '' }}"
-                href="{{ route('import_index') }}"
-            >
-                Importer un CSV
-            </a>
-        </div>
+                    <li>
+                        <a
+                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'benef_') ? 'active' : '' }}"
+                            href="{{ route('benef_index') }}"
+                        >
+                            Bénéficiaires
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'categ_') ? 'active' : '' }}"
+                            href="{{ route('categ_index') }}"
+                        >
+                            Catégories
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'labels_') ? 'active' : '' }}"
+                            href="{{ route('labels_index') }}"
+                        >
+                            Labels
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a
+                    class="nav-link {{ str_starts_with (Route::currentRouteName(), 'import_') ? 'active' : '' }}"
+                    href="{{ route('import_index') }}"
+                >
+                    Import
+                </a>
+            </li>
+        </ul>
     </div>
 </nav>

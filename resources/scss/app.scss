@@ -53,9 +53,9 @@ body {
             text-decoration: none;
             color: $lavender;
 
-            &:hover,
-            &:active,
-            &:focus {
+            &:not(.btn):hover,
+            &:not(.btn):active,
+            &:not(.btn):focus {
                 text-decoration: underline;
             }
         }
@@ -71,6 +71,23 @@ body {
         .page-item.active .page-link {
             border-color: $lavender;
             background: $lavender;
+        }
+    }
+
+    fieldset {
+        position: relative;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        padding: 2.5rem 1rem 1rem;
+
+        legend {
+            float: none;
+            width: auto;
+            position: absolute;
+            background: $body-bg;
+            top: -1.2rem;
+            left: 1rem;
+            padding: 0 1rem;
         }
     }
 }

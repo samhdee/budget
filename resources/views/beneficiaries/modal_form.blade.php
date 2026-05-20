@@ -26,7 +26,7 @@
                             type="text"
                             name="raw_name"
                             class="form-control"
-                            maxlength="100"
+                            maxlength="255"
                             autocomplete="off"
                             required
                         />
@@ -40,7 +40,7 @@
                             type="text"
                             name="pretty_name"
                             class="form-control"
-                            maxlength="100"
+                            maxlength="255"
                             autocomplete="off"
                         />
 

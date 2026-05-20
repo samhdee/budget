@@ -4,6 +4,7 @@ use App\Http\Controllers\BeneficiariesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LabelsController;
+use App\Http\Controllers\RecurrencesController;
 use App\Http\Controllers\TransactionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -61,5 +62,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->group(function () {
             Route::get('/', 'index')->name('import_index');
             Route::post('/store', 'store')->name('import_store');
+        });
+
+    Route::controller(RecurrencesController::class)
+        ->prefix('recurrences')
+        ->group(function () {
+            Route::get('/', 'index')->name('recurrences_index');
+            Route::get('/filter', 'filter')->name('recurrences_filter');
+            Route::get('/get/{id}', 'get')->name('recurrences_get');
+            Route::post('/store', 'store')->name('recurrences_store');
+            Route::get('/detect', 'detectRecurrences')->name('recurrences_detect');
         });
 });

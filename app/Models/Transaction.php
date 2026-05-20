@@ -15,23 +15,31 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $occurred_at
  * @property numeric $amount
- * @property TransactionType $type
- * @property string $notes
- * @property int $beneficiary_id
+ * @property int|null $beneficiary_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int $category_id
+ * @property int|null $category_id
+ * @property string $type
+ * @property int|null $line
+ * @property string|null $file
+ * @property string|null $notes
+ * @property-read Beneficiary|null $beneficiary
+ * @property-read Category|null $category
+ * @property-read TransacRecurringPattern|null $recurringPattern
  * @method static Builder<static>|Transaction newModelQuery()
  * @method static Builder<static>|Transaction newQuery()
  * @method static Builder<static>|Transaction query()
  * @method static Builder<static>|Transaction whereAmount($value)
- * @method static Builder<static>|Transaction whereType($value)
- * @method static Builder<static>|Transaction whereNotes($value)
  * @method static Builder<static>|Transaction whereBeneficiaryId($value)
  * @method static Builder<static>|Transaction whereCategoryId($value)
+ * @method static Builder<static>|Transaction whereRecurringPatternId($value)
  * @method static Builder<static>|Transaction whereCreatedAt($value)
+ * @method static Builder<static>|Transaction whereFile($value)
  * @method static Builder<static>|Transaction whereId($value)
+ * @method static Builder<static>|Transaction whereLine($value)
+ * @method static Builder<static>|Transaction whereNotes($value)
  * @method static Builder<static>|Transaction whereOccurredAt($value)
+ * @method static Builder<static>|Transaction whereType($value)
  * @method static Builder<static>|Transaction whereUpdatedAt($value)
  * @mixin Eloquent
  */
@@ -49,6 +57,7 @@ class Transaction extends Model
         'type',
         'line',
         'file',
+        'recurring_pattern_id',
     ];
 
     public function beneficiary(): HasOne
@@ -59,6 +68,11 @@ class Transaction extends Model
     public function category(): HasOne
     {
         return $this->hasOne(Category::class, 'category_id');
+    }
+
+    public function recurringPattern(): HasOne
+    {
+        return $this->hasOne(TransacRecurringPattern::class, 'id', 'recurring_pattern_id');
     }
 
     /**

@@ -116,4 +116,24 @@ $(function () {
             }
         });
     });
+
+    // Coche toutes les checkboxes
+    $(document).on('change', '#bulk-select-all', () => {
+        if ($('#bulk-select-all').is(':checked')) {
+            $('.bulk-select').prop('checked', 'checked')
+        } else {
+            $('.bulk-select').prop('checked', '');
+        }
+
+        $('.bulk-select').trigger('change');
+    });
+
+    // Fait apparaître ou disparaître les boutons d'actions groupées
+    $(document).on('change', '#bulk-select-all, .bulk-select', e => {
+        if ($('.bulk-select:checked').length > 0) {
+            $('#bulk-action-wrapper').removeClass('d-none');
+        } else {
+            $('#bulk-action-wrapper').addClass('d-none');
+        }
+    });
 });

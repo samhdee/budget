@@ -16,26 +16,6 @@ $(function() {
         }
     });
 
-    // Fait apparaître ou disparaître les boutons d'actions groupées
-    $(document).on('change', '#bulk-select-all, .bulk-select', e => {
-        if ($('.bulk-select:checked').length > 0) {
-            $('#bulk-action-wrapper').removeClass('d-none');
-        } else {
-            $('#bulk-action-wrapper').addClass('d-none');
-        }
-    });
-
-    // Coche toutes les checkboxes
-    $(document).on('change', '#bulk-select-all', () => {
-        if ($('#bulk-select-all').is(':checked')) {
-            $('.bulk-select').prop('checked', 'checked')
-        } else {
-            $('.bulk-select').prop('checked', '');
-        }
-
-        $('.bulk-select').trigger('change');
-    });
-
     // Synchronise les catégories de toutes les lignes sélectionnées
     $(document).on('click', '#bulk-sync-all', () => {
         if (confirm('Lier toutes les transactions des bénéficiaires à leurs catégories ?')) {
@@ -108,6 +88,21 @@ $(function() {
                     ? response.responseJSON.message
                     :'Une erreur inattendue est survenue');
             });
+        }
+    });
+
+    // Supprimer un benef
+    $(document).on('click', '.delete-benef', e => {
+        e.preventDefault();
+
+        if (confirm(`Supprimer le bénéficiaire ${$(e.currentTarget).data('raw_name')} ?`)) {
+            $.get($(e.currentTarget).data('url'))
+                .then(response => {
+
+                })
+                .fail(response => {
+
+                });
         }
     });
 });

@@ -20,12 +20,12 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Category newModelQuery()
  * @method static Builder<static>|Category newQuery()
  * @method static Builder<static>|Category query()
+ * @method static Builder<static>|Category whereAppellation($value)
  * @method static Builder<static>|Category whereColor($value)
  * @method static Builder<static>|Category whereCreatedAt($value)
  * @method static Builder<static>|Category whereDeletedAt($value)
  * @method static Builder<static>|Category whereDescription($value)
  * @method static Builder<static>|Category whereId($value)
- * @method static Builder<static>|Category whereAppellation($value)
  * @method static Builder<static>|Category whereUpdatedAt($value)
  * @mixin Eloquent
  */

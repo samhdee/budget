@@ -92,7 +92,7 @@ class ImportController extends Controller
 
                     if (!empty($transac_results['benef'])) {
                         $benef_result = Beneficiary::query()
-                            ->select(['id'])
+                            ->select(['id', 'category_id'])
                             ->where('raw_name', $transac_results['benef'])
                             ->first();
 
@@ -101,11 +101,14 @@ class ImportController extends Controller
                         }
                     }
 
+                    // @TODO: Vérifier si la transaction a un recurring pattern
+
                     Transaction::create([
                         'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
                         'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,
                         'occurred_at' => $transac_results['date'],
                         'type' => $transac_results['type'],
+                        'category_id' => !empty($benef_result->category_id) ? $benef_result->category_id : null,
                         'line' => $i,
                         'file' => $file,
                     ]);
@@ -126,7 +129,7 @@ class ImportController extends Controller
      * @param string $raw_date
      * @return array
      */
-    public function getCardInfo(mixed $benef_raw, string $raw_date): array
+    private function getCardInfo(mixed $benef_raw, string $raw_date): array
     {
         $benef = '';
         $has_match = preg_match(self::FIND_CB_BENEF, $benef_raw, $benef_matches);
@@ -146,7 +149,7 @@ class ImportController extends Controller
      * @param string $raw_date
      * @return array
      */
-    public function getTransferInfo(mixed $benef_raw, string $raw_date): array
+    private function getTransferInfo(mixed $benef_raw, string $raw_date): array
     {
         $type = TransactionType::perma_transfer->name;
 
@@ -177,7 +180,7 @@ class ImportController extends Controller
      * @param mixed $benef_raw
      * @return array
      */
-    public function getWithdrawalInfo(mixed $benef_raw): array
+    private function getWithdrawalInfo(mixed $benef_raw): array
     {
         preg_match(self::FIND_WITHDRAWAL, $benef_raw, $benef_matches);
 
@@ -193,7 +196,7 @@ class ImportController extends Controller
      * @param string $raw_date
      * @return array
      */
-    public function getOtherInfo(mixed $benef_raw, string $raw_date): array
+    private function getOtherInfo(mixed $benef_raw, string $raw_date): array
     {
         $has_match = preg_match(self::FIND_OTHER, $benef_raw, $benef_matches);
 
