@@ -82,30 +82,47 @@ class TransacRecurringPattern extends Model
         };
     }
 
-    public static function getList($filters = []): Collection
+    /**
+     * @param array $filters
+     * @return Collection
+     */
+    public static function getList(array $filters = []): Collection
     {
-        return self::query()
+        $query = self::query()
             ->select([
                 'transac_recurring_patterns.id', 'label', 'beneficiary_id', 'amount', 'frequency_unit',
                 'frequency_count', 'ends_at', 'raw_name', 'pretty_name',
             ])
             ->join('beneficiaries as b', 'b.id', 'beneficiary_id')
-            ->whereHas('transactions')
-            ->where('active', 1)
-            ->orderBy('label')
+            ->whereHas('transactions');
+
+
+        if (isset($filters['active'])) {
+            $query->where('active', $filters['active']);
+        } else {
+            $query->where('active', 1);
+        }
+
+        if (!empty($filters['past'])) {
+            $query->whereDate('ends_at', '<', Carbon::now());
+        } else {
+            $query->where(function (Builder $query) {
+                $query->orWhereDate('ends_at', '>=', Carbon::now())
+                    ->orWhereNull('ends_at');
+            });
+        }
+
+        return $query->orderBy('label')
             ->orderBy('b.raw_name')
             ->orderBy('b.pretty_name')
             ->get();
     }
 
-    public static function getOne($recurrence_id)
+    public static function getOne($recurrence_id): ?TransacRecurringPattern
     {
         return self::query()
-            ->select([
-                'id', 'label', 'beneficiary_id', 'amount', 'frequency_unit', 'frequency_count', 'ends_at',
-            ])
+            ->select(['id', 'label', 'beneficiary_id', 'amount', 'frequency_unit', 'frequency_count', 'ends_at'])
             ->whereHas('transactions')
-            ->where('active', 1)
             ->where('id', $recurrence_id)
             ->first();
     }

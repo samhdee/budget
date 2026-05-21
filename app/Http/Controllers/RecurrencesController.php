@@ -20,6 +20,8 @@ class RecurrencesController extends Controller
     {
         return view('recurrences.index', [
             'recurrences' => TransacRecurringPattern::getList(),
+            'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
+            'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
             'beneficiaries' => Beneficiary::getDropdownList(),
         ]);
     }
@@ -29,8 +31,10 @@ class RecurrencesController extends Controller
      */
     public function filter()
     {
-        return view('recurrences.list', [
+        return view('recurrences.lists', [
             'recurrences' => TransacRecurringPattern::getList(),
+            'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
+            'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
         ]);
     }
 
@@ -135,9 +139,10 @@ class RecurrencesController extends Controller
         return response()->json([
             'updated' => TransacRecurringPattern::where('id', $data['id'])
                 ->update($data),
-            'view' => view('recurrences.list', [
+            'view' => view('recurrences.lists', [
                 'recurrences' => TransacRecurringPattern::getList(),
-                'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0, 'date_end_past' => true]),
+                'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
+                'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
             ])->render(),
         ]);
     }
@@ -147,17 +152,29 @@ class RecurrencesController extends Controller
      * @return JsonResponse
      * @throws Throwable
      */
-    public function deactivate(int $recurrence_id)
+    public function toggleActive(int $recurrence_id)
     {
-        if (empty($recurrence_id) || empty(TransacRecurringPattern::find($recurrence_id))) {
+        $recurrence = TransacRecurringPattern::find($recurrence_id);
+
+        if (empty($recurrence_id) || empty($recurrence)) {
             return response()->json(['message' => 'L\'ID récurrence est obligatoire.'], 422);
         }
 
+        if (!empty($recurrence->active)) {
+            $recurrence->active = 0;
+            $recurrence->ends_at = null;
+        } else {
+            $recurrence->active = 1;
+        }
+
+        $updated = $recurrence->save();
+
         return response()->json([
-            'updated' => TransacRecurringPattern::where('id', $recurrence_id)
-                ->update(['active' => 0]),
-            'view' => view('recurrences.list', [
+            'updated' => $updated,
+            'view' => view('recurrences.lists', [
                 'recurrences' => TransacRecurringPattern::getList(),
+                'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
+                'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
             ])->render()
         ]);
     }
