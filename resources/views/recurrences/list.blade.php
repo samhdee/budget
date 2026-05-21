@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 @endphp
 
-<table class="mx-auto w-75 table table-striped table-bordered align-middle">
+<table class="table table-striped table-bordered align-middle">
     <thead>
         <tr>
             <th style="width: 2rem;">
@@ -61,7 +61,12 @@
                         <i class="fas fa-pencil"></i>
                     </button>
 
-                    <button type="button" class="ms-1 btn btn-sm btn-danger recurrence-delete">
+                    <button
+                        type="button"
+                        class="ms-1 btn btn-sm btn-danger btn-action confirm-before-action"
+                        data-url="{{ route('recurrences_deactivate', $recurrence->id) }}"
+                        data-message="Désactiver cette récurrence ?"
+                    >
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>

@@ -1,5 +1,4 @@
 @php
-    use App\Enums\RecurrenceFreqUnit;
     use App\Models\Beneficiary;
 @endphp
 
@@ -18,14 +17,13 @@
             </div>
 
             <div class="modal-body">
-                <form id="recurrence-edit-form" method="POST" action="{{ route('recurrences_store') }}"
-                      data-list="#recurrences-list-wrapper">
+                <form id="recurrence-edit-form" method="POST" action="{{ route('recurrences_store') }}" data-list="#recurrences-list-wrapper">
                     <div class="d-none alert alert-danger"></div>
 
                     <input type="hidden" id="recurrence-id" name="id"/>
 
                     <div class="form-floating form-field">
-                        <input id="recurrence-label" type="text" name="label" class="form-control"/>
+                        <input id="recurrence-label" type="text" name="label" class="form-control" />
                         <label for="recurrence-label">Label</label>
                     </div>
 
@@ -36,7 +34,7 @@
                             name="amount"
                             class="form-control"
                             step=".01"
-                            required
+                           required
                         />
                         <label for="recurrence-amount">Montant *</label>
                     </div>
@@ -64,21 +62,21 @@
 
                         <div class="row justify-content-between">
                             <div class="col-3 form-field">
-                                <input type="number" name="frequency_count" class="form-control" required/>
+                                <input type="number" name="frequency_count" class="form-control" required />
                             </div>
 
                             <div class="col-9 form-field">
                                 <select class="form-select" name="frequency_unit">
                                     <option value=""></option>
-                                    <option value="{{ RecurrenceFreqUnit::week->value }}">semaine</option>
-                                    <option value="{{ RecurrenceFreqUnit::month->value }}">mois</option>
+                                    <option value="week">semaine</option>
+                                    <option value="month">mois</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-3 form-floating form-field">
-                        <input id="recurrence-ends-at" type="date" name="ends_at" class="form-control" required/>
+                        <input id="recurrence-ends-at" type="date" name="ends_at" class="form-control" required />
                         <label for="recurrence-ends-at">Date de fin</label>
                     </div>
                 </form>

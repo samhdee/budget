@@ -19,6 +19,19 @@
                     <div class="d-none mb-3 alert alert-danger"></div>
 
                     <div class="form-floating form-field">
+                        <input
+                            id="benef-pretty_name"
+                            type="text"
+                            name="pretty_name"
+                            class="form-control"
+                            maxlength="255"
+                            autocomplete="off"
+                        />
+
+                        <label for="benef-pretty_name">Nom joli</label>
+                    </div>
+
+                    <div class="mt-3 form-floating form-field">
                         <select id="benef-bulk-category-id" name="category_id" class="form-select" required>
                             <option value=""></option>
 

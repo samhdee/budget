@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RecurrenceFreqUnit;
 use App\Models\Beneficiary;
 use App\Models\TransacRecurringPattern;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Throwable;
 
 class RecurrencesController extends Controller
 {
@@ -108,6 +113,52 @@ class RecurrencesController extends Controller
                 ->update(['recurring_pattern_id' => $new_recurrence->id]);
         }
 
-        return to_route('import_index');
+        return to_route('recurrences_index');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+            'label' => ['nullable', 'max:255'],
+            'amount' => ['required', 'decimal:2'],
+            'frequency_count' => ['required', 'integer'],
+            'frequency_unit' => ['required', Rule::in(RecurrenceFreqUnit::cases())],
+            'ends_at' => ['nullable', 'date'],
+        ]);
+
+        return response()->json([
+            'updated' => TransacRecurringPattern::where('id', $data['id'])
+                ->update($data),
+            'view' => view('recurrences.list', [
+                'recurrences' => TransacRecurringPattern::getList(),
+                'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0, 'date_end_past' => true]),
+            ])->render(),
+        ]);
+    }
+
+    /**
+     * @param int $recurrence_id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function deactivate(int $recurrence_id)
+    {
+        if (empty($recurrence_id) || empty(TransacRecurringPattern::find($recurrence_id))) {
+            return response()->json(['message' => 'L\'ID récurrence est obligatoire.'], 422);
+        }
+
+        return response()->json([
+            'updated' => TransacRecurringPattern::where('id', $recurrence_id)
+                ->update(['active' => 0]),
+            'view' => view('recurrences.list', [
+                'recurrences' => TransacRecurringPattern::getList(),
+            ])->render()
+        ]);
     }
 }

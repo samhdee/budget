@@ -9,14 +9,20 @@
 @endsection
 
 @section('content')
-    <div>
-        <a href="{{ route('recurrences_detect') }}" class="btn btn-primary">
-            <i class="me-1 fas fa-arrows-rotate"></i> Détecter les récurrences
-        </a>
-    </div>
+    <div id="recurrences-wrapper">
+        <h1>Récurrences</h1>
 
-    <div id="recurrences-list-wrapper" class="mt-4">
-        @include('recurrences.list')
+        <div class="mt-5 mx-auto w-75">
+            <div class="d-flex justify-content-end">
+                <a href="{{ route('recurrences_detect') }}" class="btn btn-sm btn-primary">
+                    <i class="me-1 fas fa-arrows-rotate"></i> Détecter les récurrences
+                </a>
+            </div>
+
+            <div id="recurrences-list-wrapper" class="mt-3 list-wrapper">
+                @include('recurrences.list')
+            </div>
+        </div>
     </div>
 
     @include('recurrences.modal_form')

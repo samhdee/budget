@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->tinyInteger('active');
             $table->string('frequency_unit');
             $table->tinyInteger('frequency_count');
-            $table->tinyText('type');
-            $table->integer('amount');
+            $table->tinyText('type')->nullable();
+            $table->decimal('amount');
             $table->date('ends_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -10,9 +10,20 @@
     {{ $transactions->links() }}
 </div>
 
+<div class="d-flex justify-content-end">
+    <div id="bulk-action-wrapper" class="d-none">
+        <button id="bulk-delete" type="button" class="btn btn-sm btn-danger">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</div>
+
 <table class="mt-2 table table-striped table-bordered align-middle">
     <thead>
         <tr>
+            <th style="width: 2rem;">
+                <input id="bulk-select-all" type="checkbox" class="form-check" />
+            </th>
             <th style="width: 7rem">Date</th>
             <th style="width: 7rem">Montant</th>
             <th>Type</th>
@@ -27,6 +38,10 @@
         @php /** @var Transaction $transaction */ @endphp
         @forelse ($transactions as $transaction)
             <tr>
+                <td>
+                    <input type="checkbox" class="form-check bulk-select" data-transac_id="{{ $transaction->id }}" />
+                </td>
+
                 <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
                 <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">{{ $transaction->amount }}€</td>
                 <td>{{ getTransactionTypeLabel($transaction->type) }}</td>

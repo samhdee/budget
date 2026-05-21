@@ -117,11 +117,20 @@ class BeneficiariesController extends Controller
                     Rule::exists(Beneficiary::class, 'id'),
                 ];
             }),
-            'category_id' => ['required', 'exists:' . Category::class . ',id']
+            'category_id' => ['required', 'exists:' . Category::class . ',id'],
+            'pretty_name' => ['nullable', 'max:255'],
         ]);
 
+        $update_data = [
+            'category_id' => $data['category_id'],
+        ];
+
+        if (!empty($data['pretty_name'])) {
+            $update_data['pretty_name'] = $data['pretty_name'];
+        }
+
         $updated = Beneficiary::whereIn('id', $data['benef_ids'])
-            ->update(['category_id' => $data['category_id']]);
+            ->update($update_data);
 
         return response()->json(['updated' => $updated]);
     }

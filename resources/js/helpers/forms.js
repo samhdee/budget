@@ -1,4 +1,5 @@
 import { getFilteredList } from "./filters.js";
+import { showFlashMessage } from "./helpers.js";
 
 /**
  * Renvoie un objet contenant les input du formulaire
@@ -76,7 +77,11 @@ $(function () {
                     $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.item[i]);
                 }
 
-                let title = ($(open_button).data('action') === 'delete' ? 'Supprimer ' : 'Éditer ') + type;
+                let title = ($(open_button).data('action') === 'delete' ? 'Supprimer ' : 'Éditer ');
+
+                if (typeof type !== 'undefined') {
+                    title += type;
+                }
 
                 if (typeof response.item['appellation'] !== 'undefined') {
                     title += ` <span class="fst-italic">${response.item['appellation']}</span>`;
@@ -100,7 +105,11 @@ $(function () {
                 $(modal).find('.btn-close').trigger('click');
 
                 if (typeof response.view !== 'undefined') {
-                    $('.list-wrapper').html(response.view);
+                    if (typeof $(form).data('list') !== 'undefined') {
+                        $($(form).data('list')).html(response.view);
+                    } else {
+                        $('.list-wrapper').html(response.view);
+                    }
                 } else {
                     const page = $('.pagination-wrapper .page-item.active .page-link').length > 0
                         ? $('.pagination-wrapper .page-item.active .page-link').first().text()
@@ -110,7 +119,7 @@ $(function () {
             }
         }).fail(response => {
             if (typeof response.responseJSON.errors !== 'undefined') {
-                showFormErrors($(form).attr('id'), response.responseJSON.errors);
+                showFormErrors(`#${$(form).attr('id')}`, response.responseJSON.errors);
             } else {
                 $(form).find('.alert-danger').html(response.responseJSON.message).removeClass('d-none');
             }
@@ -134,6 +143,32 @@ $(function () {
             $('#bulk-action-wrapper').removeClass('d-none');
         } else {
             $('#bulk-action-wrapper').addClass('d-none');
+        }
+    });
+
+    // Affiche un confirm et appelle l'URL demandée
+    $(document).on('click', '.btn-action.confirm-before-action', e => {
+        e.preventDefault();
+        const button = e.currentTarget;
+
+        if (confirm($(button).data('message'))) {
+            $.get($(button).data('url')).then(response => {
+                if (typeof response.message !== 'undefined') {
+                    showFlashMessage('success', typeof response.message !== 'undefined'
+                        ? response.message
+                        : 'Succès !'
+                    );
+                }
+
+                if (typeof response.view !== 'undefined') {
+                    $($(button).data('list')).html(response.view);
+                }
+            }).fail(response => {
+                showFlashMessage(
+                    'danger',
+                    typeof response.responseJSON.message !== 'undefined' ? response.responseJSON.message : 'Une erreur est survenue.'
+                )
+            });
         }
     });
 });

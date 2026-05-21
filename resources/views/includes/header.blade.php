@@ -14,15 +14,6 @@
                 </a>
             </li>
 
-            <li>
-                <a
-                    class="me-2 nav-link {{ str_starts_with(Route::currentRouteName(), 'dashboard_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
-                    href="{{ route('dashboard_index') }}"
-                >
-                    Dashboard
-                </a>
-            </li>
-
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                    aria-expanded="false">
