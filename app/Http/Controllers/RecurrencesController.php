@@ -20,6 +20,7 @@ class RecurrencesController extends Controller
     {
         return view('recurrences.index', [
             'recurrences' => TransacRecurringPattern::getList(),
+            'inactive_recurrences' => TransacRecurringPattern::getList(['inactive' => true]),
             'beneficiaries' => Beneficiary::getDropdownList(),
         ]);
     }
@@ -29,8 +30,9 @@ class RecurrencesController extends Controller
      */
     public function filter()
     {
-        return view('recurrences.list', [
+        return view('recurrences.lists', [
             'recurrences' => TransacRecurringPattern::getList(),
+            'inactive_recurrences' => TransacRecurringPattern::getList(['inactive' => true]),
         ]);
     }
 
@@ -135,7 +137,7 @@ class RecurrencesController extends Controller
         return response()->json([
             'updated' => TransacRecurringPattern::where('id', $data['id'])
                 ->update($data),
-            'view' => view('recurrences.list', [
+            'view' => view('recurrences.lists', [
                 'recurrences' => TransacRecurringPattern::getList(),
                 'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0, 'date_end_past' => true]),
             ])->render(),
@@ -156,7 +158,7 @@ class RecurrencesController extends Controller
         return response()->json([
             'updated' => TransacRecurringPattern::where('id', $recurrence_id)
                 ->update(['active' => 0]),
-            'view' => view('recurrences.list', [
+            'view' => view('recurrences.active-list', [
                 'recurrences' => TransacRecurringPattern::getList(),
             ])->render()
         ]);

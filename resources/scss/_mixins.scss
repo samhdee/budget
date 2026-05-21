@@ -36,4 +36,7 @@ $position-values: (
     100: 100%
 );
 
+// Onglets
+$nav-tabs-link-active-color: $body-color;
+
 @import "bootstrap/scss/bootstrap";

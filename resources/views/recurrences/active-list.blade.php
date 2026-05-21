@@ -15,7 +15,7 @@
             <th>Bénéficiaire</th>
             <th style="width: 6rem;">Période</th>
             <th style="width: 7rem;">Date de fin</th>
-            <th style="width: 6rem;"></th>
+            <th style="width: 8.7rem;"></th>
         </tr>
     </thead>
 
@@ -63,9 +63,20 @@
 
                     <button
                         type="button"
+                        class="ms-1 btn btn-sm btn-success"
+                        data-url="{{ route('recurrences_deactivate', $recurrence->id) }}"
+                        data-message="Désactiver cette récurrence ?"
+                        data-list="#recurrences-list-wrapper"
+                    >
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+
+                    <button
+                        type="button"
                         class="ms-1 btn btn-sm btn-danger btn-action confirm-before-action"
                         data-url="{{ route('recurrences_deactivate', $recurrence->id) }}"
                         data-message="Désactiver cette récurrence ?"
+                        data-list="#recurrences-list-wrapper"
                     >
                         <i class="fas fa-trash"></i>
                     </button>
