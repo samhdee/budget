@@ -14,8 +14,7 @@
         <th style="width: 6rem;">Montant</th>
         <th>Bénéficiaire</th>
         <th style="width: 6rem;">Période</th>
-        <th style="width: 7rem;">Date de fin</th>
-        <th style="width: 3.2rem;"></th>
+        <th style="width: 6rem;"></th>
     </tr>
     </thead>
 
@@ -24,8 +23,7 @@
     @forelse($inactive_recurrences as $inactive_recurrence)
         <tr>
             <td>
-                <input class="bulk-select form-check" type="checkbox"
-                       data-recurrence_id="{{ $inactive_recurrence->id }}"/>
+                <input class="bulk-select form-check" type="checkbox" data-recurrence_id="{{ $inactive_recurrence->id }}"/>
             </td>
 
             <td>{{ $inactive_recurrence->label }}</td>
@@ -43,21 +41,24 @@
                 {{ $inactive_recurrence->frequency_count }} {{ $inactive_recurrence->getUnitLabel() }}
             </td>
 
-            <td class="text-center">
-                @if (!empty($inactive_recurrence->ends_at))
-                    {{ Carbon::parse($inactive_recurrence->ends_at)->format('d/m/Y') }}
-                @else
-                    -
-                @endif
-            </td>
-
             <td>
                 <button
                     type="button"
-                    class="btn btn-sm btn-success btn-action confirm-before-action"
-                    data-url="{{ route('recurrences_deactivate', $inactive_recurrence->id) }}"
-                    data-message="Désactiver cette récurrence ?"
+                    class="btn btn-sm btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal-recurrence-form"
+                    data-url="{{ route('recurrences_get', $inactive_recurrence->id) }}"
+                >
+                    <i class="fas fa-pencil"></i>
+                </button>
+
+                <button
+                    type="button"
+                    class="ms-1 btn btn-sm btn-success btn-action confirm-before-action"
+                    data-url="{{ route('recurrences_toggle_active', $inactive_recurrence->id) }}"
+                    data-message="Rétablir cette récurrence ?"
                     data-list="#recurrences-list-wrapper"
+                    title="Rétablir"
                 >
                     <i class="fas fa-arrows-rotate"></i>
                 </button>

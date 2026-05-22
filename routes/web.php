@@ -71,7 +71,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/filter', 'filter')->name('recurrences_filter');
             Route::get('/get/{id}', 'get')->name('recurrences_get');
             Route::post('/store', 'store')->name('recurrences_store');
-            Route::get('/deactivate/{recurrence_id}', 'deactivate')->name('recurrences_deactivate');
+            Route::get('/toggle-active/{recurrence_id}', 'toggleActive')->name('recurrences_toggle_active');
+            Route::get('/add-transacs/{recurrence_id}', 'addTransacs')->name('recurrences_add_transacs');
             Route::get('/detect', 'detectRecurrences')->name('recurrences_detect');
         });
 });

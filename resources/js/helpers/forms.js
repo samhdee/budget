@@ -167,7 +167,7 @@ $(function () {
                 showFlashMessage(
                     'danger',
                     typeof response.responseJSON.message !== 'undefined' ? response.responseJSON.message : 'Une erreur est survenue.'
-                )
+                );
             });
         }
     });

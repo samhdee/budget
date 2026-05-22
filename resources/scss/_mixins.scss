@@ -2,10 +2,10 @@
 $violet: #6247aa;
 $lavender: #a06cd5;
 
-$primary: #3abeff;
+$primary: #25a5e3;
 $danger: #f56476;
 $warning: #f5b700;
-$success: #138a36;
+$success: #298f46;
 
 // Corps
 $body-bg: #231f2a;
@@ -38,5 +38,9 @@ $position-values: (
 
 // Onglets
 $nav-tabs-link-active-color: $body-color;
+
+// Navbar
+$dropdown-bg: $violet;
+$dropdown-link-hover-color: $violet;
 
 @import "bootstrap/scss/bootstrap";

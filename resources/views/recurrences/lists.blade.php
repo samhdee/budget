@@ -17,15 +17,30 @@
     <li class="nav-item" role="presentation">
         <button
             class="nav-link"
+            id="recurreces-past-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#recurreces-past-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="recurrences-past-tab-pane"
+            aria-selected="false"
+        >
+            Récurrences passées
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button
+            class="nav-link"
             id="recurreces-inactive-tab"
             data-bs-toggle="tab"
             data-bs-target="#recurreces-inactive-tab-pane"
             type="button"
             role="tab"
-            aria-controls="recurreces-inactive-tab-pane"
+            aria-controls="recurrences-inactive-tab-pane"
             aria-selected="false"
         >
-            Récurrences passées/inactives
+            Récurrences inactives
         </button>
     </li>
 </ul>
@@ -44,10 +59,22 @@
     </div>
 
     <div
+        id="recurreces-past-tab-pane"
+        class="tab-pane fade"
+        role="tabpanel"
+        aria-labelledby="recurrences-past-tab"
+        tabindex="0"
+    >
+        <div class="mt-4 mx-auto w-75 list-wrapper">
+            @include('recurrences.past-list')
+        </div>
+    </div>
+
+    <div
         id="recurreces-inactive-tab-pane"
         class="tab-pane fade"
         role="tabpanel"
-        aria-labelledby="recurreces-inactive-tab"
+        aria-labelledby="recurrences-inactive-tab"
         tabindex="0"
     >
         <div class="mt-4 mx-auto w-75 list-wrapper">

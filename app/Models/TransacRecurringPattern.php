@@ -97,17 +97,19 @@ class TransacRecurringPattern extends Model
             ->whereHas('transactions');
 
 
-        if (!empty($filters['inactive'])) {
-            $query->where(function (Builder $query) {
-                $query->orWhereDate('ends_at', '<', Carbon::now())
-                    ->orWhere('active', 0);
-            });
+        if (isset($filters['active'])) {
+            $query->where('active', $filters['active']);
+        } else {
+            $query->where('active', 1);
+        }
+
+        if (!empty($filters['past'])) {
+            $query->whereDate('ends_at', '<', Carbon::now());
         } else {
             $query->where(function (Builder $query) {
                 $query->orWhereDate('ends_at', '>=', Carbon::now())
                     ->orWhereNull('ends_at');
-            })
-                ->where('active', 1);
+            });
         }
 
         return $query->orderBy('label')
@@ -119,11 +121,8 @@ class TransacRecurringPattern extends Model
     public static function getOne($recurrence_id): ?TransacRecurringPattern
     {
         return self::query()
-            ->select([
-                'id', 'label', 'beneficiary_id', 'amount', 'frequency_unit', 'frequency_count', 'ends_at',
-            ])
+            ->select(['id', 'label', 'beneficiary_id', 'amount', 'frequency_unit', 'frequency_count', 'ends_at'])
             ->whereHas('transactions')
-            ->where('active', 1)
             ->where('id', $recurrence_id)
             ->first();
     }

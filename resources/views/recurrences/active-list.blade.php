@@ -64,7 +64,7 @@
                     <button
                         type="button"
                         class="ms-1 btn btn-sm btn-success"
-                        data-url="{{ route('recurrences_deactivate', $recurrence->id) }}"
+                        data-url="{{ route('recurrences_add_transacs', $recurrence->id) }}"
                         data-message="Désactiver cette récurrence ?"
                         data-list="#recurrences-list-wrapper"
                     >
@@ -74,7 +74,7 @@
                     <button
                         type="button"
                         class="ms-1 btn btn-sm btn-danger btn-action confirm-before-action"
-                        data-url="{{ route('recurrences_deactivate', $recurrence->id) }}"
+                        data-url="{{ route('recurrences_toggle_active', $recurrence->id) }}"
                         data-message="Désactiver cette récurrence ?"
                         data-list="#recurrences-list-wrapper"
                     >

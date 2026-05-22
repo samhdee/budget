@@ -38,7 +38,8 @@ body {
             color: white;
 
             &:hover,
-            &.active {
+            &.active,
+            &.dropdown-toggle.show {
                 background-color: white;
                 color: $violet;
             }
