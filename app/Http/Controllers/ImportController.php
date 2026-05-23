@@ -26,6 +26,7 @@ class ImportController extends Controller
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_SEPA_BENEF = '#VIR\sSEPA\s([\w\-\s]+)#';
     private const string FIND_VIRT_SIMPLE_BENEF = '#VIREMENT\s([\w\-\s]+)#';
+    private const string FIND_VIRT_INST_BENEF = '#VIR\sINST\s([\w\-\s]+)#';
     private const string FIND_VIRT_WERO_BENEF = '#VIR\sINST\sWero\s([\w\-\s]+)#';
     private const string FIND_WITHDRAWAL = '#CB\s+RETRAIT\sDU\s+(\d{2}/\d{2}(?:/\d{2})?)#';
     private const string FIND_OTHER = '#([\w\-\s.]+)\s(\d{2}/\d{2}/\d{2})#';
@@ -76,18 +77,16 @@ class ImportController extends Controller
                         continue;
                     }
 
-                    $benef = '';
-                    $date = '';
                     $benef_result = null;
                     $benef_raw = !empty($line[self::COL_BENEFICIARY])
                         ? $line[self::COL_BENEFICIARY]
                         : $line[self::COL_BENEFICIARY_BIS];
 
                     $transac_results = match ($line[self::COL_TRANSAC_TYPE]) {
-                        'Carte' => $this->getCardInfo($benef_raw, $line[self::COL_DATE]),
-                        'Virement' => $this->getTransferInfo($benef_raw, $line[self::COL_DATE]),
+                        'Carte' => $this->getCardInfo($benef_raw),
+                        'Virement' => $this->getTransferInfo($benef_raw),
                         'Retrait DAB' => $this->getWithdrawalInfo($benef_raw),
-                        default => $this->getOtherInfo($benef_raw, $line[self::COL_DATE]),
+                        default => $this->getOtherInfo($benef_raw),
                     };
 
                     if (!empty($transac_results['benef'])) {
@@ -106,7 +105,7 @@ class ImportController extends Controller
                     Transaction::create([
                         'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
                         'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,
-                        'occurred_at' => $transac_results['date'],
+                        'occurred_at' => parseDateMultiFormat($line[self::COL_DATE])->format('Y-m-d'),
                         'type' => $transac_results['type'],
                         'category_id' => !empty($benef_result->category_id) ? $benef_result->category_id : null,
                         'line' => $i,
@@ -126,30 +125,20 @@ class ImportController extends Controller
 
     /**
      * @param mixed $benef_raw
-     * @param string $raw_date
      * @return array
      */
-    private function getCardInfo(mixed $benef_raw, string $raw_date): array
+    private function getCardInfo(mixed $benef_raw): array
     {
-        $benef = '';
         $has_match = preg_match(self::FIND_CB_BENEF, $benef_raw, $benef_matches);
 
-        if ($has_match) {
-            $benef = trim($benef_matches[1]);
-            $date = parseDateMultiFormat($benef_matches[2])->format('Y-m-d');
-        } else {
-            $date = parseDateMultiFormat('d/m/Y', $raw_date)->format('Y-m-d');
-        }
-
-        return ['type' => TransactionType::card->name, 'benef' => $benef, 'date' => $date];
+        return ['type' => TransactionType::card->name, 'benef' => $has_match ? trim($benef_matches[1]) : ''];
     }
 
     /**
      * @param mixed $benef_raw
-     * @param string $raw_date
      * @return array
      */
-    private function getTransferInfo(mixed $benef_raw, string $raw_date): array
+    private function getTransferInfo(mixed $benef_raw): array
     {
         $type = TransactionType::perma_transfer->name;
 
@@ -158,12 +147,14 @@ class ImportController extends Controller
 
             // @fixme : doit y avoir moyen de faire mieux è.è
             if (!$has_match = preg_match(self::FIND_VIRT_SIMPLE_BENEF, $benef_raw, $benef_matches)) {
-                if (!$has_match = preg_match(self::FIND_VIRT_SEPA_BENEF, $benef_raw, $benef_matches)) {
-                    $type = TransactionType::wero->name;
+                if (!$has_match = preg_match(self::FIND_VIRT_INST_BENEF, $benef_raw, $benef_matches)) {
+                    if (!$has_match = preg_match(self::FIND_VIRT_SEPA_BENEF, $benef_raw, $benef_matches)) {
+                        $type = TransactionType::wero->name;
 
-                    if (!$has_match = preg_match(self::FIND_VIRT_WERO_BENEF, $benef_raw, $benef_matches)) {
-                        $has_match = preg_match(self::FIND_PRLVT_BENEF, $benef_raw, $benef_matches);
-                        $type = TransactionType::collection->name;
+                        if (!$has_match = preg_match(self::FIND_VIRT_WERO_BENEF, $benef_raw, $benef_matches)) {
+                            $has_match = preg_match(self::FIND_PRLVT_BENEF, $benef_raw, $benef_matches);
+                            $type = TransactionType::collection->name;
+                        }
                     }
                 }
             }
@@ -172,7 +163,6 @@ class ImportController extends Controller
         return [
             'type' => $type,
             'benef' => !empty($has_match) ? trim($benef_matches[1]) : trim($benef_raw),
-            'date' => parseDateMultiFormat($raw_date)->format('Y-m-d')
         ];
     }
 
@@ -187,27 +177,17 @@ class ImportController extends Controller
         return [
             'type' => TransactionType::withdrawal->name,
             'benef' => '',
-            'date' => parseDateMultiFormat($benef_matches[1])->format('Y-m-d')
         ];
     }
 
     /**
      * @param mixed $benef_raw
-     * @param string $raw_date
      * @return array
      */
-    private function getOtherInfo(mixed $benef_raw, string $raw_date): array
+    private function getOtherInfo(mixed $benef_raw): array
     {
         $has_match = preg_match(self::FIND_OTHER, $benef_raw, $benef_matches);
 
-        if ($has_match) {
-            $benef = $benef_matches[1];
-            $date = parseDateMultiFormat($benef_matches[2])->format('Y-m-d');
-        } else {
-            $benef = trim($benef_raw);
-            $date = Carbon::createFromFormat('d/m/Y', $raw_date)->format('Y-m-d');
-        }
-
-        return ['type' => TransactionType::other->name, 'benef' => $benef, 'date' => $date];
+        return ['type' => TransactionType::other->name, 'benef' => $has_match ? $benef_matches[1] : trim($benef_raw)];
     }
 }

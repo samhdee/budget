@@ -43,9 +43,11 @@ class BeneficiariesController extends Controller
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Beneficiary::class],
             'raw_name' => [
-                'nullable',
+                'required',
                 'max:255',
-                'unique:' . Beneficiary::class,
+                !empty($request->input('id'))
+                    ? Rule::unique(Beneficiary::class)->ignore($request->input('id'))
+                    : 'unique:' . Beneficiary::class
             ],
             'pretty_name' => ['nullable', 'max:255'],
             'category_id' => ['nullable', 'integer', 'exists:' . Category::class . ',id'],

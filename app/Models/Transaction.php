@@ -114,7 +114,7 @@ class Transaction extends Model
         }
 
         return $query->orderByDesc('occurred_at')
-            ->orderByDesc('line')
+            ->orderByDesc('t.created_at')
             ->paginate(50);
     }
 

@@ -5,17 +5,6 @@ import {showFlashMessage} from "./helpers/helpers.js";
 import {formSerializeObject} from "./helpers/forms.js";
 
 $(function() {
-    // Active/désactive le champ raw_name
-    $(document).on('show.bs.modal', '#modal-benef-form', e => {
-        const action = $(e.relatedTarget).data('action');
-
-        if (action === 'edit') {
-            $('#benef-raw-name').prop('disabled', 'disabled');
-        } else if (action === 'create') {
-            $('#benef-raw-name').prop('disabled', '');
-        }
-    });
-
     // Synchronise les catégories de toutes les lignes sélectionnées
     $(document).on('click', '#bulk-sync-all', () => {
         if (confirm('Lier toutes les transactions des bénéficiaires à leurs catégories ?')) {

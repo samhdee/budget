@@ -35,9 +35,4 @@ $(function () {
     $(document).on('hide.bs.collapse', '#transac-new-benef-wrapper', () => {
         $('#transac-benef-id').prop('disabled', '');
     });
-
-    /* --- Édition Bénéficiaire --- */
-    $(document).on('show.bs.modal', '#modal-benef-form', e => {
-        $('#benef-raw-name').prop('disabled', 'disabled');
-    });
 });
