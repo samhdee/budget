@@ -57,6 +57,7 @@ class BeneficiariesController extends Controller
         if (!empty($data['id'])) {
             $benef_id = $data['id'];
             $benef = Beneficiary::find($data['id']);
+            $benef->raw_name = trim($data['raw_name']);
             $benef->pretty_name = trim($data['pretty_name']);
             $benef->category_id = $data['category_id'];
             $benef->description = trim($data['description']);

@@ -167,6 +167,11 @@ $(function () {
 
                 if (typeof response.view !== 'undefined') {
                     $($(button).data('list')).html(response.view);
+                } else if ($('.filters-wrapper').length > 0) {
+                    getFilteredList($('.pagination-wrapper').length > 0
+                        ? $('.pagination-wrapper .page-item.active .page-link').first().text()
+                        : null
+                    );
                 }
             }).fail(response => {
                 showFlashMessage(

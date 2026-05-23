@@ -40,7 +40,7 @@
 
         <tbody>
             @php /** @var Beneficiary $beneficiary */ @endphp
-            @foreach ($beneficiaries as $beneficiary)
+            @forelse ($beneficiaries as $beneficiary)
                 <tr>
                     <td>
                         <input
@@ -92,7 +92,13 @@
                         @endif
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        <i class="me-1 fas fa-ban"></i> Aucun résultat
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
