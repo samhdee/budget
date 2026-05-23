@@ -4,7 +4,7 @@
     use App\Models\Category;
 @endphp
 
-<div class="modal fade modal-form" id="modal-transac-form" tabindex="-1" aria-labelledby="transac-form-title" aria-hidden="true">
+<div class="modal fade modal-form" id="modal-transac-form" aria-labelledby="transac-form-title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -45,15 +45,15 @@
 
                     <div class="mt-3 position-relative">
                         <div class="pe-5 form-floating form-field">
-                            <select id="transac-benef-id" name="beneficiary_id" class="form-select">
+                            <select id="transac-benef-id" name="beneficiary_id" class="select2 form-select" style="width: 100%;">
                                 <option value=""></option>
 
                                 @php /** @var Beneficiary[] $beneficiaries */ @endphp
                                 @foreach ($beneficiaries as $beneficiary)
                                     <option value="{{ $beneficiary->id }}">
                                         {{ !empty($beneficiary->pretty_name)
-                                            ? $beneficiary->pretty_name :
-                                            $beneficiary->raw_name
+                                            ? "{$beneficiary->pretty_name} ({$beneficiary->raw_name})"
+                                            : $beneficiary->raw_name
                                         }}
                                     </option>
                                 @endforeach

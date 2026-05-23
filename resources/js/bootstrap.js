@@ -7,6 +7,7 @@ import.meta.glob([
 ]);
 
 window.jQuery = window.$ = $;
+
 document.addEventListener('DOMContentLoaded', () => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el, {

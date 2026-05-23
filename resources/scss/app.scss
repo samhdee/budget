@@ -1,6 +1,7 @@
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
 @import "../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "../../node_modules/select2/dist/css/select2.min.css";
 
 @import "mixins";
 @import "font_face";
@@ -90,5 +91,19 @@ body {
             left: 1rem;
             padding: 0 1rem;
         }
+    }
+
+    .select2-container--default .select2-selection--single {
+        border-color: #fff;
+        padding: 1.5rem .5rem 2rem;
+        background-color: $body-bg;
+
+        .select2-selection__rendered {
+            color: #fff;
+        }
+    }
+
+    .select2-dropdown {
+        background: $body-bg;
     }
 }

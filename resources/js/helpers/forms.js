@@ -56,7 +56,7 @@ export function showFormErrors(container, errors) {
 
 $(function () {
     // Renseigne ou vide le formulaire d'édition de categ
-    $(document).on('show.bs.modal', '.modal-form', e => {
+    $(document).on('shown.bs.modal', '.modal-form', e => {
         const open_button = $(e.relatedTarget);
         const form = $(e.currentTarget).find('form');
         const type = $(open_button).data('type');
@@ -74,7 +74,12 @@ $(function () {
             // @TODO: Ajouter la gestion d'erreur
             $.get($(open_button).data('url')).then(response => {
                 for (const i in response.item) {
-                    $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`).val(response.item[i]);
+                    const form_element = $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`);
+                    $(form_element).val(response.item[i]);
+
+                    if ($(form_element).hasClass('select2')) {
+                        $(form_element).trigger('change.select2');
+                    }
                 }
 
                 let title = ($(open_button).data('action') === 'delete' ? 'Supprimer ' : 'Éditer ');

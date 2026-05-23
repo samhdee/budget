@@ -12,6 +12,10 @@ $(function () {
 
     /* --- Édition Transaction --- */
     $(document).on('show.bs.modal', '#modal-transac-form', e => {
+        $('#transac-benef-id').select2({
+            dropdownParent: $('#modal-transac-form')
+        });
+
         if ($(e.relatedTarget).data('action') === 'edit') {
             $('#transac-line-wrapper').removeClass('d-none');
             $('#transac-file-wrapper').removeClass('d-none');
