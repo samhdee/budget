@@ -16,7 +16,7 @@
                 size="30"
             />
 
-            <label for="transac-filter-benef">Bénéficiaire</label>
+            <label for="benef-filter-benef">Bénéficiaire</label>
 
             <button
                 type="button"
@@ -27,8 +27,41 @@
             </button>
         </div>
 
+        <div class="filter-wrapper">
+            <input
+                id="benef-filter-with-transac-yes"
+                type="radio"
+                name="with_transac"
+                class="me-1"
+                value="true"
+            />
+            <label for="benef-filter-with-transac-yes" class="form-check-label">Avec transaction</label>
+        </div>
+
+        <div class="filter-wrapper">
+            <input
+                id="benef-filter-with-transac-no"
+                type="radio"
+                name="with_transac"
+                class="ms-2 me-1"
+                value="false"
+            />
+            <label for="benef-filter-with-transac-no" class="form-check-label">Sans</label>
+        </div>
+
+        <div class="filter-wrapper">
+            <input
+                id="benef-filter-with-transac-all"
+                type="radio"
+                name="with_transac"
+                class="ms-2 me-1"
+                value="all"
+            />
+            <label for="benef-filter-with-transac-all" class="form-check-label">Tout</label>
+        </div>
+
         <div>
-            <button type="button" class="btn btn-sm btn-danger all-filter-reset">
+            <button type="button" class="ms-2 btn btn-sm btn-danger all-filter-reset">
                 <i class="fas fa-trash"></i>
             </button>
         </div>

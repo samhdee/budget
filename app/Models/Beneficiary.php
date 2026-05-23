@@ -71,6 +71,14 @@ class Beneficiary extends Model
             });
         }
 
+        if (!empty($filters['with_transac'])) {
+            if ($filters['with_transac'] === 'true') {
+                $query->whereHas('transactions');
+            } elseif ($filters['with_transac'] === 'false') {
+                $query->whereDoesntHave('transactions');
+            }
+        }
+
         return $query->orderBy('raw_name')
             ->orderBy('pretty_name')
             ->paginate();

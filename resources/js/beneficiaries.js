@@ -79,19 +79,4 @@ $(function() {
             });
         }
     });
-
-    // Supprimer un benef
-    $(document).on('click', '.delete-benef', e => {
-        e.preventDefault();
-
-        if (confirm(`Supprimer le bénéficiaire ${$(e.currentTarget).data('raw_name')} ?`)) {
-            $.get($(e.currentTarget).data('url'))
-                .then(response => {
-
-                })
-                .fail(response => {
-
-                });
-        }
-    });
 });

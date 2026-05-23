@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Validator;
 
 class BeneficiariesController extends Controller
 {
@@ -140,10 +141,18 @@ class BeneficiariesController extends Controller
 
     /**
      * @param int $benef_id
-     * @return void
+     * @return JsonResponse
      */
     public function delete(int $benef_id)
     {
+        $benef = Beneficiary::query()
+            ->whereDoesntHave('transactions')
+            ->first();
 
+        if (empty($benef_id) || empty($benef)) {
+            return response()->json(['message' => 'Bénéficiaire introuvable ou lié à une transaction.'], 422);
+        }
+
+        return response()->json(['updated' => $benef->delete()]);
     }
 }

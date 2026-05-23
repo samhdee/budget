@@ -2,20 +2,28 @@
 
 body {
     .table {
+        tr {
+            th {
+                background-color: $lavender;
+                color: white;
+            }
+
+             td:not(.text-danger):not(.text-success) {
+                 color: white;
+             }
+
+            .form-control {
+                border: none;
+                background-color: #363535;
+            }
+        }
+
+        &.align-middle {
             tr {
                 th {
-                    background-color: $lavender;
-                    color: white;
-                }
-
-                 td:not(.text-danger):not(.text-success) {
-                     color: white;
-                 }
-
-                .form-control {
-                    border: none;
-                    background-color: #363535;
+                    vertical-align: middle;
                 }
             }
         }
+    }
 }

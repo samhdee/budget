@@ -7,6 +7,10 @@ export const getFilteredList = (page = null) => {
     const filters = {};
 
     $(wrapper).find('select, input').each(function () {
+        if ($(this).prop('type') === 'radio' && !$(this).is(':checked')) {
+            return;
+        }
+
         filters[$(this).prop('name')] = $(this).val();
     });
 

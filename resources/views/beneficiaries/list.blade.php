@@ -83,9 +83,9 @@
                         @if (empty($beneficiary->nb_transactions))
                             <button
                                 type="button"
-                                class="ms-1 btn btn-sm btn-danger delete-benef"
+                                class="ms-1 btn btn-sm btn-danger btn-action confirm-before-action"
                                 data-url="{{ route('benef_delete', $beneficiary->id) }}"
-                                data-raw_name="{{ $beneficiary->raw_name }}"
+                                data-message="Supprimer ce bénéficiaire ?"
                             >
                                 <i class="fas fa-trash"></i>
                             </button>
