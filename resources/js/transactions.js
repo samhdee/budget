@@ -1,7 +1,5 @@
 import './helpers/filters.js';
 import './helpers/forms.js';
-import { formSerializeObject, showFormErrors } from "./helpers/forms.js";
-import { getFilteredList } from "./helpers/filters.js";
 
 $(function () {
     // Filtres début/fin : change la range de dates sélectionnables

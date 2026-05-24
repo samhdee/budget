@@ -2,20 +2,23 @@
 
 use App\Http\Controllers\BeneficiariesController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LabelsController;
 use App\Http\Controllers\RecurrencesController;
 use App\Http\Controllers\TransactionsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Désactive l’uri /
-    Route::get('/', function () {
-        return to_route('transac_index');
-    });
+    Route::controller(DashboardController::class)
+        ->prefix('dashboard')
+        ->group(function () {
+            Route::get('/', 'index')->name('home');
+            Route::post('/expanses/filter', 'expFilter')->name('dashboard_exp_filter');
+        });
 
     Route::controller(TransactionsController::class)
         ->prefix('transactions')
@@ -24,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', 'filter')->name('transac_filter');
             Route::get('/get/{id}', 'get')->name('transac_get');
             Route::post('/store', 'store')->name('transac_store');
-            Route::post('/delete', 'delete')->name('transac_delete');
+            Route::get('/delete/{id}', 'delete')->name('transac_delete');
         });
 
     Route::controller(BeneficiariesController::class)

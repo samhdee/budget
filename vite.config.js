@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/beneficiaries.js',
                 'resources/js/categories.js',
+                'resources/js/dashboard.js',
                 'resources/js/helpers/filters.js',
                 'resources/js/helpers/forms.js',
                 'resources/js/recurrences.js',

@@ -7,7 +7,7 @@
 @endphp
 
 <div class="pagination-wrapper">
-    {{ $transactions->links() }}
+    {{ $transac_expanses->links() }}
 </div>
 
 <div class="d-flex justify-content-end">
@@ -24,9 +24,9 @@
         <th style="width: 2rem;">
             <input id="bulk-select-all" type="checkbox" class="form-check"/>
         </th>
-        <th style="width: 7rem">Date</th>
+        <th style="width: 6rem">Date</th>
         <th style="width: 7rem">Montant</th>
-        <th>Type</th>
+        <th style="width: 8rem;">Type</th>
         <th>Bénéficiaire</th>
         <th>Catégorie</th>
         <th style="width: 12rem">Notes</th>
@@ -36,7 +36,7 @@
 
     <tbody>
     @php /** @var Transaction $transaction */ @endphp
-    @forelse ($transactions as $transaction)
+    @forelse ($transac_expanses as $transaction)
         <tr>
             <td>
                 <input type="checkbox" class="form-check bulk-select" data-transac_id="{{ $transaction->id }}"/>
@@ -55,10 +55,10 @@
                     data-url="{{ route('benef_get', $transaction->beneficiary_id) }}"
                     data-action="edit"
                     data-type="bénéficiaire"
+                    data-list="#expanses-list-wrapper"
                     title="{{ $transaction->raw_name }}"
                 >
                     {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
-                    <i class="text-small fas fa-person-through-window"></i>
                 </a>
             </td>
 

@@ -17,9 +17,9 @@
     <li class="nav-item" role="presentation">
         <button
             class="nav-link"
-            id="recurreces-past-tab"
+            id="recurrences-past-tab"
             data-bs-toggle="tab"
-            data-bs-target="#recurreces-past-tab-pane"
+            data-bs-target="#recurrences-past-tab-pane"
             type="button"
             role="tab"
             aria-controls="recurrences-past-tab-pane"
@@ -32,9 +32,9 @@
     <li class="nav-item" role="presentation">
         <button
             class="nav-link"
-            id="recurreces-inactive-tab"
+            id="recurrences-inactive-tab"
             data-bs-toggle="tab"
-            data-bs-target="#recurreces-inactive-tab-pane"
+            data-bs-target="#recurrences-inactive-tab-pane"
             type="button"
             role="tab"
             aria-controls="recurrences-inactive-tab-pane"
@@ -45,7 +45,7 @@
     </li>
 </ul>
 
-<div class="tab-content" id="recurreces-tab-content">
+<div class="tab-content" id="recurrences-tab-content">
     <div
         id="recurrences-active-tab-pane"
         class="tab-pane fade show active"
@@ -59,7 +59,7 @@
     </div>
 
     <div
-        id="recurreces-past-tab-pane"
+        id="recurrences-past-tab-pane"
         class="tab-pane fade"
         role="tabpanel"
         aria-labelledby="recurrences-past-tab"
@@ -71,7 +71,7 @@
     </div>
 
     <div
-        id="recurreces-inactive-tab-pane"
+        id="recurrences-inactive-tab-pane"
         class="tab-pane fade"
         role="tabpanel"
         aria-labelledby="recurrences-inactive-tab"

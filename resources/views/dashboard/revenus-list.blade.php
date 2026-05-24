@@ -2,13 +2,7 @@
     use App\Enums\TransactionType;
     use App\Models\Transaction;
     use Carbon\Carbon;
-    use Illuminate\Pagination\LengthAwarePaginator;
-    /** @var LengthAwarePaginator $transactions */
 @endphp
-
-<div class="pagination-wrapper">
-    {{ $transactions->links() }}
-</div>
 
 <div class="d-flex justify-content-end">
     <div id="bulk-action-wrapper" class="d-none">
@@ -36,7 +30,7 @@
 
     <tbody>
     @php /** @var Transaction $transaction */ @endphp
-    @forelse ($transactions as $transaction)
+    @forelse ($transac_revenus as $transaction)
         <tr>
             <td>
                 <input type="checkbox" class="form-check bulk-select" data-transac_id="{{ $transaction->id }}"/>
@@ -81,7 +75,9 @@
                 <button
                     type="button"
                     class="ms-1 btn btn-sm btn-danger btn-action confirm-before-action"
-                    data-url="{{ route('transac_delete', $transaction->id) }}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal-transac-delete"
+                    data-url="{{ route('transac_get', $transaction->id) }}"
                     data-message="Supprimer cette transaction ?"
                 >
                     <i class="fas fa-trash"></i>

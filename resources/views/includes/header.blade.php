@@ -7,20 +7,29 @@
         <ul class="navbar-nav">
             <li>
                 <a
-                    class="me-2 nav-link {{ str_starts_with(Route::currentRouteName(), 'transac_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
-                    href="{{ route('transac_index') }}"
+                    class="nav-link {{ str_starts_with (Route::currentRouteName(), 'home') ? 'active' : '' }}"
+                    href="{{ route('home') }}"
                 >
-                    Transactions
+                    Dashboard
                 </a>
             </li>
 
-            <li class="nav-item dropdown">
+            <li class="ms-1 nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                    aria-expanded="false">
                     Gérer
                 </a>
 
                 <ul class="dropdown-menu">
+                    <li>
+                        <a
+                            class="me-2 dropdown-item {{ str_starts_with(Route::currentRouteName(), 'transac_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
+                            href="{{ route('transac_index') }}"
+                        >
+                            Transactions
+                        </a>
+                    </li>
+
                     <li>
                         <a
                             class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'recurrences_') ? 'active' : '' }}"
@@ -61,7 +70,7 @@
 
             <li>
                 <a
-                    class="nav-link {{ str_starts_with (Route::currentRouteName(), 'import_') ? 'active' : '' }}"
+                    class="ms-1 nav-link {{ str_starts_with (Route::currentRouteName(), 'import_') ? 'active' : '' }}"
                     href="{{ route('import_index') }}"
                 >
                     Import

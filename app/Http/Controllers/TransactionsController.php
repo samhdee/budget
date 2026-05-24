@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class TransactionsController extends Controller
@@ -86,12 +87,12 @@ class TransactionsController extends Controller
         return response()->json(['updated' => $transac_id]);
     }
 
-    public function delete(Request $request)
+    public function delete($transac_id)
     {
-        $data = $request->validate([
+        \validator(\request()->route()->parameters(), [
             'id' => ['required', 'integer', 'exists:' . Transaction::class],
-        ]);
+        ])->validate();
 
-        return response()->json(['deleted' => Transaction::where('id', $data['id'])->delete()]);
+        return response()->json(['deleted' => Transaction::where('id', $transac_id)->delete()]);
     }
 }

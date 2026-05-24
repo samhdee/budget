@@ -79,7 +79,7 @@ class Transaction extends Model
      * @param array $filters
      * @return LengthAwarePaginator
      */
-    public static function getList(array $filters = []): LengthAwarePaginator
+    public static function getList(array $filters = [], $per_page = 50): LengthAwarePaginator
     {
         $query = self::query()
             ->select([
@@ -89,6 +89,14 @@ class Transaction extends Model
             ->from('transactions as t')
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->leftJoin('categories as c', 'c.id', 't.category_id');
+
+        if (!empty($filters['sign'])) {
+            if ($filters['sign'] === 'negative') {
+                $query->where('amount', '<', 0);
+            } else {
+                $query->where('amount', '>', 0);
+            }
+        }
 
         if (!empty($filters['type'])) {
             $query->where('type', $filters['type']);
@@ -115,7 +123,7 @@ class Transaction extends Model
 
         return $query->orderByDesc('occurred_at')
             ->orderByDesc('t.created_at')
-            ->paginate(50);
+            ->paginate($per_page);
     }
 
     /**

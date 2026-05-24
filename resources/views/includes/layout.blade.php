@@ -15,7 +15,7 @@
     <container>
         @include('includes.header')
 
-        <main id="main-container" class="container">
+        <main id="main-container" class="container-xxl">
             @csrf
 
             <div id="global-alert-wrapper">

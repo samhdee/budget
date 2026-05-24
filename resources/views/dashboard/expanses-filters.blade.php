@@ -5,13 +5,13 @@
 
 <div class="d-flex justify-content-between align-items-center">
     <div
-        id="transactions-filter-wrapper"
+        id="expanses-filter-wrapper"
         class="filters-wrapper d-flex gap-3"
-        data-url="{{ route('transac_filter') }}"
-        data-target="#transac-list-wrapper"
+        data-url="{{ route('dashboard_exp_filter') }}"
+        data-target="#expanses-list-wrapper"
     >
         <div class="form-floating">
-            <select id="transac-filter-type" name="type" class="form-select">
+            <select id="expanses-filter-type" name="type" class="form-select">
                 <option value="">Tous</option>
 
                 @foreach(TransactionType::cases() as $transac_type)
@@ -21,11 +21,11 @@
                 @endforeach
             </select>
 
-            <label for="transac-filter-type">Type</label>
+            <label for="expanses-filter-type">Type</label>
         </div>
 
         <div class="form-floating">
-            <select id="transac-filter-category" name="category_id" class="form-select">
+            <select id="expanses-filter-category" name="category_id" class="form-select">
                 <option value="">Tous</option>
 
                 @php /** @var Category $category */ @endphp
@@ -36,36 +36,27 @@
                 @endforeach
             </select>
 
-            <label for="transac-filter-type">Catégorie</label>
+            <label for="expanses-filter-type">Catégorie</label>
         </div>
 
         <div class="filter-wrapper with-reset form-floating">
             <input
-                id="transac-filter-benef"
+                id="expanses-filter-benef"
                 type="text"
                 name="benef_name"
                 class="form-control"
                 size="30"
             />
 
-            <label for="transac-filter-benef">Bénéficiaire</label>
+            <label for="expanses-filter-benef">Bénéficiaire</label>
 
-            <button type="button" class="filter-reset d-none btn btn-sm btn-close-white"
-                    data-target="#transac-filter-benef">
+            <button
+                type="button"
+                class="filter-reset d-none btn btn-sm btn-close-white"
+                data-target="#expanses-filter-benef"
+            >
                 <i class="fas fa-xmark-circle"></i>
             </button>
-        </div>
-
-        <div class="d-flex gap-1">
-            <div class="form-floating">
-                <input id="transac-filter-date-start" name="date_start" type="date" class="form-control"/>
-                <label for="transac-filter-date-start">Début</label>
-            </div>
-
-            <div class="form-floating">
-                <input id="transac-filter-date-end" name="date_end" type="date" class="form-control"/>
-                <label for="transac-filter-date-end">Fin</label>
-            </div>
         </div>
 
         <div>

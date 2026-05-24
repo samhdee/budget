@@ -112,7 +112,7 @@ $(function () {
                 if (typeof response.view !== 'undefined') {
                     if (typeof $(form).data('list') !== 'undefined') {
                         $($(form).data('list')).html(response.view);
-                    } else {
+                    } else if (typeof response.view !== 'undefined') {
                         $('.list-wrapper').html(response.view);
                     }
                 } else {
