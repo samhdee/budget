@@ -21,6 +21,7 @@ class ImportController extends Controller
     private const int COL_TRANSAC_TYPE = 2;
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
+    private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b)#';
     private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)\s(\d{2}/\d{2}/\d{2})#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
@@ -56,8 +57,6 @@ class ImportController extends Controller
         $all_files = Storage::disk('statements')->files('/');
 
         // @TODO: Collecter les benefs créés pour permettre de les éditer ensuite
-        $created_benefs = false;
-
         foreach ($all_files as $file) {
             if (!preg_match('/\.csv$/', $file)) {
                 continue;
@@ -69,6 +68,7 @@ class ImportController extends Controller
             // Récupère le fichier à importer
             if ($handle = fopen(storage_path("statements/$file"), "r")) {
                 $i = 0;
+                $errors = [];
 
                 // @TODO: Ajouter un param pour choisir le séparateur
                 while ($line = fgetcsv($handle, separator: ';')) {
@@ -81,6 +81,95 @@ class ImportController extends Controller
                     $benef_raw = !empty($line[self::COL_BENEFICIARY])
                         ? $line[self::COL_BENEFICIARY]
                         : $line[self::COL_BENEFICIARY_BIS];
+
+                    $has_match = preg_match(self::FIND_TRANSAC_TYPE, $benef_raw, $matches);
+
+                    if ($has_match) {
+                        $match_type = preg_replace('/\s+/', ' ', $matches[1]);
+                        dump($match_type);
+
+                        switch ($match_type) {
+                            case 'CB':
+                                $has_match_benef = preg_match(self::FIND_CB_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            case 'PRLV SEPA':
+                                $has_match_benef = preg_match(self::FIND_PRLVT_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            case 'VIR SEPA':
+                                $has_match_benef = preg_match(self::FIND_VIRT_SEPA_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            case 'VIR INST Wero':
+                                $has_match_benef = preg_match(self::FIND_VIRT_WERO_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            case 'VIR INST':
+                                $has_match_benef = preg_match(self::FIND_VIRT_INST_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            case 'VIREMENT':
+                                $has_match_benef = preg_match(self::FIND_VIRT_SIMPLE_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            case 'VIR.PERMANENT':
+                                $has_match_benef = preg_match(self::FIND_VIRT_PERMA_BENEF, $benef_raw, $matches_benef);
+
+                                if (!empty($has_match_benef)) {
+                                    $benef_raw_name = $matches_benef[1];
+                                } else {
+                                    $errors[] = $line;
+                                }
+                                break;
+
+                            // @FIXME: Doit y avoir moyen de faire plus propre que des valeurs en dur, surtout avec un double espace è.è
+                            'CB RETRAIT' => self::FIND_WITHDRAWAL,
+                            // @TODO: penser au cas prêt immo
+                            'PRET IMMOBILIER' =>
+                            default => '',
+                        };
+                        dump($search_benef_regexp);
+                        dump('========================================');
+                    } else {
+                        // @TODO: Erreur ?
+                    }
 
                     $transac_results = match ($line[self::COL_TRANSAC_TYPE]) {
                         'Carte' => $this->getCardInfo($benef_raw),
@@ -115,6 +204,7 @@ class ImportController extends Controller
                     $i++;
                 }
 
+                dd('FINITO PIPO');
                 DB::commit();
                 Storage::disk('statements')->move("/{$file}", "/parsed/{$file}");
             }

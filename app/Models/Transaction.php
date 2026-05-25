@@ -87,7 +87,7 @@ class Transaction extends Model
                 'b.pretty_name', 'b.notes as benef_notes', 'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->from('transactions as t')
-            ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
+            ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->leftJoin('categories as c', 'c.id', 't.category_id');
 
         if (!empty($filters['sign'])) {
