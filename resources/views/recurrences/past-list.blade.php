@@ -24,7 +24,7 @@
     @forelse ($past_recurrences as $past_recurrence)
         <tr>
             <td>
-                <input class="bulk-select form-check" type="checkbox" data-recurrence_id="{{ $past_recurrence->id }}"/>
+                <input class="bulk-select form-check" type="checkbox" data-item_id="{{ $past_recurrence->id }}"/>
             </td>
 
             <td>{{ $past_recurrence->label }}</td>

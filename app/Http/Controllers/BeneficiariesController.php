@@ -75,15 +75,45 @@ class BeneficiariesController extends Controller
         return response()->json(['updated' => $benef_id]);
     }
 
+    public function storeInBulk(Request $request)
+    {
+        $data = $request->validate([
+            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
+                return [
+                    Rule::exists(Beneficiary::class, 'id'),
+                ];
+            }),
+            'category_id' => ['required', 'exists:' . Category::class . ',id'],
+            'pretty_name' => ['nullable', 'max:255'],
+        ]);
+
+        $update_data = [
+            'category_id' => $data['category_id'],
+        ];
+
+        if (!empty($data['pretty_name'])) {
+            $update_data['pretty_name'] = $data['pretty_name'];
+        }
+
+        $updated = Beneficiary::whereIn('id', $data['item_ids'])
+            ->update($update_data);
+
+        return response()->json(['updated' => $updated]);
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
      */
     public function syncCategories(Request $request): JsonResponse
     {
+        \validator(\request()->route()->parameters(), [
+            'id' => ['required', 'integer', 'exists:' . Beneficiary::class],
+        ])->validate();
+
         $benefs = Beneficiary::query()
             ->select(['id', 'category_id'])
-            ->whereIn('id', $request->input('benef_ids'))
+            ->where('id', $request->input('id'))
             ->get();
 
         $nb_updated = 0;
@@ -106,37 +136,22 @@ class BeneficiariesController extends Controller
      * @param int $categ_id
      * @return JsonResponse
      */
-    public function syncCategoriesInBulk(Request $request, int $benef_id, int $categ_id): JsonResponse
-    {
-        $transactions = Transaction::whereIn('beneficiary_id', $benef_id)
-            ->update(['category_id' => $categ_id]);
-        return response()->json(['updated' => $transactions]);
-    }
-
-    public function storeInBulk(Request $request)
+    public function syncCategoriesInBulk(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'benef_ids.*' => Rule::forEach(function ($value, string $attribute) {
+            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
                 return [
-                    Rule::exists(Beneficiary::class, 'id'),
+                    Rule::exists(Transaction::class, 'id'),
                 ];
             }),
-            'category_id' => ['required', 'exists:' . Category::class . ',id'],
-            'pretty_name' => ['nullable', 'max:255'],
         ]);
 
-        $update_data = [
-            'category_id' => $data['category_id'],
-        ];
+        $beneficiaries = Beneficiary::query()
+            ->select(['id', 'category_id'])
 
-        if (!empty($data['pretty_name'])) {
-            $update_data['pretty_name'] = $data['pretty_name'];
-        }
-
-        $updated = Beneficiary::whereIn('id', $data['benef_ids'])
-            ->update($update_data);
-
-        return response()->json(['updated' => $updated]);
+        $transactions = Transaction::whereIn('beneficiary_id', $data['item_ids'])
+            ->update(['category_id' => $categ_id]);
+        return response()->json(['updated' => $transactions]);
     }
 
     /**

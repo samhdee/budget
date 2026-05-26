@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', 'filter')->name('transac_filter');
             Route::get('/get/{id}', 'get')->name('transac_get');
             Route::post('/bulk-store', 'bulkStore')->name('transac_bulk_store');
+            Route::post('/bulk-delete', 'bulkDelete')->name('transac_bulk_delete');
             Route::post('/store', 'store')->name('transac_store');
             Route::get('/delete/{id}', 'delete')->name('transac_delete');
         });
@@ -38,9 +39,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/get/{id}', 'get')->name('benef_get');
             Route::post('/filter', 'filter')->name('benef_filter');
             Route::post('/store', 'store')->name('benef_store');
-            Route::get('/delete/{benef_id}', 'delete')->name('benef_delete');
+            Route::post('/bulk-store', 'storeInBulk')->name('benef_bulk_store');
             Route::post('/sync', 'syncCategories')->name('benef_sync');
-            Route::post('/bulk-sync-edit', 'storeInBulk')->name('benef_bulk_edit');
+            Route::post('/bulk-sync', 'syncCategoriesInBulk')->name('benef_bulk_sync');
+            Route::get('/delete/{benef_id}', 'delete')->name('benef_delete');
         });
 
     Route::controller(CategoriesController::class)

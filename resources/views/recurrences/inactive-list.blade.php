@@ -23,7 +23,7 @@
     @forelse($inactive_recurrences as $inactive_recurrence)
         <tr>
             <td>
-                <input class="bulk-select form-check" type="checkbox" data-recurrence_id="{{ $inactive_recurrence->id }}"/>
+                <input class="bulk-select form-check" type="checkbox" data-item_id="{{ $inactive_recurrence->id }}"/>
             </td>
 
             <td>{{ $inactive_recurrence->label }}</td>

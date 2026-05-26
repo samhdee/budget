@@ -17,13 +17,18 @@
             class="btn btn-sm btn-primary"
             data-bs-toggle="modal"
             data-bs-target="#modal-transac-bulk-form"
-            data-type="transaction"
-            data-action="edit"
+            data-action="bulk"
         >
             <i class="fas fa-pencil"></i>
         </button>
 
-        <button id="bulk-delete" type="button" class="btn btn-sm btn-danger">
+        <button
+            id="bulk-delete"
+            type="button"
+            class="ms-1 btn btn-sm btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#modal-transac-bulk-delete-form"
+        >
             <i class="fas fa-trash"></i>
         </button>
     </div>
@@ -50,7 +55,7 @@
     @forelse ($transactions as $transaction)
         <tr>
             <td>
-                <input type="checkbox" class="form-check bulk-select" data-transac_id="{{ $transaction->id }}"/>
+                <input type="checkbox" class="form-check bulk-select" data-item_id="{{ $transaction->id }}"/>
             </td>
 
             <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
@@ -114,3 +119,4 @@
 @include('transactions.modal_form')
 @include('beneficiaries.modal_form')
 @include('transactions.modal_bulk_form')
+@include('transactions.modal_bulk_delete_form')

@@ -52,7 +52,7 @@ class TransactionsController extends Controller
     public function bulkStore(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'transac_ids.*' => Rule::forEach(function ($value, string $attribute) {
+            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
                 return [
                     Rule::exists(Transaction::class, 'id'),
                 ];
@@ -78,7 +78,7 @@ class TransactionsController extends Controller
             return response()->json(['message' => 'Rien à mettre à jour']);
         }
 
-        $nb_updated = Transaction::whereIn('id', $data['transac_ids'])
+        $nb_updated = Transaction::whereIn('id', $data['item_ids'])
             ->update($update_data);
 
         return response()->json(['updated' => $nb_updated]);
@@ -133,5 +133,18 @@ class TransactionsController extends Controller
         ])->validate();
 
         return response()->json(['deleted' => Transaction::where('id', $transac_id)->delete()]);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $data = $request->validate([
+            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
+                return [
+                    Rule::exists(Transaction::class, 'id'),
+                ];
+            }),
+        ]);
+
+        return response()->json(['deleted' => Transaction::whereIn('id', $data['item_ids'])->delete()]);
     }
 }

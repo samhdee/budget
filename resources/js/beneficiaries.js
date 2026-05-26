@@ -5,57 +5,6 @@ import {showFlashMessage} from "./helpers/helpers.js";
 import {formSerializeObject} from "./helpers/forms.js";
 
 $(function() {
-    // Synchronise les catégories de toutes les lignes sélectionnées
-    $(document).on('click', '#bulk-sync-all', () => {
-        if (confirm('Lier toutes les transactions des bénéficiaires à leurs catégories ?')) {
-            const benef_ids = [];
-
-            $('.bulk-select:checked').each((i, el) => {
-                benef_ids.push($(el).data('benef_id'));
-            });
-
-            $.post($('#bulk-sync-all').data('url'), {benef_ids}, response => {
-                showFlashMessage('success', `${response.updated} transaction(s) mise(s) à jour sur ${$('.bulk-select').length} !`);
-                getFilteredList($('.pagination-wrapper .page-item.active .page-link').length > 0
-                    ? $('.pagination-wrapper .page-item.active .page-link').text()
-                    : null
-                );
-            });
-        }
-    });
-
-    // Initialise le formulaire d'assignation de catégories en masse
-    $(document).on('show.bs.modal', '#modal-benef-bulk-form', () => {
-        $('input[name^="benef_ids"]').remove();
-        $('#benef-bulk-category-id').val('');
-
-        $('.bulk-select:checked').each((i, el) => {
-            $('#modal-benef-bulk-form .modal-body').prepend(`<input type="hidden" name="benef_ids[]" value="${$(el).data('benef_id')}" />`);
-        });
-    });
-
-    // Soumet le formulaire d'édition de masse
-    $(document).on('submit', '#benef-bulk-edit-form', e => {
-        e.preventDefault();
-
-        $.post(
-            $('#benef-bulk-edit-form').prop('action'),
-            formSerializeObject('#benef-bulk-edit-form'),
-            response => {
-                $('#modal-benef-bulk-form .btn-close').trigger('click');
-                showFlashMessage('success', `${response.updated} bénéficiaire (s) mis à jour sur ${$('.bulk-select').length} !`);
-                getFilteredList($('.pagination-wrapper .page-item.active .page-link').length > 0
-                    ? $('.pagination-wrapper .page-item.active .page-link').text()
-                    : null
-                );
-            }
-        ).fail(response => {
-            showFlashMessage('danger', typeof response.responseJSON.message !== 'undefined'
-                ? response.responseJSON.message
-                : 'Une erreur inattendue s\'est produite.'
-            );
-        });
-    });
 
     // Lie les transactions des bénéfs à la catégorie par défaut du bénéf
     $(document).on('click', '.sync-categories', e => {

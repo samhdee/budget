@@ -19,4 +19,5 @@
 
     @include('beneficiaries.modal_form')
     @include('beneficiaries.modal_bulk_form')
+    @include('beneficiaries.modal_bulk_sync')
 @endsection

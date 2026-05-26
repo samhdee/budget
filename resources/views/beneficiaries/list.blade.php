@@ -7,17 +7,23 @@
 
     <div class="d-flex justify-content-end">
         <div id="bulk-action-wrapper" class="d-none">
-            <button id="bulk-sync-all" type="button" class="btn btn-sm btn-primary" data-url="{{ route('benef_sync') }}">
+            <button
+                id="bulk-sync-all"
+                type="button"
+                class="btn btn-sm btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-benef-bulk-sync-form"
+                data-action="bulk"
+            >
                 <i class="fas fa-link"></i>
             </button>
 
             <button
-                id="bulk-add-categ-all"
                 type="button"
                 class="btn btn-sm btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#modal-benef-bulk-form"
-                data-action="bulk-edit"
+                data-action="bulk"
             >
                 <i class="fas fa-pencil"></i>
             </button>
@@ -43,11 +49,7 @@
             @forelse ($beneficiaries as $beneficiary)
                 <tr>
                     <td>
-                        <input
-                            type="checkbox"
-                            class="bulk-select form-check"
-                            data-benef_id="{{ $beneficiary->id }}"
-                        />
+                        <input type="checkbox" class="bulk-select form-check" data-item_id="{{ $beneficiary->id }}"/>
                     </td>
 
                     <td>{{ $beneficiary->raw_name }}</td>
@@ -72,7 +74,7 @@
                         @if (!empty($beneficiary->category_id))
                             <button
                                 type="button"
-                                class="ms-1 btn btn-sm btn-primary sync-categories"
+                                class="ms-1 btn btn-sm btn-primary confirm-before-action"
                                 data-url="{{ route('benef_sync') }}"
                                 data-benef_id="{{ $beneficiary->id }}"
                             >

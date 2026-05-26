@@ -24,7 +24,7 @@
         @forelse($recurrences as $recurrence)
             <tr>
                 <td>
-                    <input class="bulk-select form-check" type="checkbox" data-recurrence_id="{{ $recurrence->id }}"/>
+                    <input class="bulk-select form-check" type="checkbox" data-item_="{{ $recurrence->id }}"/>
                 </td>
 
                 <td>{{ $recurrence->label }}</td>

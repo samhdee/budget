@@ -33,7 +33,7 @@
     @forelse ($transac_revenus as $transaction)
         <tr>
             <td>
-                <input type="checkbox" class="form-check bulk-select" data-transac_id="{{ $transaction->id }}"/>
+                <input type="checkbox" class="form-check bulk-select" data-item_id="{{ $transaction->id }}"/>
             </td>
 
             <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>

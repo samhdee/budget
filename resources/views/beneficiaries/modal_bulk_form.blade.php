@@ -2,14 +2,14 @@
 
 <div
     id="modal-benef-bulk-form"
-    class="modal fade"
+    class="modal fade modal-bulk-form"
     tabindex="-1"
     aria-labelledby="benef-form-label"
     aria-hidden="true"
 >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="benef-bulk-edit-form" class="mt-4" method="POST" action="{{ route('benef_bulk_edit') }}">
+            <form id="benef-bulk-edit-form" class="mt-4" method="POST" action="{{ route('benef_bulk_store') }}">
                 <div class="modal-header">
                     <h3 class="modal-title fs-4" id="benef-form-label"></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

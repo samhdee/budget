@@ -69,7 +69,7 @@ $(function () {
             // Reset le formulaire
             $(form).find('input, select, textarea').val('');
             $(form).find('.modal-title').text(`Ajouter ${type}`);
-        } else {
+        } else if (typeof $(open_button).data('url') !== 'undefined') {
             // Récupère et affiche les infos de la categorie
             // @TODO: Ajouter la gestion d'erreur
             $.get($(open_button).data('url')).then(response => {
@@ -97,9 +97,22 @@ $(function () {
         }
     });
 
-    $(document).on('click', '.modal-form *[type="submit"]', e => {
+    // Initialise le formulaire d'édition de mâsse
+    $(document).on('show.bs.modal', '.modal-bulk-form', e => {
+        const modal = $(e.relatedTarget).data('bs-target');
+        $(modal).find('input[name^="item_ids"]').remove();
+        $(modal).find('form input, form select, form textarea').val('');
+
+        $('.bulk-select:checked').each((i, el) => {
+            $(modal).find('form')
+                .prepend(`<input type="hidden" name="item_ids[]" value="${$(el).data('item_id')}" />`);
+        });
+    });
+
+    // Soumet les formulaires en modale
+    $(document).on('click', '.modal-form *[type="submit"], .modal-bulk-form *[type="submit"]', e => {
         e.preventDefault();
-        const modal = $(e.currentTarget).parents('.modal-form');
+        const modal = $(e.currentTarget).parents('.modal-form, .modal-bulk-form');
         const form = $(modal).find('form');
 
         $.post(
@@ -116,7 +129,7 @@ $(function () {
                         $('.list-wrapper').html(response.view);
                     }
                 } else {
-                    const page = $('.pagination-wrapper .page-item.active .page-link').length > 0
+                    const page = $('.pagination-wrapper').length > 0
                         ? $('.pagination-wrapper .page-item.active .page-link').first().text()
                         : null;
                     getFilteredList(page);
