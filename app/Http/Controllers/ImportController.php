@@ -22,15 +22,14 @@ class ImportController extends Controller
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
     private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b)#';
-    private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)\s(\d{2}/\d{2}/\d{2})#';
+    private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_SEPA_BENEF = '#VIR\sSEPA\s([\w\-\s]+)#';
     private const string FIND_VIRT_SIMPLE_BENEF = '#VIREMENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_INST_BENEF = '#VIR\sINST\s([\w\-\s]+)#';
     private const string FIND_VIRT_WERO_BENEF = '#VIR\sINST\sWero\s([\w\-\s]+)#';
-    private const string FIND_WITHDRAWAL = '#CB\s+RETRAIT\sDU\s+(\d{2}/\d{2}(?:/\d{2})?)#';
-    private const string FIND_OTHER = '#([\w\-\s.]+)\s(\d{2}/\d{2}/\d{2})#';
+    private const string FIND_WITHDRAWAL = '#CB\s+RETRAIT\sDU#';
 
     /**
      * @return View
@@ -69,6 +68,7 @@ class ImportController extends Controller
             if ($handle = fopen(storage_path("statements/$file"), "r")) {
                 $i = 0;
                 $errors = [];
+                $lines = 0;
 
                 // @TODO: Ajouter un param pour choisir le séparateur
                 while ($line = fgetcsv($handle, separator: ';')) {
@@ -86,7 +86,8 @@ class ImportController extends Controller
 
                     if ($has_match) {
                         $match_type = preg_replace('/\s+/', ' ', $matches[1]);
-                        dump($match_type);
+                        $benef_raw_name = '';
+                        $type = TransactionType::other->name;
 
                         switch ($match_type) {
                             case 'CB':
@@ -97,6 +98,8 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::card->name;
                                 break;
 
                             case 'PRLV SEPA':
@@ -107,6 +110,8 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::collection->name;
                                 break;
 
                             case 'VIR SEPA':
@@ -117,6 +122,8 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::transfer->name;
                                 break;
 
                             case 'VIR INST Wero':
@@ -127,6 +134,8 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::wero->name;
                                 break;
 
                             case 'VIR INST':
@@ -137,6 +146,8 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::transfer_instant->name;
                                 break;
 
                             case 'VIREMENT':
@@ -147,6 +158,8 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::transfer->name;
                                 break;
 
                             case 'VIR.PERMANENT':
@@ -157,127 +170,71 @@ class ImportController extends Controller
                                 } else {
                                     $errors[] = $line;
                                 }
+
+                                $type = TransactionType::perma_transfer->name;
                                 break;
 
-                            // @FIXME: Doit y avoir moyen de faire plus propre que des valeurs en dur, surtout avec un double espace è.è
-                            'CB RETRAIT' => self::FIND_WITHDRAWAL,
-                            // @TODO: penser au cas prêt immo
-                            'PRET IMMOBILIER' =>
-                            default => '',
-                        };
-                        dump($search_benef_regexp);
-                        dump('========================================');
+                            case 'CB RETRAIT':
+                                $type = TransactionType::withdrawal->name;
+                                break;
+
+                            case 'PRET IMMOBILIER':
+                                $benef_raw_name = 'PRET IMMOBILIER ECH';
+                                $type = TransactionType::mortgage->name;
+                                break;
+                        }
+
+                        if (in_array($line, $errors)) {
+                            continue;
+                        }
+
+                        $lines++;
+
+                        if (!empty($benef_raw_name)) {
+                            $benef_result = Beneficiary::query()
+                                ->select(['id', 'category_id'])
+                                ->where('raw_name', $benef_raw_name)
+                                ->first();
+
+                            if (empty($benef_result)) {
+                                $benef_result = Beneficiary::create(['raw_name' => $benef_raw_name]);
+                            }
+                        }
+
+                        // @TODO: Vérifier si la transaction a un recurring pattern
+                        Transaction::create([
+                            'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
+                            'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,
+                            'occurred_at' => parseDateMultiFormat($line[self::COL_DATE])->format('Y-m-d'),
+                            'type' => $type,
+                            'category_id' => !empty($benef_result->category_id) ? $benef_result->category_id : null,
+                            'line' => $i,
+                            'file' => $file,
+                        ]);
                     } else {
                         // @TODO: Erreur ?
+                        $errors[] = $line;
                     }
-
-                    $transac_results = match ($line[self::COL_TRANSAC_TYPE]) {
-                        'Carte' => $this->getCardInfo($benef_raw),
-                        'Virement' => $this->getTransferInfo($benef_raw),
-                        'Retrait DAB' => $this->getWithdrawalInfo($benef_raw),
-                        default => $this->getOtherInfo($benef_raw),
-                    };
-
-                    if (!empty($transac_results['benef'])) {
-                        $benef_result = Beneficiary::query()
-                            ->select(['id', 'category_id'])
-                            ->where('raw_name', $transac_results['benef'])
-                            ->first();
-
-                        if (empty($benef_result)) {
-                            $benef_result = Beneficiary::create(['raw_name' => $transac_results['benef']]);
-                        }
-                    }
-
-                    // @TODO: Vérifier si la transaction a un recurring pattern
-
-                    Transaction::create([
-                        'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
-                        'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,
-                        'occurred_at' => parseDateMultiFormat($line[self::COL_DATE])->format('Y-m-d'),
-                        'type' => $transac_results['type'],
-                        'category_id' => !empty($benef_result->category_id) ? $benef_result->category_id : null,
-                        'line' => $i,
-                        'file' => $file,
-                    ]);
 
                     $i++;
                 }
 
-                dd('FINITO PIPO');
                 DB::commit();
                 Storage::disk('statements')->move("/{$file}", "/parsed/{$file}");
             }
         }
 
-        return redirect(route('import_index'))->with('message', 'Import successful!');
-    }
+        $message = '';
 
-    /**
-     * @param mixed $benef_raw
-     * @return array
-     */
-    private function getCardInfo(mixed $benef_raw): array
-    {
-        $has_match = preg_match(self::FIND_CB_BENEF, $benef_raw, $benef_matches);
-
-        return ['type' => TransactionType::card->name, 'benef' => $has_match ? trim($benef_matches[1]) : ''];
-    }
-
-    /**
-     * @param mixed $benef_raw
-     * @return array
-     */
-    private function getTransferInfo(mixed $benef_raw): array
-    {
-        $type = TransactionType::perma_transfer->name;
-
-        if (!$has_match = preg_match(self::FIND_VIRT_PERMA_BENEF, $benef_raw, $benef_matches)) {
-            $type = TransactionType::transfer->name;
-
-            // @fixme : doit y avoir moyen de faire mieux è.è
-            if (!$has_match = preg_match(self::FIND_VIRT_SIMPLE_BENEF, $benef_raw, $benef_matches)) {
-                if (!$has_match = preg_match(self::FIND_VIRT_INST_BENEF, $benef_raw, $benef_matches)) {
-                    if (!$has_match = preg_match(self::FIND_VIRT_SEPA_BENEF, $benef_raw, $benef_matches)) {
-                        $type = TransactionType::wero->name;
-
-                        if (!$has_match = preg_match(self::FIND_VIRT_WERO_BENEF, $benef_raw, $benef_matches)) {
-                            $has_match = preg_match(self::FIND_PRLVT_BENEF, $benef_raw, $benef_matches);
-                            $type = TransactionType::collection->name;
-                        }
-                    }
-                }
-            }
+        if (!empty($lines)) {
+            $message .= "{$lines} lignes importées avec succès !";
         }
 
-        return [
-            'type' => $type,
-            'benef' => !empty($has_match) ? trim($benef_matches[1]) : trim($benef_raw),
-        ];
-    }
+        if (!empty($errors)) {
+            $message .= 'Des erreurs ont eu lieu. Lignes en erreur : <pre>' . print_r($errors, true) . '</pre>';
+        }
 
-    /**
-     * @param mixed $benef_raw
-     * @return array
-     */
-    private function getWithdrawalInfo(mixed $benef_raw): array
-    {
-        preg_match(self::FIND_WITHDRAWAL, $benef_raw, $benef_matches);
 
-        return [
-            'type' => TransactionType::withdrawal->name,
-            'benef' => '',
-        ];
-    }
-
-    /**
-     * @param mixed $benef_raw
-     * @return array
-     */
-    private function getOtherInfo(mixed $benef_raw): array
-    {
-        $has_match = preg_match(self::FIND_OTHER, $benef_raw, $benef_matches);
-
-        return ['type' => TransactionType::other->name, 'benef' => $has_match ? $benef_matches[1] : trim($benef_raw)];
+        return redirect(route('import_index'))->with(['message' => $message]);
     }
 }
