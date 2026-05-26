@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('transac_index');
             Route::post('/', 'filter')->name('transac_filter');
             Route::get('/get/{id}', 'get')->name('transac_get');
+            Route::post('/bulk-store', 'bulkStore')->name('transac_bulk_store');
             Route::post('/store', 'store')->name('transac_store');
             Route::get('/delete/{id}', 'delete')->name('transac_delete');
         });

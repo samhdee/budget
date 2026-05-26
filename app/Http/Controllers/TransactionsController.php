@@ -44,6 +44,47 @@ class TransactionsController extends Controller
     }
 
     /**
+     * bulkStore
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bulkStore(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'transac_ids.*' => Rule::forEach(function ($value, string $attribute) {
+                return [
+                    Rule::exists(Transaction::class, 'id'),
+                ];
+            }),
+            'type' => ['nullable', Rule::enum(TransactionType::class)],
+            'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
+            'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
+        ]);
+
+        if (!empty($data['type'])) {
+            $update_data['type'] = $data['type'];
+        }
+
+        if (!empty($data['category_id'])) {
+            $update_data['category_id'] = $data['category_id'];
+        }
+
+        if (!empty($data['beneficiary_id'])) {
+            $update_data['beneficiary_id'] = $data['beneficiary_id'];
+        }
+
+        if (empty($update_data)) {
+            return response()->json(['message' => 'Rien à mettre à jour']);
+        }
+
+        $nb_updated = Transaction::whereIn('id', $data['transac_ids'])
+            ->update($update_data);
+
+        return response()->json(['updated' => $nb_updated]);
+    }
+
+    /**
      * store
      *
      * @param Request $request
@@ -51,14 +92,12 @@ class TransactionsController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        // @TODO: Ajouter une vérif sur l'unicité de benef pretty_name
-        // @TODO: Ajouter une vérif sur le type
         $data = $request->validate([
             'id' => ['nullable', 'integer', 'exists:' . Transaction::class],
             'amount' => ['required', 'decimal:2'],
             'type' => ['required', Rule::enum(TransactionType::class)],
             'occurred_at' => ['required', 'date'],
-            'beneficiary_id' => ['required', 'exists:' . Beneficiary::class . ',id'],
+            'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
             'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
             'notes' => ['nullable', 'max:255'],
         ]);
@@ -69,18 +108,18 @@ class TransactionsController extends Controller
             $transaction->occurred_at = $data['occurred_at'];
             $transaction->amount = $data['amount'];
             $transaction->type = $data['type'];
-            $transaction->beneficiary_id = $data['beneficiary_id'];
-            $transaction->category_id = $data['category_id'];
-            $transaction->notes = $data['notes'];
+            $transaction->beneficiary_id = $data['beneficiary_id'] ?? null;
+            $transaction->category_id = $data['category_id'] ?? null;
+            $transaction->notes = $data['notes'] ?? null;
             $transaction->save();
         } else {
             $transac_id = Transaction::create([
                 'amount' => $data['amount'],
                 'occurred_at' => $data['occurred_at'],
                 'type' => $data['type'],
-                'beneficiary_id' => $data['beneficiary_id'],
-                'category_id' => $data['category_id'],
-                'notes' => $data['notes'],
+                'beneficiary_id' => $data['beneficiary_id'] ?? null,
+                'category_id' => $data['category_id'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
         }
 

@@ -12,6 +12,17 @@
 
 <div class="d-flex justify-content-end">
     <div id="bulk-action-wrapper" class="d-none">
+        <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modal-transac-bulk-form"
+            data-type="transaction"
+            data-action="edit"
+        >
+            <i class="fas fa-pencil"></i>
+        </button>
+
         <button id="bulk-delete" type="button" class="btn btn-sm btn-danger">
             <i class="fas fa-trash"></i>
         </button>
@@ -102,3 +113,4 @@
 
 @include('transactions.modal_form')
 @include('beneficiaries.modal_form')
+@include('transactions.modal_bulk_form')

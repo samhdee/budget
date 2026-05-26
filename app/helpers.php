@@ -39,6 +39,7 @@ function getTransactionTypeLabel($transaction_type): string
         TransactionType::transfer->name => 'Virement',
         TransactionType::perma_transfer->name => 'Virement permanent',
         TransactionType::withdrawal->name => 'Retrait',
+        TransactionType::mortgage->name => 'Prêt',
         default => 'Autre',
     };
 }

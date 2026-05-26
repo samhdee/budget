@@ -13,7 +13,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="transac-bulk-edit-form" method="POST" action="{{ route('transac_bulk_store') }}">
+                <form id="transac-bulk-edit-form" method="POST" action="{{ route('transac_store') }}">
                     <div class="d-none alert alert-danger"></div>
 
                     <div class="mt-3 form-floating form-field">
