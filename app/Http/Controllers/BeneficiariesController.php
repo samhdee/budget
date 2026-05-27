@@ -107,37 +107,6 @@ class BeneficiariesController extends Controller
      */
     public function syncCategories(Request $request): JsonResponse
     {
-        \validator(\request()->route()->parameters(), [
-            'id' => ['required', 'integer', 'exists:' . Beneficiary::class],
-        ])->validate();
-
-        $benefs = Beneficiary::query()
-            ->select(['id', 'category_id'])
-            ->where('id', $request->input('id'))
-            ->get();
-
-        $nb_updated = 0;
-
-        foreach ($benefs as $benef) {
-            if (empty($benef->category_id)) {
-                continue;
-            }
-
-            $nb_updated += Transaction::where('beneficiary_id', $benef->id)
-                ->update(['category_id' => $benef->category_id]);
-        }
-
-        return response()->json(['updated' => $nb_updated]);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $benef_id
-     * @param int $categ_id
-     * @return JsonResponse
-     */
-    public function syncCategoriesInBulk(Request $request): JsonResponse
-    {
         $data = $request->validate([
             'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
                 return [
@@ -147,11 +116,21 @@ class BeneficiariesController extends Controller
         ]);
 
         $beneficiaries = Beneficiary::query()
-            ->select(['id', 'category_id'])
+            ->select(['id', 'category_id', 'raw_name'])
+            ->whereIn('id', $data['item_ids'])
+            ->get();
 
-        $transactions = Transaction::whereIn('beneficiary_id', $data['item_ids'])
-            ->update(['category_id' => $categ_id]);
-        return response()->json(['updated' => $transactions]);
+        $nb_updated = 0;
+
+        foreach ($beneficiaries as $beneficiary) {
+            if (empty($beneficiary->category_id)) {
+                continue;
+            }
+            
+            $nb_updated += Transaction::where('beneficiary_id', $beneficiary->id)
+                ->update(['category_id' => $beneficiary->category_id]);
+        }
+        return response()->json(['updated' => $nb_updated]);
     }
 
     /**

@@ -41,7 +41,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/store', 'store')->name('benef_store');
             Route::post('/bulk-store', 'storeInBulk')->name('benef_bulk_store');
             Route::post('/sync', 'syncCategories')->name('benef_sync');
-            Route::post('/bulk-sync', 'syncCategoriesInBulk')->name('benef_bulk_sync');
             Route::get('/delete/{benef_id}', 'delete')->name('benef_delete');
         });
 
