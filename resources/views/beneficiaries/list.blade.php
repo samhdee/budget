@@ -1,12 +1,12 @@
 @php use App\Models\Beneficiary; @endphp
 
-<div>
+<div class="content-wrapper">
     <div class="pagination-wrapper">
         {{ $beneficiaries->links() }}
     </div>
 
     <div class="d-flex justify-content-end">
-        <div id="bulk-action-wrapper" class="d-none">
+        <div class="d-none bulk-action-wrapper">
             <button
                 id="bulk-sync-all"
                 type="button"
@@ -33,7 +33,7 @@
     <table class="mt-2 table table-striped table-bordered align-middle">
         <thead>
             <th style="width: 2rem;">
-                <input id="bulk-select-all" type="checkbox" class="form-check" />
+                <input type="checkbox" class="form-check bulk-select-all" />
             </th>
 
             <th>Nom moche</th>
@@ -49,7 +49,7 @@
             @forelse ($beneficiaries as $beneficiary)
                 <tr>
                     <td>
-                        <input type="checkbox" class="bulk-select form-check" data-item_id="{{ $beneficiary->id }}"/>
+                        <input type="checkbox" class="bulk-select form-check" data-item_id="{{ $beneficiary->id }}" />
                     </td>
 
                     <td>{{ $beneficiary->raw_name }}</td>

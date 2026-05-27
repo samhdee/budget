@@ -148,29 +148,47 @@ class RecurrencesController extends Controller
     }
 
     /**
-     * @param int $recurrence_id
+     * @param int|null $recurrence_id
      * @return JsonResponse
      * @throws Throwable
      */
-    public function toggleActive(int $recurrence_id)
+    public function toggleActive(Request $request, ?int $recurrence_id = null)
     {
-        $recurrence = TransacRecurringPattern::find($recurrence_id);
-
-        if (empty($recurrence_id) || empty($recurrence)) {
-            return response()->json(['message' => 'L\'ID récurrence est obligatoire.'], 422);
-        }
-
-        if (!empty($recurrence->active)) {
-            $recurrence->active = 0;
-            $recurrence->ends_at = null;
+        if (!empty($recurrence_id)) {
+            \validator(\request()->route()->parameters(), [
+                'recurrence_id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class . ',id'],
+            ])->validate();
+            $data['item_ids'] = [$recurrence_id];
         } else {
-            $recurrence->active = 1;
+            $data = $request->validate([
+                'item_ids.*' => Rule::forEach(function () {
+                    return [
+                        Rule::exists(TransacRecurringPattern::class, 'id'),
+                    ];
+                }),
+            ]);
         }
 
-        $updated = $recurrence->save();
+        $recurrences = TransacRecurringPattern::query()
+            ->select(['id', 'active', 'ends_at'])
+            ->whereIn('id', $data['item_ids'])
+            ->get();
+
+        $nb_updated = 0;
+
+        foreach ($recurrences as $recurrence) {
+            if (!empty($recurrence->active)) {
+                $recurrence->active = 0;
+                $recurrence->ends_at = null;
+            } else {
+                $recurrence->active = 1;
+            }
+
+            $nb_updated += $recurrence->save();
+        }
 
         return response()->json([
-            'updated' => $updated,
+            'updated' => $nb_updated,
             'view' => view('recurrences.lists', [
                 'recurrences' => TransacRecurringPattern::getList(),
                 'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),

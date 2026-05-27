@@ -5,6 +5,10 @@ import './helpers/forms.js';
 
 $(document).ready(() => {
     document.querySelectorAll('.dashboard-chart').forEach((canvas) => {
+        if (typeof canvas.dataset === 'undefined' || typeof canvas.dataset.values === 'undefined') {
+            return;
+        }
+
         const dataset = JSON.parse(canvas.dataset.values);
 
         let y_options = {

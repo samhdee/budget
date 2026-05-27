@@ -32,6 +32,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/delete/{id}', 'delete')->name('transac_delete');
         });
 
+    Route::controller(RecurrencesController::class)
+        ->prefix('recurrences')
+        ->group(function () {
+            Route::get('/', 'index')->name('recurrences_index');
+            Route::get('/filter', 'filter')->name('recurrences_filter');
+            Route::get('/get/{id}', 'get')->name('recurrences_get');
+            Route::post('/store', 'store')->name('recurrences_store');
+            Route::get('/toggle-active/{recurrence_id}', 'toggleActive')->name('recurrences_toggle_active');
+            Route::post('/bulk-toggle-active', 'toggleActive')->name('recurrences_bulk_toggle_active');
+            Route::get('/add-transacs/{recurrence_id}', 'addTransacs')->name('recurrences_add_transacs');
+            Route::get('/detect', 'detectRecurrences')->name('recurrences_detect');
+        });
+
     Route::controller(BeneficiariesController::class)
         ->prefix('benefs')
         ->group(function () {
@@ -67,17 +80,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->group(function () {
             Route::get('/', 'index')->name('import_index');
             Route::post('/store', 'store')->name('import_store');
-        });
-
-    Route::controller(RecurrencesController::class)
-        ->prefix('recurrences')
-        ->group(function () {
-            Route::get('/', 'index')->name('recurrences_index');
-            Route::get('/filter', 'filter')->name('recurrences_filter');
-            Route::get('/get/{id}', 'get')->name('recurrences_get');
-            Route::post('/store', 'store')->name('recurrences_store');
-            Route::get('/toggle-active/{recurrence_id}', 'toggleActive')->name('recurrences_toggle_active');
-            Route::get('/add-transacs/{recurrence_id}', 'addTransacs')->name('recurrences_add_transacs');
-            Route::get('/detect', 'detectRecurrences')->name('recurrences_detect');
         });
 });

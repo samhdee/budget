@@ -100,7 +100,8 @@
                 </div>
             </div>
         </div>
-
-        @include('transactions.modal_form')
     </div>
+
+    @include('transactions.modal_form')
+    @include('beneficiaries.modal_form')
 @endsection

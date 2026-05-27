@@ -24,4 +24,5 @@
     </div>
 
     @include('recurrences.modal_form')
+    @include('recurrences.modal_bulk_deactivate_form')
 @endsection

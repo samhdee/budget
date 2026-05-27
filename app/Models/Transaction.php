@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $line
  * @property string|null $file
  * @property string|null $notes
+ * @property int|null $recurring_pattern_id
  * @property-read Beneficiary|null $beneficiary
  * @property-read Category|null $category
  * @property-read TransacRecurringPattern|null $recurringPattern
@@ -83,8 +84,8 @@ class Transaction extends Model
     {
         $query = self::query()
             ->select([
-                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 'b.raw_name',
-                'b.pretty_name', 'b.notes as benef_notes', 'c.appellation as c_appellation', 'c.color as c_color',
+                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 'recurring_pattern_id',
+                'b.raw_name', 'b.pretty_name', 'b.notes as benef_notes', 'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->from('transactions as t')
             ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')

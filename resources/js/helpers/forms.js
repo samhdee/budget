@@ -145,22 +145,26 @@ $(function () {
     });
 
     // Coche toutes les checkboxes
-    $(document).on('change', '#bulk-select-all', () => {
-        if ($('#bulk-select-all').is(':checked')) {
-            $('.bulk-select').prop('checked', 'checked')
+    $(document).on('change', '.bulk-select-all', e => {
+        const wrapper = $(e.target).parents('.content-wrapper');
+
+        if ($('.bulk-select-all').is(':checked')) {
+            $(wrapper).find('.bulk-select').prop('checked', 'checked')
         } else {
-            $('.bulk-select').prop('checked', '');
+            $(wrapper).find('.bulk-select').prop('checked', '');
         }
 
-        $('.bulk-select').trigger('change');
+        $(wrapper).find('.bulk-select').trigger('change');
     });
 
     // Fait apparaître ou disparaître les boutons d'actions groupées
-    $(document).on('change', '#bulk-select-all, .bulk-select', e => {
-        if ($('.bulk-select:checked').length > 0) {
-            $('#bulk-action-wrapper').removeClass('d-none');
+    $(document).on('change', '.bulk-select-all, .bulk-select', e => {
+        const wrapper = $(e.target).parents('.content-wrapper');
+
+        if ($(wrapper).find('.bulk-select:checked').length > 0) {
+            $(wrapper).find('.bulk-action-wrapper').removeClass('d-none');
         } else {
-            $('#bulk-action-wrapper').addClass('d-none');
+            $(wrapper).find('.bulk-action-wrapper').addClass('d-none');
         }
     });
 
