@@ -3,46 +3,52 @@ import Chart from 'chart.js/auto';
 import './helpers/filters.js';
 import './helpers/forms.js';
 
-$(document).ready(() => {
-    document.querySelectorAll('.dashboard-chart').forEach((canvas) => {
-        if (typeof canvas.dataset === 'undefined' || typeof canvas.dataset.values === 'undefined') {
-            return;
-        }
+$(function () {
+    const canvas_rev_exp = document.getElementById('dashboard-rev-exp-chart');
+    const rev_exp_dataset = JSON.parse(canvas_rev_exp.dataset.values);
 
-        const dataset = JSON.parse(canvas.dataset.values);
-
-        let y_options = {
-            beginAtZero: true,
-            ticks: {
-                callback: function (value) {
-                    return `${value}${canvas.dataset.unit}`;
+    new Chart(canvas_rev_exp, {
+        type: 'bar',
+        data: {
+            labels: rev_exp_dataset.labels,
+            datasets: [{
+                axis: 'x',
+                label: canvas_rev_exp.dataset.title,
+                data: rev_exp_dataset.values,
+                fill: false,
+                backgroundColor:[
+                    'rgb(255 99 99)',
+                    'rgb(75 192 91)',
+                ],
+            }],
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (value) {
+                            return `${value}${canvas_rev_exp.dataset.unit}`;
+                        }
+                    },
                 }
             }
-        };
-
-        if (typeof canvas.dataset.max !== 'undefined') {
-           y_options = {
-               ...y_options,
-               ...{
-                    max: canvas.dataset.max,
-               }
-           }
         }
+    });
 
-        new Chart(canvas, {
-            type: canvas.dataset.type,
-            data: {
-                labels: dataset.labels,
-                datasets: [{
-                    label: canvas.dataset.title,
-                    data: dataset.values
-                }],
-            },
-            options: {
-                scales: {
-                    y: y_options
-                }
-            }
-        });
+    const canvas_exp_by_categ = document.getElementById('dashboard-exp-by-categ-chart');
+    const exp_by_categ_dataset = JSON.parse(canvas_exp_by_categ.dataset.values);
+
+    new Chart(canvas_exp_by_categ, {
+        type: 'pie',
+        data: {
+            labels: exp_by_categ_dataset.labels,
+            datasets: [{
+                axis: 'x',
+                label: canvas_exp_by_categ.dataset.title,
+                data: exp_by_categ_dataset.values,
+            }],
+        },
     });
 });

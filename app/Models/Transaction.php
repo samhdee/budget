@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\TransactionType;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -78,14 +79,16 @@ class Transaction extends Model
 
     /**
      * @param array $filters
-     * @return LengthAwarePaginator
+     * @param $per_page
+     * @return Collection|LengthAwarePaginator
      */
-    public static function getList(array $filters = [], $per_page = 50): LengthAwarePaginator
+    public static function getList(array $filters = [], $per_page = 50): Collection|LengthAwarePaginator
     {
         $query = self::query()
             ->select([
-                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id', 'recurring_pattern_id',
-                'b.raw_name', 'b.pretty_name', 'b.notes as benef_notes', 'c.appellation as c_appellation', 'c.color as c_color',
+                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id',
+                'recurring_pattern_id', 't.category_id', 'b.raw_name', 'b.pretty_name', 'b.notes as benef_notes',
+                'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->from('transactions as t')
             ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')
@@ -122,9 +125,14 @@ class Transaction extends Model
             $query->whereDate('occurred_at', '<=', $filters['date_end']);
         }
 
-        return $query->orderByDesc('occurred_at')
-            ->orderByDesc('t.created_at')
-            ->paginate($per_page);
+        $query->orderByDesc('occurred_at')
+            ->orderByDesc('t.created_at');
+
+        if (!empty($per_page)) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
     }
 
     /**
