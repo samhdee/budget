@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('recurrences_index');
             Route::get('/filter', 'filter')->name('recurrences_filter');
             Route::get('/get/{id}', 'get')->name('recurrences_get');
+            Route::get('/get-transac/{id}', 'getTransacs')->name('recurrences_get_transacs');
             Route::post('/store', 'store')->name('recurrences_store');
             Route::get('/toggle-active/{recurrence_id}', 'toggleActive')->name('recurrences_toggle_active');
             Route::post('/bulk-toggle-active', 'toggleActive')->name('recurrences_bulk_toggle_active');

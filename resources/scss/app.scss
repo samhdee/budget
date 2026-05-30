@@ -77,19 +77,23 @@ body {
     }
 
     fieldset {
-        position: relative;
         border: 1px solid #fff;
         border-radius: 5px;
-        padding: 2.5rem 1rem 1rem;
+        padding: .7rem;
 
-        legend {
-            float: none;
-            width: auto;
-            position: absolute;
-            background: $body-bg;
-            top: -1.2rem;
-            left: 1rem;
-            padding: 0 1rem;
+        &.with-legend {
+            position: relative;
+            padding: 2.5rem 1rem 1rem;
+
+            legend {
+                float: none;
+                width: auto;
+                position: absolute;
+                background: $body-bg;
+                top: -1.2rem;
+                left: 1rem;
+                padding: 0 1rem;
+            }
         }
     }
 

@@ -29,7 +29,8 @@
                 <th style="width: 6rem;">Montant</th>
                 <th>Bénéficiaire</th>
                 <th style="width: 6rem;">Période</th>
-                <th style="width: 7rem;">Date de fin</th>
+                <th style="width: 6rem">Transactions</th>
+                <th style="width: 6rem;">Date de fin</th>
                 <th style="width: 8.7rem;"></th>
             </tr>
         </thead>
@@ -53,9 +54,8 @@
                         @endif
                     </td>
 
-                    <td>
-                        {{ $recurrence->frequency_count }} {{ $recurrence->getUnitLabel() }}
-                    </td>
+                    <td>{{ $recurrence->frequency_count }} {{ $recurrence->getUnitLabel() }}</td>
+                    <td class="text-center">{{ $recurrence->nb_transactions }}</td>
 
                     <td class="text-center">
                         @if (!empty($recurrence->ends_at))
@@ -79,9 +79,10 @@
                         <button
                             type="button"
                             class="ms-1 btn btn-sm btn-success"
-                            data-url="{{ route('recurrences_add_transacs', $recurrence->id) }}"
-                            data-message="Désactiver cette récurrence ?"
-                            data-list="#recurrences-list-wrapper"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal-recurrence-transacs-form"
+                            data-url="{{ route('recurrences_get_transacs', $recurrence->id) }}"
+                            data-item_id="{{ $recurrence->id }}"
                         >
                             <i class="fas fa-plus-circle"></i>
                         </button>
