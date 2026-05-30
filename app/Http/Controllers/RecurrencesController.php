@@ -43,6 +43,11 @@ class RecurrencesController extends Controller
         return response()->json(['item' => TransacRecurringPattern::getOne($recurrence_id)]);
     }
 
+    public function getTransacs($recurrence_id)
+    {
+        return response()->json(['item' => Transaction::getFromRecurrence($recurrence_id)]);
+    }
+
     /**
      * @return RedirectResponse
      */
@@ -148,6 +153,7 @@ class RecurrencesController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int|null $recurrence_id
      * @return JsonResponse
      * @throws Throwable

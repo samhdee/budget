@@ -1,3 +1,8 @@
+@php
+    use Carbon\Carbon;
+    use Carbon\CarbonPeriod;
+@endphp
+
 @extends('includes.layout')
 
 @section('title')
@@ -11,6 +16,24 @@
 @section('content')
     <div id="dashboard-wrapper">
         <h1>Dashboard</h1>
+
+        @php
+            $now = Carbon::now();
+            $period = CarbonPeriod::create($first_date->occurred_at, '1 month', $now->format('Y-m-d'));
+        @endphp
+
+        <select id="transac-date-select" class="form-select" style="width: 130px">
+            @foreach ($period as $month)
+                <option
+                    value="{{ $month->format('m/Y') }}"
+                    @if ($month->format('m/Y') === $now->format('m/Y'))
+                        selected="selected"
+                    @endif
+                >
+                    {{ $month->format('m/Y') }}
+                </option>
+            @endforeach
+        </select>
 
         <ul id="transactions-tabs" class="mt-4 nav nav-tabs" role="tablist">
             <li class="nav-item" role="presentation">

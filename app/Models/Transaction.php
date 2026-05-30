@@ -65,12 +65,12 @@ class Transaction extends Model
 
     public function beneficiary(): HasOne
     {
-        return $this->hasOne(Beneficiary::class, 'beneficiary_id');
+        return $this->hasOne(Beneficiary::class, 'id', 'beneficiary_id');
     }
 
     public function category(): HasOne
     {
-        return $this->hasOne(Category::class, 'category_id');
+        return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
     public function labels(): BelongsToMany
@@ -162,5 +162,19 @@ class Transaction extends Model
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->where('t.id', $id)
             ->firstOrFail();
+    }
+
+    /**
+     * @param $recurrence_id
+     * @return Collection
+     */
+    public static function getFromRecurrence($recurrence_id): Collection
+    {
+        return self::query()
+            ->select(['id', 'amount', 'occurred_at', 'category_id', 'beneficiary_id'])
+            ->with(['category:id,appellation', 'beneficiary:id,raw_name,pretty_name'])
+            ->where('recurring_pattern_id', $recurrence_id)
+            ->orderByDesc('occurred_at')
+            ->get();
     }
 }

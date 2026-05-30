@@ -6,6 +6,7 @@ use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -13,6 +14,30 @@ class DashboardController extends Controller
     protected const int EXP_PER_PAGE = 25;
 
     public function index()
+    {
+        $data = $this->getIndexData();
+
+        return view('dashboard.index', $data);
+    }
+
+    public function expFilter(Request $request)
+    {
+        $filters = array_merge(
+            $request->input('filters'),
+            ['sign' => 'negative', 'date_start' => Carbon::now()->startOfMonth()->format('Y-m-d')],
+        );
+
+        return view('dashboard.expanses-list', [
+            'transac_expanses' => Transaction::getList($filters, self::EXP_PER_PAGE),
+            'beneficiaries' => Beneficiary::getDropdownList(),
+            'categories' => Category::getDropdownList(),
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getIndexData(): array
     {
         $data = [
             'transac_expanses' => Transaction::getList(
@@ -24,6 +49,10 @@ class DashboardController extends Controller
             ),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
+            'first_date' => Transaction::query()
+                ->select(DB::raw('DATE(occurred_at) as occurred_at'))
+                ->orderBy('occurred_at')
+                ->first()
         ];
 
         $expanses = Transaction::getList(
@@ -52,21 +81,6 @@ class DashboardController extends Controller
             $data['values_exp_by_categ']['labels'][] = $expanse->first()->c_appellation;
             $data['values_exp_by_categ']['values'][] = abs($expanse->pluck('amount')->sum());
         }
-
-        return view('dashboard.index', $data);
-    }
-
-    public function expFilter(Request $request)
-    {
-        $filters = array_merge(
-            $request->input('filters'),
-            ['sign' => 'negative', 'date_start' => Carbon::now()->startOfMonth()->format('Y-m-d')],
-        );
-
-        return view('dashboard.expanses-list', [
-            'transac_expanses' => Transaction::getList($filters, self::EXP_PER_PAGE),
-            'beneficiaries' => Beneficiary::getDropdownList(),
-            'categories' => Category::getDropdownList(),
-        ]);
+        return $data;
     }
 }
