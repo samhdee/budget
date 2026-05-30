@@ -1,4 +1,4 @@
-<table class="mt-3 mx-auto w-50 table table-striped table-bordered align-middle">
+<table class="mt-3 table table-striped table-bordered align-middle">
     <thead>
         <tr>
             <th style="width: 12rem">Nom</th>

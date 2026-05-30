@@ -1,8 +1,8 @@
-<table class="mt-3 mx-auto w-50 table table-striped table-bordered align-middle">
+<table class="mt-3 table table-striped table-bordered align-middle">
     <thead>
         <tr>
             <th style="width: 12rem">Nom</th>
-            <th style="width: 5rem">Couleur</th>
+            <th style="width: 6.5rem;">Transactions</th>
             <th>Description</th>
             <th style="width: 6rem"></th>
         </tr>
@@ -12,16 +12,7 @@
         @forelse ($categories as $category)
             <tr>
                 <td>{{ $category->appellation }}</td>
-
-                <td>
-                    <input
-                        type="color"
-                        class="mx-auto rounded-1"
-                        value="{{ !empty($category->color) ? $category->color : '#000000' }}"
-                        disabled
-                    />
-                </td>
-
+                <td class="text-center">{{ $category->nb_transactions }}</td>
                 <td>{{ $category->description }}</td>
 
                 <td class="text-center">

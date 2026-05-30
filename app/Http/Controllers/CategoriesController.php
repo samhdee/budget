@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,7 @@ class CategoriesController extends Controller
     {
         return view('categories.index', ['categories' => Category::query()
             ->select(['id', 'appellation', 'color'])
+            ->withCount('transactions as nb_transactions')
             ->orderBy('appellation')
             ->get()
         ]);
@@ -92,6 +94,16 @@ class CategoriesController extends Controller
         $data = $request->validate([
             'id' => ['required', 'integer', 'exists:' . Category::class],
         ]);
+
+        $transactions = Transaction::query()
+            ->select('id')
+            ->where('category_id', $data['id'])
+            ->get();
+
+        if ($transactions->isNotEmpty()) {
+            Transaction::whereIn('id', $transactions->pluck('id'))
+                ->update(['category_id' => null]);
+        }
 
         return response()->json([
             'deleted' => Category::where('id', $data['id'])->delete(),

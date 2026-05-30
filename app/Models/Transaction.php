@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
@@ -70,6 +71,16 @@ class Transaction extends Model
     public function category(): HasOne
     {
         return $this->hasOne(Category::class, 'category_id');
+    }
+
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Label::class,
+            'labels_transactions',
+            'transaction_id',
+            'label_id'
+        );
     }
 
     public function recurringPattern(): HasOne

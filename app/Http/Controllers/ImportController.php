@@ -21,7 +21,7 @@ class ImportController extends Controller
     private const int COL_TRANSAC_TYPE = 2;
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
-    private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b)#';
+    private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b|COTISATION\sMENSUELLE\b)#';
     private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
@@ -181,6 +181,11 @@ class ImportController extends Controller
                             case 'PRET IMMOBILIER':
                                 $benef_raw_name = 'PRET IMMOBILIER ECH';
                                 $type = TransactionType::mortgage->name;
+                                break;
+
+                            case 'COTISATION MENSUELLE':
+                                $benef_raw_name = 'COTISATION MENSUELLE CARTE';
+                                $type = TransactionType::transfer->name;
                                 break;
                         }
 

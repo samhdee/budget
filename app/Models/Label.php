@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -35,4 +36,14 @@ class Label extends Model
         'color',
         'description',
     ];
+
+    public function transactions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Transaction::class,
+            'labels_transactions',
+            'label_id',
+            'transaction_id'
+        );
+    }
 }
