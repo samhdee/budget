@@ -72,7 +72,7 @@ class DashboardController extends Controller
         ];
 
         $expanses_with_categ = $expanses->filter(function ($item) {
-            return !empty($item->category_id);
+            return !empty($item->category_id) && !empty($item->c_appellation);
         })
             ->values()
             ->groupBy('category_id');
@@ -81,6 +81,7 @@ class DashboardController extends Controller
             $data['values_exp_by_categ']['labels'][] = $expanse->first()->c_appellation;
             $data['values_exp_by_categ']['values'][] = abs($expanse->pluck('amount')->sum());
         }
+        
         return $data;
     }
 }

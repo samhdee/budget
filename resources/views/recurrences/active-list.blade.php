@@ -29,6 +29,7 @@
                 <th style="width: 6rem;">Montant</th>
                 <th>Bénéficiaire</th>
                 <th style="width: 6rem;">Période</th>
+                <th style="width: 6rem">Transactions</th>
                 <th style="width: 6rem;">Date de fin</th>
                 <th style="width: 8.7rem;"></th>
             </tr>
@@ -53,9 +54,8 @@
                         @endif
                     </td>
 
-                    <td>
-                        {{ $recurrence->frequency_count }} {{ $recurrence->getUnitLabel() }}
-                    </td>
+                    <td>{{ $recurrence->frequency_count }} {{ $recurrence->getUnitLabel() }}</td>
+                    <td class="text-center">{{ $recurrence->nb_transactions }}</td>
 
                     <td class="text-center">
                         @if (!empty($recurrence->ends_at))

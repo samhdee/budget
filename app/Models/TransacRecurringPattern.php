@@ -94,7 +94,8 @@ class TransacRecurringPattern extends Model
                 'frequency_count', 'ends_at', 'raw_name', 'pretty_name',
             ])
             ->join('beneficiaries as b', 'b.id', 'beneficiary_id')
-            ->whereHas('transactions');
+            ->whereHas('transactions')
+            ->withCount('transactions as nb_transactions');
 
 
         if (isset($filters['active'])) {

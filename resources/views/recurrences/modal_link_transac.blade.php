@@ -17,14 +17,26 @@
             </div>
 
             <div class="modal-body">
-                <form id="recurrence-edit-form" method="POST" action="{{ route('recurrences_store') }}" data-list="#recurrences-list-wrapper">
+                <form id="recurrence-transac-form" method="POST" action="{{ route('recurrences_store') }}" data-list="#recurrences-list-wrapper">
                     <div class="d-none alert alert-danger"></div>
 
                     <input type="hidden" id="transac-recurrence-id" name="id" />
 
-                    <p>
-                        Bénéficiaire : <span id="recur-transac-beneficiary"></span>
-                    </p>
+                    <p>Bénéficiaire : <span id="recur-transac-beneficiary"></span></p>
+
+                    <fieldset id="recur-transac-template" class="d-none mt-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="recur-transac-date"></div>
+                                <div class="recur-transac-amount"></div>
+                                <div class="recur-transac-categ"></div>
+                            </div>
+
+                            <div>
+                                <input class="form-check-input recur-transac-check" type="checkbox" role="switch" checked />
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
 

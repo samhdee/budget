@@ -65,14 +65,11 @@ class RecurrencesController extends Controller
             ->orderByDesc('occurred_at')
             ->get();
 
-        $two_months_ago = $now->subMonths(2)->startOfMonth()->format('Y-m-d');
-
         foreach ($transactions as $transaction) {
             $query = Transaction::query()
                 ->select(['transactions.id', 'amount', 'occurred_at', 'beneficiary_id'])
                 ->whereDoesntHave('recurringPattern')
-                ->whereDate('occurred_at', '<', $transaction->occurred_at)
-                ->whereDate('occurred_at', '>=', $two_months_ago);
+                ->whereDate('occurred_at', '<', $transaction->occurred_at);
 
             // @FIXME: utiliser min/max à la place d'un if
             if ($transaction->amount > 30) {
