@@ -81,7 +81,7 @@ class DashboardController extends Controller
             $data['values_exp_by_categ']['labels'][] = $expanse->first()->c_appellation;
             $data['values_exp_by_categ']['values'][] = abs($expanse->pluck('amount')->sum());
         }
-        
+
         return $data;
     }
 }

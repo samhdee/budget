@@ -22,7 +22,7 @@ class ImportController extends Controller
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
     private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b|COTISATION\sMENSUELLE\b)#';
-    private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)#';
+    private const string FIND_CB_BENEF = '#CB\s+([a-zA-Z.*\-\s]+)#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_SEPA_BENEF = '#VIR\sSEPA\s([\w\-\s]+)#';
@@ -66,13 +66,13 @@ class ImportController extends Controller
 
             // Récupère le fichier à importer
             if ($handle = fopen(storage_path("statements/$file"), "r")) {
-                $i = 0;
+                $i = 1;
                 $errors = [];
                 $lines = 0;
 
                 // @TODO: Ajouter un param pour choisir le séparateur
                 while ($line = fgetcsv($handle, separator: ';')) {
-                    if ($i === 0 || empty($line[self::COL_BENEFICIARY]) && empty($line[self::COL_BENEFICIARY_BIS])) {
+                    if ($i === 1 || empty($line[self::COL_BENEFICIARY]) && empty($line[self::COL_BENEFICIARY_BIS])) {
                         $i++;
                         continue;
                     }
@@ -96,7 +96,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::card->name;
@@ -108,7 +108,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::collection->name;
@@ -120,7 +120,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::transfer->name;
@@ -132,7 +132,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::wero->name;
@@ -144,7 +144,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::transfer_instant->name;
@@ -156,7 +156,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::transfer->name;
@@ -168,7 +168,7 @@ class ImportController extends Controller
                                 if (!empty($has_match_benef)) {
                                     $benef_raw_name = $matches_benef[1];
                                 } else {
-                                    $errors[] = $line;
+                                    $errors[] = $i;
                                 }
 
                                 $type = TransactionType::perma_transfer->name;
@@ -207,7 +207,7 @@ class ImportController extends Controller
                         }
 
                         // @TODO: Vérifier si la transaction a un recurring pattern
-                        Transaction::create([
+                        $transaction = Transaction::create([
                             'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
                             'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,
                             'occurred_at' => parseDateMultiFormat($line[self::COL_DATE])->format('Y-m-d'),
@@ -216,9 +216,16 @@ class ImportController extends Controller
                             'line' => $i,
                             'file' => $file,
                         ]);
+
+                        $similar_transacs = Transaction::getSimilar($transaction, true);
+
+                        if ($similar_transacs->isNotEmpty()) {
+                            $transaction->recurring_pattern_id = $similar_transacs->first()->recurring_pattern_id;
+                            $transaction->save();
+                        }
                     } else {
-                        // @TODO: Erreur ?
-                        $errors[] = $line;
+                        $errors[] = $i;
+                        continue;
                     }
 
                     $i++;

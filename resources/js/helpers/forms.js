@@ -79,6 +79,7 @@ $(function () {
 
                     if ($(form_element).hasClass('select2')) {
                         $(form_element).trigger('change.select2');
+                        $(form_element).select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
                     }
                 }
 

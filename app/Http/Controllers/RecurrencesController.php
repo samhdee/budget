@@ -65,28 +65,16 @@ class RecurrencesController extends Controller
             ->orderByDesc('occurred_at')
             ->get();
 
+        $nb_found = 0;
+
         foreach ($transactions as $transaction) {
-            $query = Transaction::query()
-                ->select(['transactions.id', 'amount', 'occurred_at', 'beneficiary_id'])
-                ->whereDoesntHave('recurringPattern')
-                ->whereDate('occurred_at', '<', $transaction->occurred_at);
-
-            // @FIXME: utiliser min/max à la place d'un if
-            if ($transaction->amount > 30) {
-                $query->where('amount', '<=', $transaction->amount - 1.5)
-                    ->where('amount', '>=', $transaction->amount + 1.5);
-            } else {
-                $query->where('amount', '<=', 0.95 * $transaction->amount)
-                    ->where('amount', '>=', 1.05 * $transaction->amount);
-            }
-
-            $previous_transacs = $query->where('beneficiary_id', $transaction->beneficiary_id)
-                ->orderByDesc('occurred_at')
-                ->get();
+            $previous_transacs = Transaction::getSimilar($transaction);
 
             if ($previous_transacs->isEmpty()) {
                 continue;
             }
+
+            $nb_found++;
 
             $new_recurrence = new TransacRecurringPattern();
             $new_recurrence->beneficiary_id = $transaction->beneficiary_id;
@@ -119,7 +107,8 @@ class RecurrencesController extends Controller
                 ->update(['recurring_pattern_id' => $new_recurrence->id]);
         }
 
-        return to_route('recurrences_index');
+        return to_route('recurrences_index')
+            ->with('message', "{$nb_found} récurrence(s) trouvée(s) !");
     }
 
     /**

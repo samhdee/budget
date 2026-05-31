@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="mt-3 form-floating form-field">
-                        <select id="recurrence-benef-id" name="beneficiary_id" class="form-select" required>
+                        <select id="recurrence-benef-id" name="beneficiary_id" class="form-select select2" required>
                             <option value=""></option>
 
                             @php /** @var Beneficiary[] $beneficiaries */ @endphp

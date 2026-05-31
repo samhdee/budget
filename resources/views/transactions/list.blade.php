@@ -119,7 +119,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted fst-italic">
+                    <td colspan="9" class="text-center text-muted fst-italic">
                         <i class="fa-solid fa-ban me-1"></i> Aucun résultat
                     </td>
                 </tr>

@@ -178,4 +178,34 @@ class Transaction extends Model
             ->orderByDesc('occurred_at')
             ->get();
     }
+
+    /**
+     * @param Transaction $transaction
+     * @param bool $with_recurrence
+     * @return Collection
+     */
+    public static function getSimilar(Transaction $transaction, bool $with_recurrence = false): Collection
+    {
+        $query = Transaction::query()
+            ->select(['transactions.id', 'amount', 'occurred_at', 'beneficiary_id', 'recurring_pattern_id'])
+            ->whereDate('occurred_at', '<', $transaction->occurred_at);
+
+        if ($with_recurrence) {
+            $query->whereHas('recurringPattern');
+        } else {
+            $query->whereDoesntHave('recurringPattern');
+        }
+
+        if ($transaction->amount > 30) {
+            $query->where('amount', '<=', $transaction->amount - 1.5)
+                ->where('amount', '>=', $transaction->amount + 1.5);
+        } else {
+            $query->where('amount', '<=', 0.95 * $transaction->amount)
+                ->where('amount', '>=', 1.05 * $transaction->amount);
+        }
+
+        return $query->where('beneficiary_id', $transaction->beneficiary_id)
+            ->orderByDesc('occurred_at')
+            ->get();
+    }
 }
