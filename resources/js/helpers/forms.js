@@ -19,6 +19,7 @@ export const formSerializeObject = function (form_selector) {
             if (!results[form_element.name].push) {
                 results[form_element.name] = [results[form_element.name]];
             }
+
             results[form_element.name].push(form_element.value || '');
         } else {
             results[form_element.name] = form_element.value || '';
@@ -75,7 +76,12 @@ $(function () {
             $.get($(open_button).data('url')).then(response => {
                 for (const i in response.item) {
                     const form_element = $(form).find(`input[name="${i}"], select[name="${i}"], textarea[name="${i}"]`);
-                    $(form_element).val(response.item[i]);
+
+                    if ($(form_element).prop('type') === 'checkbox') {
+                        $(form_element).prop('checked', response.item[i] == '1' ? 'checked' : '');
+                    } else {
+                        $(form_element).val(response.item[i]);
+                    }
 
                     if ($(form_element).hasClass('select2')) {
                         $(form_element).trigger('change.select2');
@@ -102,7 +108,7 @@ $(function () {
     $(document).on('show.bs.modal', '.modal-bulk-form', e => {
         const modal = $(e.relatedTarget).data('bs-target');
         $(modal).find('input[name^="item_ids"]').remove();
-        $(modal).find('form input, form select, form textarea').val('');
+        $(modal).find('form input, form select, form textarea').val('').prop('checked', '');
 
         $('.bulk-select:checked').each((i, el) => {
             $(modal).find('form')
@@ -115,6 +121,9 @@ $(function () {
         e.preventDefault();
         const modal = $(e.currentTarget).parents('.modal-form, .modal-bulk-form');
         const form = $(modal).find('form');
+        $(modal).find('.form-error-message').remove();
+        $(modal).find('.form-error').removeClass('form-error');
+        $(modal).find('.alert-danger').addClass('d-none');
 
         $.post(
             $(form).prop('action'),

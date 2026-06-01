@@ -53,6 +53,7 @@ class BeneficiariesController extends Controller
             'pretty_name' => ['nullable', 'max:255'],
             'category_id' => ['nullable', 'integer', 'exists:' . Category::class . ',id'],
             'description' => ['nullable', 'max:255'],
+            'non_recurring' => ['nullable', Rule::in(['on'])],
         ]);
 
         if (!empty($data['id'])) {
@@ -62,6 +63,7 @@ class BeneficiariesController extends Controller
             $benef->pretty_name = trim($data['pretty_name']);
             $benef->category_id = $data['category_id'];
             $benef->description = trim($data['description']);
+            $benef->non_recurring = !empty($data['non_recurring']);
             $benef->save();
         } else {
             $benef_id = Beneficiary::create([
@@ -69,6 +71,7 @@ class BeneficiariesController extends Controller
                 'pretty_name' => trim($data['pretty_name']),
                 'category_id' => $data['category_id'],
                 'description' => trim($data['description']),
+                'non_recurring' => !empty($data['non_recurring']),
             ]);
         }
 
@@ -78,21 +81,28 @@ class BeneficiariesController extends Controller
     public function storeInBulk(Request $request)
     {
         $data = $request->validate([
-            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
+            'item_ids.*' => Rule::forEach(function () {
                 return [
                     Rule::exists(Beneficiary::class, 'id'),
                 ];
             }),
-            'category_id' => ['required', 'exists:' . Category::class . ',id'],
             'pretty_name' => ['nullable', 'max:255'],
+            'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
+            'non_recurring' => ['nullable', Rule::in(['on'])],
         ]);
 
-        $update_data = [
-            'category_id' => $data['category_id'],
-        ];
+        $update_data = [];
+
+        if (!empty($data['category_id'])) {
+            $update_data['category_id'] = $data['category_id'];
+        }
 
         if (!empty($data['pretty_name'])) {
             $update_data['pretty_name'] = $data['pretty_name'];
+        }
+
+        if (!empty($data['non_recurring'])) {
+            $update_data['non_recurring'] = 1;
         }
 
         $updated = Beneficiary::whereIn('id', $data['item_ids'])
@@ -105,15 +115,23 @@ class BeneficiariesController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function syncCategories(Request $request): JsonResponse
+    public function syncCategories(Request $request, $benef_id = null): JsonResponse
     {
-        $data = $request->validate([
-            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
-                return [
-                    Rule::exists(Transaction::class, 'id'),
-                ];
-            }),
-        ]);
+        if (!empty($benef_id)) {
+            \validator(\request()->route()->parameters(), [
+                'benef_id' => ['required', 'integer', 'exists:' . Beneficiary::class . ',id'],
+            ])->validate();
+
+            $data['item_ids'] = [$benef_id];
+        } else {
+            $data = $request->validate([
+                'item_ids.*' => Rule::forEach(function () {
+                    return [
+                        Rule::exists(Beneficiary::class, 'id'),
+                    ];
+                }),
+            ]);
+        }
 
         $beneficiaries = Beneficiary::query()
             ->select(['id', 'category_id', 'raw_name'])
@@ -126,7 +144,7 @@ class BeneficiariesController extends Controller
             if (empty($beneficiary->category_id)) {
                 continue;
             }
-            
+
             $nb_updated += Transaction::where('beneficiary_id', $beneficiary->id)
                 ->update(['category_id' => $beneficiary->category_id]);
         }
@@ -147,6 +165,6 @@ class BeneficiariesController extends Controller
             return response()->json(['message' => 'Bénéficiaire introuvable ou lié à une transaction.'], 422);
         }
 
-        return response()->json(['updated' => $benef->delete()]);
+        return response()->json(['updated' => Beneficiary::where('id', $benef_id)->delete()]);
     }
 }

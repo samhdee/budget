@@ -66,6 +66,11 @@
                         <textarea id="benef-description" class="form-control" name="description" maxlength="255"></textarea>
                         <label for="benef-description">Description</label>
                     </div>
+
+                    <div class="mt-3 form-field">
+                        <input id="benef-non-recurring" type="checkbox" class="form-check-inline" name="non_recurring" />
+                        <label for="benef-non-recurring" class="ms-1 form-label">Non récurrent</label>
+                    </div>
                 </div>
 
                 <div class="modal-footer">

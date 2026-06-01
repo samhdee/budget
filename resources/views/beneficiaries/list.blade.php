@@ -39,9 +39,10 @@
             <th>Nom moche</th>
             <th>Nom joli</th>
             <th>Catégorie par défaut</th>
-            <th style="width: 6.5rem;">Transactions</th>
             <th>Description</th>
-            <th style="width: 6rem;"></th>
+            <th style="width: 6.5rem;">Transactions</th>
+            <th style="width: 6rem;">Récurrence</th>
+            <th style="width: 9rem;"></th>
         </thead>
 
         <tbody>
@@ -55,8 +56,14 @@
                     <td>{{ $beneficiary->raw_name }}</td>
                     <td>{{ $beneficiary->pretty_name }}</td>
                     <td>{{ $beneficiary->c_appellation }}</td>
-                    <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
                     <td>{{ $beneficiary->description }}</td>
+                    <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
+
+                    <td class="text-center">
+                        @if (!empty($beneficiary->non_recurring))
+                            <i class="text-danger fas fa-xmark"></i>
+                        @endif
+                    </td>
 
                     <td class="text-center">
                         <button

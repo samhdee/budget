@@ -7,6 +7,7 @@ use App\Models\Beneficiary;
 use App\Models\TransacRecurringPattern;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -62,6 +63,10 @@ class RecurrencesController extends Controller
             ->whereDate('occurred_at', '>=', $now->startOfMonth()->format('Y-m-d'))
             ->whereDate('occurred_at', '<=', $now->endOfMonth()->format('Y-m-d'))
             ->where('amount', '<', 0)
+            ->where(function (Builder $query) {
+                $query->orWhere('non_recurring', '!=', 1)
+                    ->orWhereNull('non_recurring');
+            })
             ->orderByDesc('occurred_at')
             ->get();
 
@@ -85,7 +90,13 @@ class RecurrencesController extends Controller
             $prev_trans_date = Carbon::parse($previous_transacs->first()->occurred_at);
             $diff_in_days = $prev_trans_date->diffInDays($transaction->occurred_at);
 
-            if ($diff_in_days >= 57) {
+            if ($diff_in_days >= 117) {
+                $new_recurrence->frequency_count = 4;
+                $new_recurrence->frequency_unit = 'month';
+            } elseif ($diff_in_days >= 87) {
+                $new_recurrence->frequency_count = 3;
+                $new_recurrence->frequency_unit = 'month';
+            } elseif ($diff_in_days >= 57) {
                 $new_recurrence->frequency_count = 2;
                 $new_recurrence->frequency_unit = 'month';
             } elseif ($diff_in_days >= 27) {

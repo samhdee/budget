@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
  * @property string|null $pretty_name
  * @property int|null $category_id
  * @property string|null $notes
+ * @property boolean|null $non_recurring
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transaction> $transactions
  * @property-read int|null $transactions_count
  * @method static Builder<static>|Beneficiary newModelQuery()
@@ -34,6 +35,7 @@ use Illuminate\Support\Collection;
  * @method static Builder<static>|Beneficiary whereNotes($value)
  * @method static Builder<static>|Beneficiary wherePrettyName($value)
  * @method static Builder<static>|Beneficiary whereRawName($value)
+ * @method static Builder<static>|Beneficiary whereNonRecurring($value)
  * @method static Builder<static>|Beneficiary whereUpdatedAt($value)
  * @mixin Eloquent
  */
@@ -47,6 +49,7 @@ class Beneficiary extends Model
         'pretty_name',
         'category_id',
         'description',
+        'non_recurring',
     ];
 
     public function transactions(): HasMany
@@ -58,8 +61,8 @@ class Beneficiary extends Model
     {
         $query = self::query()
             ->select([
-                'beneficiaries.id', 'raw_name', 'pretty_name', 'beneficiaries.description', 'category_id',
-                'c.appellation as c_appellation', 'c.color as c_color',
+                'beneficiaries.id', 'raw_name', 'pretty_name', 'non_recurring',
+                'beneficiaries.description', 'category_id', 'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->withCount('transactions as nb_transactions')
             ->leftJoin('categories as c', 'c.id', 'category_id');
@@ -103,7 +106,7 @@ class Beneficiary extends Model
     public static function getOne($benef_id): Beneficiary
     {
         return self::query()
-            ->select(['id', 'raw_name', 'pretty_name', 'category_id', 'notes'])
+            ->select(['id', 'raw_name', 'pretty_name', 'category_id', 'description', 'non_recurring'])
             ->where('id', $benef_id)
             ->firstOrFail();
     }
