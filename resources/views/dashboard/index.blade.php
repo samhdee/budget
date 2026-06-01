@@ -19,7 +19,11 @@
 
         @php
             $now = Carbon::now();
-            $period = CarbonPeriod::create($first_date->occurred_at, '1 month', $now->format('Y-m-d'));
+            $period = CarbonPeriod::create(
+                Carbon::parse($first_date->occurred_at)->startOfMonth()->format('Y-m-d'),
+                '1 month',
+                $now->format('Y-m-d')
+            );
         @endphp
 
         <select id="transac-date-select" class="form-select" style="width: 130px">
