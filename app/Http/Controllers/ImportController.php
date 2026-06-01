@@ -22,7 +22,7 @@ class ImportController extends Controller
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
     private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b|COTISATION\sMENSUELLE\b)#';
-    private const string FIND_CB_BENEF = '#CB\s+([a-zA-Z.*\-\s]+)#';
+    private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_SEPA_BENEF = '#VIR\sSEPA\s([\w\-\s]+)#';
@@ -94,7 +94,8 @@ class ImportController extends Controller
                                 $has_match_benef = preg_match(self::FIND_CB_BENEF, $benef_raw, $matches_benef);
 
                                 if (!empty($has_match_benef)) {
-                                    $benef_raw_name = $matches_benef[1];
+                                    // Supprime les deux derniers caractères, qui sont un bout de la date de la transac
+                                    $benef_raw_name = substr($matches_benef[1], 0, strlen($matches_benef[1]) - 2);
                                 } else {
                                     $errors[] = $i;
                                 }

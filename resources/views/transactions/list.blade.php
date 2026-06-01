@@ -80,7 +80,6 @@
                                 title="{{ $transaction->raw_name }}"
                             >
                                 {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
-                                <i class="text-small fas fa-person-through-window"></i>
                             </a>
                         @endif
                     </td>

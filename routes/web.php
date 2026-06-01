@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', function () {
         return to_route('home');
     });
-    
+
     // Désactive l’uri /
     Route::controller(DashboardController::class)
         ->prefix('dashboard')
@@ -58,7 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/filter', 'filter')->name('benef_filter');
             Route::post('/store', 'store')->name('benef_store');
             Route::post('/bulk-store', 'storeInBulk')->name('benef_bulk_store');
-            Route::post('/sync', 'syncCategories')->name('benef_sync');
+            Route::get('/sync/{benef_id}', 'syncCategories')->name('benef_sync');
+            Route::post('/sync', 'syncCategories')->name('benef_bulk_sync');
             Route::get('/delete/{benef_id}', 'delete')->name('benef_delete');
         });
 

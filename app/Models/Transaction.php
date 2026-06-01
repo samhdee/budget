@@ -99,7 +99,7 @@ class Transaction extends Model
         $query = self::query()
             ->select([
                 't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id',
-                'recurring_pattern_id', 't.category_id', 'b.raw_name', 'b.pretty_name', 'b.notes as benef_notes',
+                'recurring_pattern_id', 't.category_id', 'b.raw_name', 'b.pretty_name', 'b.description as benef_desc',
                 'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->from('transactions as t')

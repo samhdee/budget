@@ -81,9 +81,9 @@
                         @if (!empty($beneficiary->category_id))
                             <button
                                 type="button"
-                                class="ms-1 btn btn-sm btn-primary confirm-before-action"
-                                data-url="{{ route('benef_sync') }}"
-                                data-benef_id="{{ $beneficiary->id }}"
+                                class="ms-1 btn btn-sm btn-primary btn-action confirm-before-action"
+                                data-url="{{ route('benef_sync', $beneficiary->id) }}"
+                                data-message="Synchroniser les catégories ?"
                             >
                                 <i class="fas fa-link"></i>
                             </button>
