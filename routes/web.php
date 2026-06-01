@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', function () {
+        return to_route('home');
+    });
+    
     // Désactive l’uri /
     Route::controller(DashboardController::class)
         ->prefix('dashboard')
