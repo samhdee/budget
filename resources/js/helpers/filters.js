@@ -1,5 +1,9 @@
 import { spinner } from "./helpers.js";
 
+/**
+ * Récupère les valeurs des filtres et les applique
+ * @param page
+ */
 export const getFilteredList = (page = null) => {
     const wrapper = $('.filters-wrapper');
     const list_wrapper = $(wrapper).data('target');
@@ -35,7 +39,10 @@ $(function () {
     $(document).on('change keyup', '.filters-wrapper select, .filters-wrapper input', e => {
         const input = $(e.target);
 
-        if ($(input).is('[type="text"]') && ($(input).val().length > 0 && $(input).val().length < 3)) {
+        if (
+            $(input).is('[type="text"]')
+            && ($(input).val().length > 0 && $(input).val().length < 3)
+        ) {
             return;
         }
 

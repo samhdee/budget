@@ -51,19 +51,21 @@
                     <td>{{ getTransactionTypeLabel($transaction->type) }}</td>
 
                     <td>
-                        <a
-                            href="javascript:void(0)"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modal-benef-form"
-                            data-item_id="{{ $transaction->beneficiary_id }}"
-                            data-url="{{ route('benef_get', $transaction->beneficiary_id) }}"
-                            data-action="edit"
-                            data-type="bénéficiaire"
-                            data-list="#expanses-list-wrapper"
-                            title="{{ $transaction->raw_name }}"
-                        >
-                            {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
-                        </a>
+                        @if (!empty($transaction->beneficiary_id))
+                            <a
+                                href="javascript:void(0)"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal-benef-form"
+                                data-item_id="{{ $transaction->beneficiary_id }}"
+                                data-url="{{ route('benef_get', $transaction->beneficiary_id) }}"
+                                data-action="edit"
+                                data-type="bénéficiaire"
+                                data-list="#expanses-list-wrapper"
+                                title="{{ $transaction->raw_name }}"
+                            >
+                                {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
+                            </a>
+                        @endif
                     </td>
 
                     <td>{{ $transaction->c_appellation }}</td>

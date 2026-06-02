@@ -59,6 +59,11 @@
             </button>
         </div>
 
+        <div class="d-none">
+            <input id="dash-filter-date-start" type="date" name="date_start" value="{{ $filter_date_start }}"/>
+            <input id="dash-filter-date-end" type="date" name="date_end" value="{{ $filter_date_end }}"/>
+        </div>
+
         <div>
             <button type="button" class="btn btn-sm btn-danger all-filter-reset">
                 <i class="fas fa-trash"></i>

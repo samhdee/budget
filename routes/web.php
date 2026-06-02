@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('dashboard')
         ->group(function () {
             Route::get('/', 'index')->name('home');
+            Route::post('/filter', 'filter')->name('dashboard_filter');
             Route::post('/expanses/filter', 'expFilter')->name('dashboard_exp_filter');
         });
 

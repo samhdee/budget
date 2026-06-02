@@ -70,6 +70,11 @@ $(function () {
             // Reset le formulaire
             $(form).find('input, select, textarea').val('');
             $(form).find('.modal-title').text(`Ajouter ${type}`);
+
+            if ($(form).find('.select2')) {
+                $(form).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
+                $(form).find('.select2').trigger('change.select2');
+            }
         } else if (typeof $(open_button).data('url') !== 'undefined') {
             // Récupère et affiche les infos de la categorie
             // @TODO: Ajouter la gestion d'erreur
