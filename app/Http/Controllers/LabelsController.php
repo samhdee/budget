@@ -20,7 +20,7 @@ class LabelsController extends Controller
     public function index(): View
     {
         return view('labels.index', ['labels' => Label::query()
-            ->select(['id', 'appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'description'])
             ->orderBy('appellation')
             ->get()
         ]);
@@ -35,7 +35,7 @@ class LabelsController extends Controller
     public function get($label_id): JsonResponse
     {
         return response()->json(['item' => Label::query()
-            ->select(['id', 'appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'description'])
             ->where('id', $label_id)
             ->firstOrFail()
         ]);
@@ -59,7 +59,6 @@ class LabelsController extends Controller
                     ? Rule::unique(Label::class)->whereNull('deleted_at')->ignore($request->input('id'))
                     : 'unique:' . Label::class
             ],
-            'color' => ['nullable', 'hex_color'],
             'description' => ['nullable', 'max:255'],
         ]);
 
@@ -68,13 +67,11 @@ class LabelsController extends Controller
             // @FIXME: gestion d’erreur
             $label = Label::findOrFail($data['id']);
             $label->appellation = trim($data['appellation']);
-            $label->color = trim($data['color']);
             $label->description = trim($data['description']);
             $label->save();
         } else {
             $label_id = Label::create([
                 'appellation' => trim($data['appellation']),
-                'color' => trim($data['color']),
                 'description' => trim($data['description']),
             ]);
         }
@@ -82,7 +79,7 @@ class LabelsController extends Controller
         return response()->json([
             'updated' => $label_id,
             'view' => view('labels.list', ['labels' => Label::query()
-                ->select(['id', 'appellation', 'color'])
+                ->select(['id', 'appellation'])
                 ->orderBy('appellation')
                 ->get()
             ])
@@ -102,7 +99,7 @@ class LabelsController extends Controller
         return response()->json([
             'deleted' => Label::where('id', $data['id'])->delete(),
             'view' => view('labels.list', ['labels' => Label::query()
-                ->select(['id', 'appellation', 'color', 'description'])
+                ->select(['id', 'appellation', 'description'])
                 ->orderBy('appellation')
                 ->get()
             ])->render()

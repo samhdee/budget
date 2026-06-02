@@ -31,11 +31,6 @@
                         <label for="categ-appellation">Nom *</label>
                     </div>
 
-                    <div class="mt-3 form-field">
-                        <label for="categ-color">Jolie couleur</label>
-                        <input id="categ-color" type="color" name="color" class="mt-1" required />
-                    </div>
-
                     <div class="mt-3 form-floating form-field">
                         <textarea id="categ-description" name="description" class="form-control" maxlength="255"></textarea>
                         <label for="categ-description">Description</label>

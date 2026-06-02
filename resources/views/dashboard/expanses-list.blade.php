@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <table class="mt-2 table table-striped table-bordered align-middle">
+    <table class="table table-striped table-bordered align-middle">
         <thead>
             <tr>
                 <th style="width: 2rem;">
@@ -72,7 +72,7 @@
                     <td>{{ $transaction->notes }}</td>
 
                     <td class="text-center">
-                        @if (!empty($transaction->recurring_pattern_id))
+                        @if (!empty($transaction->recurringPattern && !empty($transaction->recurringPattern->active)))
                             <i class="fas fa-repeat"></i>
                         @endif
                     </td>

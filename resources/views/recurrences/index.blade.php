@@ -26,4 +26,5 @@
     @include('recurrences.modal_form')
     @include('recurrences.modal_bulk_deactivate_form')
     @include('recurrences.modal_link_transac')
+    @include('beneficiaries.modal_form')
 @endsection

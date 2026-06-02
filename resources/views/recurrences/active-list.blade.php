@@ -47,11 +47,18 @@
                     <td>{{ $recurrence->amount }}€</td>
 
                     <td>
-                        @if(!empty($recurrence->pretty_name))
-                            <span title="{{ $recurrence->raw_name }}">{{ $recurrence->pretty_name }}</span>
-                        @else
-                            {{ $recurrence->raw_name }}
-                        @endif
+                        <a
+                            href="javascript:void(0)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal-benef-form"
+                            data-item_id="{{ $recurrence->beneficiary_id }}"
+                            data-url="{{ route('benef_get', $recurrence->beneficiary_id) }}"
+                            data-action="edit"
+                            data-type="bénéficiaire"
+                            title="{{ $recurrence->raw_name }}"
+                        >
+                            {{ !empty($recurrence->pretty_name) ? $recurrence->pretty_name : $recurrence->raw_name }}
+                        </a>
                     </td>
 
                     <td>{{ $recurrence->frequency_count }} {{ $recurrence->getUnitLabel() }}</td>

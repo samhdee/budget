@@ -65,7 +65,7 @@
         aria-labelledby="transac-expanses-tab"
         tabindex="0"
     >
-        <div class="mt-5">
+        <div class="mt-4">
             @include('dashboard.expanses-filters')
         </div>
 

@@ -91,10 +91,10 @@ class Transaction extends Model
 
     /**
      * @param array $filters
-     * @param $per_page
+     * @param int|bool $per_page
      * @return Collection|LengthAwarePaginator
      */
-    public static function getList(array $filters = [], $per_page = 50): Collection|LengthAwarePaginator
+    public static function getList(array $filters = [], int|bool $per_page = 50): Collection|LengthAwarePaginator
     {
         $query = self::query()
             ->select([
@@ -103,6 +103,7 @@ class Transaction extends Model
                 'c.appellation as c_appellation', 'c.color as c_color',
             ])
             ->from('transactions as t')
+            ->with('recurringPattern:id,active')
             ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->leftJoin('categories as c', 'c.id', 't.category_id');
 

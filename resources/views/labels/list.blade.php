@@ -2,7 +2,6 @@
     <thead>
         <tr>
             <th style="width: 12rem">Nom</th>
-            <th style="width: 5rem;">Couleur</th>
             <th>Description</th>
             <th style="width: 6rem"></th>
         </tr>
@@ -12,15 +11,6 @@
         @forelse ($labels as $label)
             <tr>
                 <td>{{ $label->appellation }}</td>
-
-                <td>
-                    <input
-                        type="color"
-                        class="mx-auto rounded-1"
-                        value="{{ !empty($label->color) ? $label->color : '#000000' }}"
-                        disabled
-                    />
-                </td>
 
                 <td>{{ $label->description }}</td>
 

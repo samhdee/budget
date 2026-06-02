@@ -5,6 +5,18 @@
 @endphp
 
 <div class="content-wrapper">
+    <div class="mt-4 d-flex justify-content-end">
+        <button
+            type="button"
+            class="btn btn-sm btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#modal-transac-form"
+            data-action="create"
+        >
+            <i class="fas fa-plus-circle"></i> Créer
+        </button>
+    </div>
+
     <div class="d-flex justify-content-end">
         <div class="d-none bulk-action-wrapper">
             <button id="bulk-delete" type="button" class="btn btn-sm btn-danger">

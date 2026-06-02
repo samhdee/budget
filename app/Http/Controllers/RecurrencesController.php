@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\RecurrenceFreqUnit;
 use App\Models\Beneficiary;
+use App\Models\Category;
 use App\Models\TransacRecurringPattern;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -24,6 +25,7 @@ class RecurrencesController extends Controller
             'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
             'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
             'beneficiaries' => Beneficiary::getDropdownList(),
+            'categories' => Category::getDropdownList(),
         ]);
     }
 
@@ -133,6 +135,7 @@ class RecurrencesController extends Controller
             'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
             'label' => ['nullable', 'max:255'],
             'amount' => ['required', 'decimal:2'],
+            'beneficiary_id' => ['required', 'exists:' . Beneficiary::class . ',id'],
             'frequency_count' => ['required', 'integer'],
             'frequency_unit' => ['required', Rule::in(RecurrenceFreqUnit::cases())],
             'ends_at' => ['nullable', 'date'],
@@ -140,7 +143,14 @@ class RecurrencesController extends Controller
 
         return response()->json([
             'updated' => TransacRecurringPattern::where('id', $data['id'])
-                ->update($data),
+                ->update([
+                    'label' => $data['label'],
+                    'amount' => $data['amount'],
+                    'beneficiary_id' => $data['beneficiary_id'],
+                    'frequency_count' => $data['frequency_count'],
+                    'frequency_unit' => $data['frequency_unit'],
+                    'ends_at' => $data['ends_at'],
+                ]),
             'view' => view('recurrences.lists', [
                 'recurrences' => TransacRecurringPattern::getList(),
                 'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),

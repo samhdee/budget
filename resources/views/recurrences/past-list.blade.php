@@ -40,11 +40,18 @@
                     <td>{{ $past_recurrence->amount }}€</td>
 
                     <td>
-                        @if(!empty($past_recurrence->pretty_name))
-                            <span title="{{ $past_recurrence->raw_name }}">{{ $past_recurrence->pretty_name }}</span>
-                        @else
-                            {{ $past_recurrence->raw_name }}
-                        @endif
+                        <a
+                            href="javascript:void(0)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal-benef-form"
+                            data-item_id="{{ $past_recurrence->beneficiary_id }}"
+                            data-url="{{ route('benef_get', $past_recurrence->beneficiary_id) }}"
+                            data-action="edit"
+                            data-type="bénéficiaire"
+                            title="{{ $past_recurrence->raw_name }}"
+                        >
+                            {{ !empty($past_recurrence->pretty_name) ? $past_recurrence->pretty_name : $past_recurrence->raw_name }}
+                        </a>
                     </td>
 
                     <td>

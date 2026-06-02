@@ -16,7 +16,7 @@ class CategoriesController extends Controller
     public function index(): View
     {
         return view('categories.index', ['categories' => Category::query()
-            ->select(['id', 'appellation', 'color'])
+            ->select(['id', 'appellation'])
             ->withCount('transactions as nb_transactions')
             ->orderBy('appellation')
             ->get()
@@ -32,7 +32,7 @@ class CategoriesController extends Controller
     public function get($categ_id): JsonResponse
     {
         return response()->json(['item' => Category::query()
-            ->select(['id', 'appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'description'])
             ->where('id', $categ_id)
             ->firstOrFail()
         ]);
@@ -56,20 +56,17 @@ class CategoriesController extends Controller
                     ? Rule::unique(Category::class)->whereNull('deleted_at')->ignore($request->input('id'))
                     : 'unique:' . Category::class
             ],
-            'color' => ['nullable', 'hex_color'],
             'description' => ['nullable', 'max:255'],
         ]);
 
         if (!empty($data['id'])) {
             $category = Category::find($data['id']);
             $category->appellation = trim($data['appellation']);
-            $category->color = $data['color'];
             $category->description = trim($data['description']);
             $category->save();
         } else {
             Category::create([
                 'appellation' => trim($data['appellation']),
-                'color' => $data['color'],
                 'description' => trim($data['description']),
             ]);
         }
@@ -78,7 +75,7 @@ class CategoriesController extends Controller
             'updated' => true,
             'view' => view('categories.list', [
                 'categories' => Category::query()
-                    ->select(['id', 'appellation', 'color'])
+                    ->select(['id', 'appellation'])
                     ->orderBy('appellation')
                     ->get()
                 ])
@@ -108,7 +105,7 @@ class CategoriesController extends Controller
         return response()->json([
             'deleted' => Category::where('id', $data['id'])->delete(),
             'view' => view('categories.list', ['categories' => Category::query()
-                ->select(['id', 'appellation', 'color', 'description'])
+                ->select(['id', 'appellation', 'description'])
                 ->orderBy('appellation')
                 ->get()
             ])->render()
