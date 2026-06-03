@@ -85,6 +85,7 @@
                     </td>
 
                     <td>{{ $transaction->c_appellation }}</td>
+
                     <td>
                         @foreach($transaction->labels as $label)
                             <span class="badge text-bg-info">{{ $label->appellation }}</span>

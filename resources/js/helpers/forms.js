@@ -85,6 +85,8 @@ $(function () {
                     if ($(form_element).prop('type') === 'checkbox') {
                         $(form_element).prop('checked', response.item[i] == '1' ? 'checked' : '');
                     } else if ($(form_element).prop('multiple')) {
+                        $(form_element).find('option:selected').prop('selected', '');
+
                         for (const j in response.item[i]) {
                             $(form_element).find(`option[value="${response.item[i][j].id}"]`).prop('selected', true);
                         }

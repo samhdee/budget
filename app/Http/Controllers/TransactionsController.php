@@ -102,11 +102,12 @@ class TransactionsController extends Controller
             'occurred_at' => ['required', 'date'],
             'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
             'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
-            'label_ids.*' => Rule::forEach(function () {
+            'labels.*' => Rule::forEach(function () {
                 return [
                     Rule::exists(Label::class, 'id'),
                 ];
             }),
+            'labels' => ['nullable', 'exists:' . Label::class . ',id'],
             'notes' => ['nullable', 'max:255'],
         ]);
 
@@ -120,8 +121,8 @@ class TransactionsController extends Controller
             $transaction->category_id = $data['category_id'] ?? null;
             $transaction->notes = $data['notes'] ?? null;
 
-            if (!empty($data['label_ids'])) {
-                $transaction->labels()->attach($data['label_ids']);
+            if (!empty($data['labels'])) {
+                $transaction->labels()->attach($data['labels']);
             }
 
             $transaction->save();
@@ -135,8 +136,8 @@ class TransactionsController extends Controller
                 'notes' => $data['notes'] ?? null,
             ]);
 
-            if (!empty($data['label_ids'])) {
-                $transaction->labels()->attach($data['label_ids']);
+            if (!empty($data['labels'])) {
+                $transaction->labels()->attach($data['labels']);
             }
 
             $transac_id = $transaction->id;

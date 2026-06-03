@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Beneficiary;
 use App\Models\Category;
+use App\Models\Label;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use DB;
@@ -69,6 +70,7 @@ class DashboardController extends Controller
             'filter_date_end' => $date_end,
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
+            'labels' => Label::getList(),
             'first_date' => Transaction::query()
                 ->select(DB::raw('DATE(occurred_at) as occurred_at'))
                 ->orderBy('occurred_at')
