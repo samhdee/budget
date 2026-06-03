@@ -2,6 +2,7 @@
     use App\Enums\TransactionType;
     use App\Models\Beneficiary;
     use App\Models\Category;
+    use App\Models\Label;
 @endphp
 
 <div class="modal fade modal-form" id="modal-transac-form" aria-labelledby="transac-form-title" aria-hidden="true">
@@ -45,7 +46,8 @@
 
                     <div class="mt-3 position-relative">
                         <div class="pe-5 form-floating form-field">
-                            <select id="transac-benef-id" name="beneficiary_id" class="select2 form-select" style="width: 100%;">
+                            <select id="transac-benef-id" name="beneficiary_id" class="form-select select2"
+                                    style="width: 100%;">
                                 <option value=""></option>
 
                                 @php /** @var Beneficiary[] $beneficiaries */ @endphp
@@ -61,18 +63,18 @@
 
                             <label for="transac-benef-id">Bénéficiaire</label>
 
-{{--                            <div class="position-absolute top-25 end-0">--}}
-{{--                                <button--}}
-{{--                                    type="button"--}}
-{{--                                    class="btn btn-sm btn-success"--}}
-{{--                                    data-bs-toggle="collapse"--}}
-{{--                                    data-bs-target="#transac-new-benef-wrapper"--}}
-{{--                                    aria-expanded="false"--}}
-{{--                                    aria-controls="transac-new-benef-wrapper"--}}
-{{--                                >--}}
-{{--                                    <i class="fas fa-plus-circle"></i>--}}
-{{--                                </button>--}}
-{{--                            </div>--}}
+                            {{--                            <div class="position-absolute top-25 end-0">--}}
+                            {{--                                <button--}}
+                            {{--                                    type="button"--}}
+                            {{--                                    class="btn btn-sm btn-success"--}}
+                            {{--                                    data-bs-toggle="collapse"--}}
+                            {{--                                    data-bs-target="#transac-new-benef-wrapper"--}}
+                            {{--                                    aria-expanded="false"--}}
+                            {{--                                    aria-controls="transac-new-benef-wrapper"--}}
+                            {{--                                >--}}
+                            {{--                                    <i class="fas fa-plus-circle"></i>--}}
+                            {{--                                </button>--}}
+                            {{--                            </div>--}}
                         </div>
 
                         <div id="transac-new-benef-wrapper" class="mt-3 collapse form-floating form-field">
@@ -82,7 +84,7 @@
                     </div>
 
                     <div class="mt-3 form-floating form-field">
-                        <select id="transac-category-id" name="category_id" class="form-select" required>
+                        <select id="transac-category-id" name="category_id" class="form-select">
                             <option value=""></option>
 
                             @php /** @var Category[] $category */ @endphp
@@ -94,6 +96,21 @@
                         </select>
 
                         <label for="transac-category-id">Catégorie</label>
+                    </div>
+
+                    <div class="mt-3 form-field">
+                        <label for="transac-label-ids">Labels</label>
+
+                        <select id="transac-label-ids" name="labels" class="select2 form-select" style="width: 100%;" multiple>
+                            <option value=""></option>
+
+                            @php /** @var Label[] $label */ @endphp
+                            @foreach ($labels as $label)
+                                <option value="{{ $label->id }}">
+                                    {{ $label->appellation }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="mt-3 form-floating form-field">

@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th style="width: 12rem">Nom</th>
+            <th style="width: 6rem;">Transactions</th>
             <th>Description</th>
             <th style="width: 6rem"></th>
         </tr>
@@ -11,7 +12,7 @@
         @forelse ($labels as $label)
             <tr>
                 <td>{{ $label->appellation }}</td>
-
+                <td class="text-center">{{ $label->nb_transactions }}</td>
                 <td>{{ $label->description }}</td>
 
                 <td class="text-center">

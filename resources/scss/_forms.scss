@@ -74,4 +74,19 @@ body {
     .form-check-inline {
         margin-right: 0;
     }
+
+    .select2-container--default {
+        .select2-selection--multiple {
+            background: $body-secondary-bg;
+            border-color: #fff;
+
+            .select2-selection__choice {
+                background: $body-bg;
+            }
+        }
+
+        .select2-results__option--selected {
+            color: $body-bg;
+        }
+    }
 }

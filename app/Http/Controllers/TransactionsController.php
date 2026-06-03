@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\TransactionType;
 use App\Models\Beneficiary;
 use App\Models\Category;
+use App\Models\Label;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +26,7 @@ class TransactionsController extends Controller
             'transactions' => Transaction::getList(),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
+            'labels' => Label::getDropdownList(),
         ]);
     }
 
@@ -35,6 +37,7 @@ class TransactionsController extends Controller
             'transactions' => Transaction::getList($request->input('filters')),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
+            'labels' => Label::getDropdownList(),
         ]);
     }
 
@@ -99,6 +102,11 @@ class TransactionsController extends Controller
             'occurred_at' => ['required', 'date'],
             'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
             'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
+            'label_ids.*' => Rule::forEach(function () {
+                return [
+                    Rule::exists(Label::class, 'id'),
+                ];
+            }),
             'notes' => ['nullable', 'max:255'],
         ]);
 
@@ -111,9 +119,14 @@ class TransactionsController extends Controller
             $transaction->beneficiary_id = $data['beneficiary_id'] ?? null;
             $transaction->category_id = $data['category_id'] ?? null;
             $transaction->notes = $data['notes'] ?? null;
+
+            if (!empty($data['label_ids'])) {
+                $transaction->labels()->attach($data['label_ids']);
+            }
+
             $transaction->save();
         } else {
-            $transac_id = Transaction::create([
+            $transaction = Transaction::create([
                 'amount' => $data['amount'],
                 'occurred_at' => $data['occurred_at'],
                 'type' => $data['type'],
@@ -121,6 +134,12 @@ class TransactionsController extends Controller
                 'category_id' => $data['category_id'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
+
+            if (!empty($data['label_ids'])) {
+                $transaction->labels()->attach($data['label_ids']);
+            }
+
+            $transac_id = $transaction->id;
         }
 
         return response()->json(['updated' => $transac_id]);
@@ -138,7 +157,7 @@ class TransactionsController extends Controller
     public function bulkDelete(Request $request)
     {
         $data = $request->validate([
-            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
+            'item_ids.*' => Rule::forEach(function () {
                 return [
                     Rule::exists(Transaction::class, 'id'),
                 ];

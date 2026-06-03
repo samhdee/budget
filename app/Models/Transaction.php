@@ -104,6 +104,7 @@ class Transaction extends Model
             ])
             ->from('transactions as t')
             ->with('recurringPattern:id,active')
+            ->with('labels:id,appellation')
             ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->leftJoin('categories as c', 'c.id', 't.category_id');
 
@@ -161,6 +162,7 @@ class Transaction extends Model
                 'b.raw_name', 'b.pretty_name',
             ])
             ->from('transactions as t')
+            ->with('labels:id,appellation')
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->where('t.id', $id)
             ->firstOrFail();

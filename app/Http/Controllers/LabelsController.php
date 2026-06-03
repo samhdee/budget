@@ -19,11 +19,7 @@ class LabelsController extends Controller
      */
     public function index(): View
     {
-        return view('labels.index', ['labels' => Label::query()
-            ->select(['id', 'appellation', 'description'])
-            ->orderBy('appellation')
-            ->get()
-        ]);
+        return view('labels.index', ['labels' => Label::getList()]);
     }
 
     /**
@@ -78,12 +74,7 @@ class LabelsController extends Controller
 
         return response()->json([
             'updated' => $label_id,
-            'view' => view('labels.list', ['labels' => Label::query()
-                ->select(['id', 'appellation'])
-                ->orderBy('appellation')
-                ->get()
-            ])
-            ->render()
+            'view' => view('labels.list', ['labels' => Label::getList()])->render()
         ]);
     }
 
@@ -98,11 +89,7 @@ class LabelsController extends Controller
 
         return response()->json([
             'deleted' => Label::where('id', $data['id'])->delete(),
-            'view' => view('labels.list', ['labels' => Label::query()
-                ->select(['id', 'appellation', 'description'])
-                ->orderBy('appellation')
-                ->get()
-            ])->render()
+            'view' => view('labels.list', ['labels' => Label::getList()])->render()
         ]);
     }
 }

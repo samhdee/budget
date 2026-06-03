@@ -47,7 +47,7 @@
                 <th>Type</th>
                 <th>Bénéficiaire</th>
                 <th>Catégorie</th>
-                <th style="width: 12rem">Notes</th>
+                <th style="width: 12rem">Labels</th>
                 <th style="width: 2rem;">
                     <i class="fas fa-repeat"></i>
                 </th>
@@ -85,7 +85,11 @@
                     </td>
 
                     <td>{{ $transaction->c_appellation }}</td>
-                    <td>{{ $transaction->notes }}</td>
+                    <td>
+                        @foreach($transaction->labels as $label)
+                            <span class="badge text-bg-info">{{ $label->appellation }}</span>
+                        @endforeach
+                    </td>
 
                     <td class="text-center">
                         @if (!empty($transaction->recurring_pattern_id))

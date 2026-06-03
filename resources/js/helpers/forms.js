@@ -84,13 +84,12 @@ $(function () {
 
                     if ($(form_element).prop('type') === 'checkbox') {
                         $(form_element).prop('checked', response.item[i] == '1' ? 'checked' : '');
+                    } else if ($(form_element).prop('multiple')) {
+                        for (const j in response.item[i]) {
+                            $(form_element).find(`option[value="${response.item[i][j].id}"]`).prop('selected', true);
+                        }
                     } else {
                         $(form_element).val(response.item[i]);
-                    }
-
-                    if ($(form_element).hasClass('select2')) {
-                        $(form_element).trigger('change.select2');
-                        $(form_element).select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
                     }
                 }
 
@@ -105,6 +104,11 @@ $(function () {
                 }
 
                 $(e.currentTarget).find('.modal-title').html(title);
+
+                if ($(form).find('.select2')) {
+                    $(form).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
+                    $(form).find('.select2').trigger('change.select2');
+                }
             });
         }
     });
