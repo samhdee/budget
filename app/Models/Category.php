@@ -44,6 +44,15 @@ class Category extends Model
         return $this->hasMany(Transaction::class, 'category_id');
     }
 
+    public static function getList(): Collection
+    {
+        return self::query()
+            ->select(['id', 'appellation'])
+            ->withCount('transactions as nb_transactions')
+            ->orderBy('appellation')
+            ->get();
+    }
+
     /**
      * @return Collection
      */

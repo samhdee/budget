@@ -15,12 +15,7 @@ class CategoriesController extends Controller
 {
     public function index(): View
     {
-        return view('categories.index', ['categories' => Category::query()
-            ->select(['id', 'appellation'])
-            ->withCount('transactions as nb_transactions')
-            ->orderBy('appellation')
-            ->get()
-        ]);
+        return view('categories.index', ['categories' => Category::getList()]);
     }
 
     /**
@@ -73,13 +68,7 @@ class CategoriesController extends Controller
 
         return response()->json([
             'updated' => true,
-            'view' => view('categories.list', [
-                'categories' => Category::query()
-                    ->select(['id', 'appellation'])
-                    ->orderBy('appellation')
-                    ->get()
-                ])
-                ->render()
+            'view' => view('categories.list', ['categories' => Category::getList()])->render()
         ]);
     }
 
@@ -104,11 +93,6 @@ class CategoriesController extends Controller
 
         return response()->json([
             'deleted' => Category::where('id', $data['id'])->delete(),
-            'view' => view('categories.list', ['categories' => Category::query()
-                ->select(['id', 'appellation', 'description'])
-                ->orderBy('appellation')
-                ->get()
-            ])->render()
-        ]);
+            'view' => view('categories.list', ['categories' => Category::getList()])->render()]);
     }
 }
