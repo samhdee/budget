@@ -1,5 +1,7 @@
 @extends('includes.layout')
 
+@section('title') CatégoRIRES @endsection
+
 @section('vite_imports')
     @vite(['resources/js/categories.js', 'resources/js/helpers/forms.js'])
 @endsection

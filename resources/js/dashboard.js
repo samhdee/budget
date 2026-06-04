@@ -55,6 +55,26 @@ const init_exp_by_categ_chart = () => {
     });
 };
 
+const reload_dashboard = async () => {
+    return await $.post(
+        'dashboard/filter',
+        {filters: {date_start: $('#transac-date-select').val()}},
+        response => {
+            $('#transac-global-wrapper').html(response);
+            if ($('#dashboard-rev-exp-chart').length > 0) {
+                init_rev_exp_chart();
+            }
+
+            if ($('#dashboard-exp-by-categ-chart').length > 0) {
+                init_exp_by_categ_chart();
+            }
+
+            // Change la valeur du filtre caché pour les dépenses
+            $('#dash-filter-date-start')
+        }
+    ).then();
+}
+
 $(function () {
     if ($('#dashboard-rev-exp-chart').length > 0) {
         init_rev_exp_chart();
@@ -66,22 +86,13 @@ $(function () {
 
     // Change le mois visualisé
     $(document).on('change', '#transac-date-select', () => {
-        $.post(
-            'dashboard/filter',
-            {filters: {date_start: $('#transac-date-select').val()}},
-            response => {
-                $('#transac-global-wrapper').html(response);
-                if ($('#dashboard-rev-exp-chart').length > 0) {
-                    init_rev_exp_chart();
-                }
+        reload_dashboard();
+    });
 
-                if ($('#dashboard-exp-by-categ-chart').length > 0) {
-                    init_exp_by_categ_chart();
-                }
-
-                // Change la valeur du filtre caché pour les dépenses
-                $('#dash-filter-date-start')
-            }
-        );
+    $(document).on('hidden.bs.modal', '#modal-transac-form', () => {
+        const active_tab = $('#transactions-tabs .nav-link.active').prop('id');
+        reload_dashboard().then(() => {
+            $(`#${active_tab}`).trigger('click');
+        });
     });
 });

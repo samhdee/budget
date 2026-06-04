@@ -44,5 +44,7 @@ $nav-tabs-link-active-color: $body-color;
 // Navbar
 $dropdown-bg: $violet;
 $dropdown-link-hover-color: $violet;
+$dropdown-link-active-bg: #fff;
+$dropdown-link-active-color: $violet;
 
 @import "bootstrap/scss/bootstrap";

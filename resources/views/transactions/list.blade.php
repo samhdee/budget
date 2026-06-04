@@ -93,7 +93,7 @@
                     </td>
 
                     <td class="text-center">
-                        @if (!empty($transaction->recurring_pattern_id))
+                        @if (!empty($transaction->recurring_pattern_id && !empty($transaction->recurringPattern->active)))
                             <i class="fas fa-repeat"></i>
                         @endif
                     </td>

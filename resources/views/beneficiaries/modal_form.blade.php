@@ -1,4 +1,7 @@
-@php use App\Models\Category; @endphp
+@php
+    use App\Models\Category;
+    use App\Models\Label;
+@endphp
 
 <div
     id="modal-benef-form"
@@ -63,12 +66,28 @@
                     </div>
 
                     <div class="mt-3 form-floating form-field">
-                        <textarea id="benef-description" class="form-control" name="description" maxlength="255"></textarea>
+                        <select id="benef-label-id" name="label_id" class="form-select" style="width: 100%">
+                            <option value=""></option>
+
+                            @php /** @var Label[] $label */ @endphp
+                            @foreach ($labels as $label)
+                                <option value="{{ $label->id }}">
+                                    {{ $label->appellation }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <label for="benef-label-id">Label par défaut</label>
+                    </div>
+
+                    <div class="mt-3 form-floating form-field">
+                        <textarea id="benef-description" class="form-control" name="description"
+                                  maxlength="255"></textarea>
                         <label for="benef-description">Description</label>
                     </div>
 
                     <div class="mt-3 form-field">
-                        <input id="benef-non-recurring" type="checkbox" class="form-check-inline" name="non_recurring" />
+                        <input id="benef-non-recurring" type="checkbox" class="form-check-inline" name="non_recurring"/>
                         <label for="benef-non-recurring" class="ms-1 form-label">Non récurrent</label>
                     </div>
                 </div>

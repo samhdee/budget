@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\RecurrenceFreqUnit;
 use App\Models\Beneficiary;
 use App\Models\Category;
+use App\Models\Label;
 use App\Models\TransacRecurringPattern;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -26,6 +27,7 @@ class RecurrencesController extends Controller
             'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
+            'labels' => Label::getDropdownList(),
         ]);
     }
 

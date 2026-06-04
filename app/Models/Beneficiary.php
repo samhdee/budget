@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -20,14 +21,16 @@ use Illuminate\Support\Collection;
  * @property Carbon|null $updated_at
  * @property string|null $pretty_name
  * @property int|null $category_id
+ * @property int|null $label_id
  * @property string|null $notes
  * @property boolean|null $non_recurring
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transaction> $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Transaction> $transactions
  * @property-read int|null $transactions_count
  * @method static Builder<static>|Beneficiary newModelQuery()
  * @method static Builder<static>|Beneficiary newQuery()
  * @method static Builder<static>|Beneficiary query()
  * @method static Builder<static>|Beneficiary whereCategoryId($value)
+ * @method static Builder<static>|Beneficiary whereLabelId($value)
  * @method static Builder<static>|Beneficiary whereCreatedAt($value)
  * @method static Builder<static>|Beneficiary whereDescription($value)
  * @method static Builder<static>|Beneficiary whereExpression($value)
@@ -48,6 +51,7 @@ class Beneficiary extends Model
         'raw_name',
         'pretty_name',
         'category_id',
+        'label_id',
         'description',
         'non_recurring',
     ];
@@ -57,15 +61,25 @@ class Beneficiary extends Model
         return $this->hasMany(Transaction::class, 'beneficiary_id');
     }
 
+    public function category(): HasOne
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id');
+    }
+
+    public function label(): HasOne
+    {
+        return $this->hasOne(Label::class, 'id', 'label_id');
+    }
+
     public static function getList($filters = []): LengthAwarePaginator
     {
         $query = self::query()
-            ->select([
-                'beneficiaries.id', 'raw_name', 'pretty_name', 'non_recurring',
-                'beneficiaries.description', 'category_id', 'c.appellation as c_appellation', 'c.color as c_color',
+            ->select(['id', 'raw_name', 'pretty_name', 'non_recurring', 'description', 'category_id', 'label_id'])
+            ->with([
+                'category:id,appellation',
+                'label:id,appellation',
             ])
-            ->withCount('transactions as nb_transactions')
-            ->leftJoin('categories as c', 'c.id', 'category_id');
+            ->withCount('transactions as nb_transactions');
 
         if (!empty($filters['either_name'])) {
             $query->where(function (Builder $query) use ($filters) {
@@ -106,7 +120,7 @@ class Beneficiary extends Model
     public static function getOne($benef_id): Beneficiary
     {
         return self::query()
-            ->select(['id', 'raw_name', 'pretty_name', 'category_id', 'description', 'non_recurring'])
+            ->select(['id', 'raw_name', 'pretty_name', 'category_id', 'label_id', 'description', 'non_recurring'])
             ->where('id', $benef_id)
             ->firstOrFail();
     }

@@ -46,6 +46,21 @@
                         <label for="benef-bulk-category-id">Catégorie par défaut</label>
                     </div>
 
+                    <div class="mt-3 form-floating form-field">
+                        <select id="benef-label-id" name="label_id" class="form-select" style="width: 100%">
+                            <option value=""></option>
+
+                            @php /** @var Label[] $label */ @endphp
+                            @foreach ($labels as $label)
+                                <option value="{{ $label->id }}">
+                                    {{ $label->appellation }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <label for="benef-label-id">Label par défaut</label>
+                    </div>
+
                     <div class="mt-3 form-field">
                         <input id="benef-bulk-non-recurring" type="checkbox" class="form-check-inline" name="non_recurring" />
                         <label for="benef-bulk-non-recurring" class="ms-1 form-label">Non récurrent</label>

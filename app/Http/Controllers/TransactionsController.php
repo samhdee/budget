@@ -121,6 +121,8 @@ class TransactionsController extends Controller
             $transaction->category_id = $data['category_id'] ?? null;
             $transaction->notes = $data['notes'] ?? null;
 
+            $transaction->labels()->detach();
+
             if (!empty($data['labels'])) {
                 $transaction->labels()->attach($data['labels']);
             }

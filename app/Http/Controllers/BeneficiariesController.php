@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Beneficiary;
 use App\Models\Category;
+use App\Models\Label;
 use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class BeneficiariesController extends Controller
         return view('beneficiaries.index', [
             'beneficiaries' => Beneficiary::getList(),
             'categories' => Category::getDropdownList(),
+            'labels' => Label::getDropdownList(),
         ]);
     }
 
@@ -25,6 +27,7 @@ class BeneficiariesController extends Controller
         return view('beneficiaries.list', [
             'beneficiaries' => Beneficiary::getList($request->input('filters')),
             'categories' => Category::getDropdownList(),
+            'labels' => Label::getDropdownList(),
         ]);
     }
 
@@ -52,6 +55,7 @@ class BeneficiariesController extends Controller
             ],
             'pretty_name' => ['nullable', 'max:255'],
             'category_id' => ['nullable', 'integer', 'exists:' . Category::class . ',id'],
+            'label_id' => ['nullable', 'integer', 'exists:' . Label::class . ',id'],
             'description' => ['nullable', 'max:255'],
             'non_recurring' => ['nullable', Rule::in(['on'])],
         ]);
@@ -62,6 +66,7 @@ class BeneficiariesController extends Controller
             $benef->raw_name = trim($data['raw_name']);
             $benef->pretty_name = trim($data['pretty_name']);
             $benef->category_id = $data['category_id'];
+            $benef->label_id = $data['label_id'];
             $benef->description = trim($data['description']);
             $benef->non_recurring = !empty($data['non_recurring']);
             $benef->save();
@@ -70,6 +75,7 @@ class BeneficiariesController extends Controller
                 'raw_name' => trim($data['raw_name']),
                 'pretty_name' => trim($data['pretty_name']),
                 'category_id' => $data['category_id'],
+                'label_id' => $data['label_id'],
                 'description' => trim($data['description']),
                 'non_recurring' => !empty($data['non_recurring']),
             ]);
@@ -88,6 +94,7 @@ class BeneficiariesController extends Controller
             }),
             'pretty_name' => ['nullable', 'max:255'],
             'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
+            'label_id' => ['nullable', 'exists:' . Label::class . ',id'],
             'non_recurring' => ['nullable', Rule::in(['on'])],
         ]);
 
@@ -95,6 +102,10 @@ class BeneficiariesController extends Controller
 
         if (!empty($data['category_id'])) {
             $update_data['category_id'] = $data['category_id'];
+        }
+
+        if (!empty($data['label_id'])) {
+            $update_data['label_id'] = $data['label_id'];
         }
 
         if (!empty($data['pretty_name'])) {
@@ -105,6 +116,10 @@ class BeneficiariesController extends Controller
             $update_data['non_recurring'] = 1;
         }
 
+        if (empty($data)) {
+            return response()->json(['message' => 'Rien à mettre à jour.'], 406);
+        }
+
         $updated = Beneficiary::whereIn('id', $data['item_ids'])
             ->update($update_data);
 
@@ -113,9 +128,10 @@ class BeneficiariesController extends Controller
 
     /**
      * @param Request $request
+     * @param int|null $benef_id
      * @return JsonResponse
      */
-    public function syncCategories(Request $request, $benef_id = null): JsonResponse
+    public function syncCategories(Request $request, ?int $benef_id = null): JsonResponse
     {
         if (!empty($benef_id)) {
             \validator(\request()->route()->parameters(), [

@@ -162,7 +162,10 @@ class Transaction extends Model
                 'b.raw_name', 'b.pretty_name',
             ])
             ->from('transactions as t')
-            ->with('labels:id,appellation')
+            ->with([
+                'labels:id,appellation',
+                'recurringPattern:id,active',
+            ])
             ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->where('t.id', $id)
             ->firstOrFail();

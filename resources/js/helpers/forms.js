@@ -160,7 +160,12 @@ $(function () {
             if (typeof response.responseJSON.errors !== 'undefined') {
                 showFormErrors(`#${$(form).attr('id')}`, response.responseJSON.errors);
             } else {
-                $(form).find('.alert-danger').html(response.responseJSON.message).removeClass('d-none');
+                $(form).find('.alert-danger')
+                    .html(typeof response.responseJSON.message !== 'undefined'
+                        ? response.responseJSON.message
+                        : 'Une erreur inattendue est survenue.'
+                    )
+                    .removeClass('d-none');
             }
         });
     });

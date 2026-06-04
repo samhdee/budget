@@ -218,12 +218,17 @@ class ImportController extends Controller
                             'file' => $file,
                         ]);
 
+                        if (!empty($benef_result->label_id)) {
+                            $transaction->labels()->attach($benef_result->label_id);
+                        }
+
                         $similar_transacs = Transaction::getSimilar($transaction, true);
 
-                        if ($similar_transacs->isNotEmpty()) {
+                        if ($similar_transacs->isNotEmpty() && empty($benef_result->non_recurring)) {
                             $transaction->recurring_pattern_id = $similar_transacs->first()->recurring_pattern_id;
-                            $transaction->save();
                         }
+
+                        $transaction->save();
                     } else {
                         $errors[] = $i;
                         continue;
