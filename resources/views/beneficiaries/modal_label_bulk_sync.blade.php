@@ -1,7 +1,7 @@
 @php use App\Models\Category; @endphp
 
 <div
-    id="modal-benef-bulk-sync-form"
+    id="modal-benef-label-bulk-sync-form"
     class="modal fade modal-bulk-form"
     tabindex="-1"
     aria-labelledby="benef-form-label"
@@ -9,7 +9,7 @@
 >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="benef-bulk-sync-form" class="mt-4" method="POST" action="{{ route('benef_categ_bulk_sync') }}">
+            <form id="benef-bulk-sync-form" class="mt-4" method="POST" action="{{ route('benef_label_bulk_sync') }}">
                 <div class="modal-header">
                     <h3 class="modal-title fs-4" id="benef-form-label"></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -19,7 +19,7 @@
                     <div class="d-none mb-3 alert alert-danger"></div>
 
                     <div>
-                        Lier toutes les catégories à toutes les transactions des bénéficiaires ?
+                        Lier tous les labels à toutes les transactions des bénéficiaires ?
                     </div>
                 </div>
 

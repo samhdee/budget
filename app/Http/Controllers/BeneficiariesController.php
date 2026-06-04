@@ -143,10 +143,12 @@ class BeneficiariesController extends Controller
         } else {
             $data = $request->validate([
                 'item_ids.*' => [
-                    'required',
-                    'integer',
                     Rule::forEach(function () {
-                        return [Rule::exists(Beneficiary::class, 'id')];
+                        return [
+                            'required',
+                            'integer',
+                            Rule::exists(Beneficiary::class, 'id'),
+                        ];
                     }),
                 ],
             ]);
@@ -186,10 +188,12 @@ class BeneficiariesController extends Controller
         } else {
             $data = $request->validate([
                 'item_ids.*' => [
-                    'required',
-                    'integer',
                     Rule::forEach(function () {
-                        return [Rule::exists(Beneficiary::class, 'id')];
+                        return [
+                            'required',
+                            'integer',
+                            Rule::exists(Beneficiary::class, 'id'),
+                        ];
                     }),
                 ],
             ]);

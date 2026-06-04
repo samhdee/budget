@@ -96,6 +96,18 @@ class Beneficiary extends Model
             }
         }
 
+        if (!empty($filters['category_id'])) {
+            $query->whereHas('category', function (Builder $query) use ($filters) {
+                $query->where('id', $filters['category_id']);
+            });
+        }
+
+        if (!empty($filters['label_id'])) {
+            $query->whereHas('label', function (Builder $query) use ($filters) {
+                $query->where('id', $filters['label_id']);
+            });
+        }
+
         return $query->orderBy('raw_name')
             ->orderBy('pretty_name')
             ->paginate();

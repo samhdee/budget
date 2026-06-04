@@ -7,20 +7,35 @@
 
     <div class="d-flex justify-content-end">
         <div class="d-none bulk-action-wrapper">
+            C :
             <button
                 id="bulk-sync-all"
                 type="button"
-                class="btn btn-sm btn-primary"
+                class="ms-1 btn btn-sm btn-primary"
                 data-bs-toggle="modal"
-                data-bs-target="#modal-benef-bulk-sync-form"
+                data-bs-target="#modal-benef-categ-bulk-sync-form"
                 data-action="bulk"
+                title="Synchro catégories"
+            >
+                <i class="fas fa-link"></i>
+            </button>
+
+            L :
+            <button
+                id="bulk-sync-all"
+                type="button"
+                class="ms-1 btn btn-sm btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-benef-label-bulk-sync-form"
+                data-action="bulk"
+                title="Synchro labels"
             >
                 <i class="fas fa-link"></i>
             </button>
 
             <button
                 type="button"
-                class="btn btn-sm btn-primary"
+                class="ms-1 btn btn-sm btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#modal-benef-bulk-form"
                 data-action="bulk"

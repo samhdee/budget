@@ -27,37 +27,38 @@
             </button>
         </div>
 
-        <div class="filter-wrapper">
-            <input
-                id="benef-filter-with-transac-yes"
-                type="radio"
-                name="with_transac"
-                class="mt-4 me-1"
-                value="true"
-            />
-            <label for="benef-filter-with-transac-yes" class="form-check-label">Avec transaction</label>
+        <div class="filter-wrapper form-floating">
+            <select id="benef-filter-transac" name="with_transac" class="form-select" style="width: 130px">
+                <option value="">Tout</option>
+                <option value="true">Avec</option>
+                <option value="false">Sans</option>
+            </select>
+
+            <label for="benef-filter-transac">Transactions</label>
         </div>
 
-        <div class="filter-wrapper">
-            <input
-                id="benef-filter-with-transac-no"
-                type="radio"
-                name="with_transac"
-                class="ms-2 mt-4 me-1"
-                value="false"
-            />
-            <label for="benef-filter-with-transac-no" class="form-check-label">Sans</label>
+        <div class="filter-wrapper form-floating">
+            <select id="benef-filter-categ" name="category_id" class="form-select">
+                <option value=""></option>
+
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->appellation }}</option>
+                @endforeach
+            </select>
+
+            <label for="benef-filter-categ">Caégorie par défaut</label>
         </div>
 
-        <div class="filter-wrapper">
-            <input
-                id="benef-filter-with-transac-all"
-                type="radio"
-                name="with_transac"
-                class="ms-2 mt-4 me-1"
-                value="all"
-            />
-            <label for="benef-filter-with-transac-all" class="form-check-label">Tout</label>
+        <div class="filter-wrapper form-floating">
+            <select id="benef-filter-label" name="label_id" class="form-select">
+                <option value=""></option>
+
+                @foreach($labels as $label)
+                    <option value="{{ $label->id }}">{{ $label->appellation }}</option>
+                @endforeach
+            </select>
+
+            <label for="benef-filter-label">Label par défaut</label>
         </div>
 
         <div>
