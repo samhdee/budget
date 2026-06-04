@@ -6,6 +6,7 @@ use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Label;
 use App\Models\Transaction;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -141,11 +142,13 @@ class BeneficiariesController extends Controller
             $data['item_ids'] = [$benef_id];
         } else {
             $data = $request->validate([
-                'item_ids.*' => Rule::forEach(function () {
-                    return [
-                        Rule::exists(Beneficiary::class, 'id'),
-                    ];
-                }),
+                'item_ids.*' => [
+                    'required',
+                    'integer',
+                    Rule::forEach(function () {
+                        return [Rule::exists(Beneficiary::class, 'id')];
+                    }),
+                ],
             ]);
         }
 
@@ -163,6 +166,60 @@ class BeneficiariesController extends Controller
 
             $nb_updated += Transaction::where('beneficiary_id', $beneficiary->id)
                 ->update(['category_id' => $beneficiary->category_id]);
+        }
+        return response()->json(['updated' => $nb_updated]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int|null $benef_id
+     * @return JsonResponse
+     */
+    public function syncLabels(Request $request, ?int $benef_id = null): JsonResponse
+    {
+        if (!empty($benef_id)) {
+            \validator(\request()->route()->parameters(), [
+                'benef_id' => ['required', 'integer', 'exists:' . Beneficiary::class . ',id'],
+            ])->validate();
+
+            $data['item_ids'] = [$benef_id];
+        } else {
+            $data = $request->validate([
+                'item_ids.*' => [
+                    'required',
+                    'integer',
+                    Rule::forEach(function () {
+                        return [Rule::exists(Beneficiary::class, 'id')];
+                    }),
+                ],
+            ]);
+        }
+
+        $beneficiaries = Beneficiary::query()
+            ->select(['id', 'category_id', 'label_id', 'raw_name'])
+            ->whereIn('id', $data['item_ids'])
+            ->get();
+
+        $nb_updated = 0;
+
+        foreach ($beneficiaries as $beneficiary) {
+            if (empty($beneficiary->label_id)) {
+                continue;
+            }
+
+            $transactions = Transaction::whereHas('beneficiary', function (Builder $query) use ($beneficiary) {
+                    $query->where('beneficiary_id', $beneficiary->id);
+                })
+                ->whereDoesntHave('labels', function (Builder $query) use ($beneficiary) {
+                    $query->where('labels.id', $beneficiary->label_id);
+                })
+                ->get();
+
+            foreach ($transactions as $transaction) {
+                $transaction->labels()->attach($beneficiary->label_id);
+                $transaction->save();
+                $nb_updated++;
+            }
         }
         return response()->json(['updated' => $nb_updated]);
     }

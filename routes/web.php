@@ -52,15 +52,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
     Route::controller(BeneficiariesController::class)
-        ->prefix('benefs')
+        ->prefix('beneficiaries')
         ->group(function () {
             Route::get('/', 'index')->name('benef_index');
             Route::get('/get/{id}', 'get')->name('benef_get');
             Route::post('/filter', 'filter')->name('benef_filter');
             Route::post('/store', 'store')->name('benef_store');
             Route::post('/bulk-store', 'storeInBulk')->name('benef_bulk_store');
-            Route::get('/sync/{benef_id}', 'syncCategories')->name('benef_sync');
-            Route::post('/sync', 'syncCategories')->name('benef_bulk_sync');
+            Route::get('/sync/categories/{benef_id}', 'syncCategories')->name('benef_categ_sync');
+            Route::post('/sync/categories', 'syncCategories')->name('benef_categ_bulk_sync');
+            Route::get('/sync/labels/{benef_id}', 'syncLabels')->name('benef_label_sync');
+            Route::post('/sync/labels', 'syncLabels')->name('benef_label_bulk_sync');
             Route::get('/delete/{benef_id}', 'delete')->name('benef_delete');
         });
 

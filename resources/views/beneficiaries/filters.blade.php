@@ -32,7 +32,7 @@
                 id="benef-filter-with-transac-yes"
                 type="radio"
                 name="with_transac"
-                class="me-1"
+                class="mt-4 me-1"
                 value="true"
             />
             <label for="benef-filter-with-transac-yes" class="form-check-label">Avec transaction</label>
@@ -43,7 +43,7 @@
                 id="benef-filter-with-transac-no"
                 type="radio"
                 name="with_transac"
-                class="ms-2 me-1"
+                class="ms-2 mt-4 me-1"
                 value="false"
             />
             <label for="benef-filter-with-transac-no" class="form-check-label">Sans</label>
@@ -54,7 +54,7 @@
                 id="benef-filter-with-transac-all"
                 type="radio"
                 name="with_transac"
-                class="ms-2 me-1"
+                class="ms-2 mt-4 me-1"
                 value="all"
             />
             <label for="benef-filter-with-transac-all" class="form-check-label">Tout</label>

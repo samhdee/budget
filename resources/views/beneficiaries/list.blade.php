@@ -42,7 +42,7 @@
             <th>Label par défaut</th>
             <th style="width: 6.5rem;">Transactions</th>
             <th style="width: 2rem;"><i class="fas fa-repeat"></i></th>
-            <th style="width: 9rem;"></th>
+            <th style="width: 6rem;"></th>
         </thead>
 
         <tbody>
@@ -55,8 +55,44 @@
 
                     <td>{{ $beneficiary->raw_name }}</td>
                     <td>{{ $beneficiary->pretty_name }}</td>
-                    <td>{{ !empty($beneficiary->category) ? $beneficiary->category->appellation : '' }}</td>
-                    <td>{{ !empty($beneficiary->label) ? $beneficiary->label->appellation : '' }}</td>
+
+                    <td>
+                        @if (!empty($beneficiary->category))
+                            <div class="d-flex justify-content-between">
+                                <div>{{ $beneficiary->category->appellation }}</div>
+
+                                <div>
+                                    <button
+                                        type="button"
+                                        class="ms-1 btn btn-sm btn-primary btn-action confirm-before-action"
+                                        data-url="{{ route('benef_categ_sync', $beneficiary->id) }}"
+                                        data-message="Synchroniser les catégories ?"
+                                    >
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+                        @endif
+                    </td>
+
+                    <td>
+                        @if (!empty($beneficiary->label))
+                            <div class="d-flex justify-content-between">
+                                <div>{{ $beneficiary->label->appellation }}</div>
+
+                                <div>
+                                    <button
+                                        type="button"
+                                        class="ms-1 btn btn-sm btn-primary btn-action confirm-before-action"
+                                        data-url="{{ route('benef_label_sync', $beneficiary->id) }}"
+                                        data-message="Synchroniser les labels ?"
+                                    >
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+                    </td>
+
                     <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
 
                     <td class="text-center">
@@ -77,17 +113,6 @@
                         >
                             <i class="fas fa-pencil"></i>
                         </button>
-
-                        @if (!empty($beneficiary->category_id))
-                            <button
-                                type="button"
-                                class="ms-1 btn btn-sm btn-primary btn-action confirm-before-action"
-                                data-url="{{ route('benef_sync', $beneficiary->id) }}"
-                                data-message="Synchroniser les catégories ?"
-                            >
-                                <i class="fas fa-link"></i>
-                            </button>
-                        @endif
 
                         @if (empty($beneficiary->nb_transactions))
                             <button
