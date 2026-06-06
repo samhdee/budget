@@ -9,7 +9,11 @@
             ></canvas>
         </div>
     @endif
+</div>
 
+<hr class="my-4" />
+
+<div class="mt-4 row justify-content-between">
     @if (!empty($values_exp_by_categ))
         <div class="col-5">
             <canvas

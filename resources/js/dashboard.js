@@ -56,7 +56,7 @@ const init_exp_by_categ_chart = () => {
 };
 
 const reload_dashboard = async () => {
-    return await $.post(
+    $.post(
         'dashboard/filter',
         {filters: {date_start: $('#transac-date-select').val()}},
         response => {
@@ -68,11 +68,8 @@ const reload_dashboard = async () => {
             if ($('#dashboard-exp-by-categ-chart').length > 0) {
                 init_exp_by_categ_chart();
             }
-
-            // Change la valeur du filtre caché pour les dépenses
-            $('#dash-filter-date-start')
         }
-    ).then();
+    ).promise();
 }
 
 $(function () {

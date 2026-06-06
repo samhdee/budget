@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Label;
+use App\Models\TransacRecurringPattern;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use DB;
@@ -94,6 +95,8 @@ class DashboardController extends Controller
                 ],
             ];
         }
+
+        $last_month_recurrences = TransacRecurringPattern::getActiveRecurrences();
 
         $expanses_with_categ = $expanses->filter(function ($item) {
             return !empty($item->category_id) && !empty($item->c_appellation);

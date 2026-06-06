@@ -18,6 +18,10 @@
         </div>
     </div>
 
+    <div>
+        Total : {{ abs($recurrences->pluck('amount')->sum()) }}€
+    </div>
+
     <table class="mt-3 table table-striped table-bordered align-middle">
         <thead>
             <tr>

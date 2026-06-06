@@ -46,7 +46,7 @@
                 @endforeach
             </select>
 
-            <label for="benef-filter-categ">Caégorie par défaut</label>
+            <label for="benef-filter-categ">Catégorie par défaut</label>
         </div>
 
         <div class="filter-wrapper form-floating">

@@ -127,4 +127,16 @@ class TransacRecurringPattern extends Model
             ->where('id', $recurrence_id)
             ->first();
     }
+
+    public static function getActiveRecurrences(): Collection
+    {
+        return self::query()
+            ->select(['id', 'amount', 'frequency_count', 'frequency_unit'])
+            ->where('active', 1)
+            ->where(function (Builder $query) {
+                $query->orWhereNull('ends_at')
+                    ->orWhereDate('ends_at', '>=', Carbon::now());
+            })
+            ->get();
+    }
 }
