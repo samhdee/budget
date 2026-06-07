@@ -127,7 +127,7 @@ $(function () {
                 .prepend(`<input type="hidden" name="item_ids[]" value="${$(el).data('item_id')}" />`);
         });
 
-        if ($(modal).find('.select2')) {
+        if ($(modal).find('.select2').length > 0) {
             $(modal).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
             $(modal).find('.select2').trigger('change.select2');
         }
