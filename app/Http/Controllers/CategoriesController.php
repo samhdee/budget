@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
@@ -81,6 +82,7 @@ class CategoriesController extends Controller
             'id' => ['required', 'integer', 'exists:' . Category::class],
         ]);
 
+        // Retire la catégorie des transactions
         $transactions = Transaction::query()
             ->select('id')
             ->where('category_id', $data['id'])
@@ -88,6 +90,17 @@ class CategoriesController extends Controller
 
         if ($transactions->isNotEmpty()) {
             Transaction::whereIn('id', $transactions->pluck('id'))
+                ->update(['category_id' => null]);
+        }
+
+        // Retire la catégorie des bénéficiaires
+        $benefs = Beneficiary::query()
+            ->select('id')
+            ->where('category_id', $data['id'])
+            ->get();
+
+        if ($benefs->isNotEmpty()) {
+            Beneficiary::whereIn('id', $benefs->pluck('id'))
                 ->update(['category_id' => null]);
         }
 

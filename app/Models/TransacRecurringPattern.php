@@ -128,11 +128,15 @@ class TransacRecurringPattern extends Model
             ->first();
     }
 
-    public static function getActiveRecurrences(): Collection
+    public static function getActiveMonthlyRecurrences(): Collection
     {
         return self::query()
             ->select(['id', 'amount', 'frequency_count', 'frequency_unit'])
             ->where('active', 1)
+            ->where(function (Builder $query) {
+                $query->orWhere('frequency_unit', 'week')
+                    ->orWhere('frequency_count', 1);
+            })
             ->where(function (Builder $query) {
                 $query->orWhereNull('ends_at')
                     ->orWhereDate('ends_at', '>=', Carbon::now());

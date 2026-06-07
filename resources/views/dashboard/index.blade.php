@@ -45,5 +45,7 @@
     </div>
 
     @include('transactions.modal_form')
+    @include('transactions.modal_bulk_form')
+    @include('transactions.modal_bulk_delete_form')
     @include('beneficiaries.modal_form')
 @endsection

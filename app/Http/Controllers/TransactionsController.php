@@ -47,54 +47,6 @@ class TransactionsController extends Controller
     }
 
     /**
-     * bulkStore
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function bulkStore(Request $request): JsonResponse
-    {
-        $data = $request->validate([
-            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
-                return [
-                    Rule::exists(Transaction::class, 'id'),
-                ];
-            }),
-            'type' => ['nullable', Rule::enum(TransactionType::class)],
-            'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
-            'label_id' => ['nullable', 'exists:' . Label::class . ',id'],
-            'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
-        ]);
-
-        if (!empty($data['type'])) {
-            $update_data['type'] = $data['type'];
-        }
-
-        if (!empty($data['category_id'])) {
-            $update_data['category_id'] = $data['category_id'];
-        }
-
-        if (!empty($data['beneficiary_id'])) {
-            $update_data['beneficiary_id'] = $data['beneficiary_id'];
-        }
-
-        if (empty($update_data) && empty($data['label_id'])) {
-            return response()->json(['message' => 'Rien à mettre à jour']);
-        }
-
-        $nb_updated = Transaction::whereIn('id', $data['item_ids'])
-            ->update($update_data);
-
-        if (!empty($data['label_id'])) {
-            $label = Label::find($data['label_id']);
-            $label->transactions()->attach($data['item_ids']);
-            $label->save();
-        }
-
-        return response()->json(['updated' => $nb_updated]);
-    }
-
-    /**
      * store
      *
      * @param Request $request
@@ -153,6 +105,67 @@ class TransactionsController extends Controller
         }
 
         return response()->json(['updated' => $transac_id]);
+    }
+
+    /**
+     * bulkStore
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bulkStore(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'item_ids.*' => Rule::forEach(function ($value, string $attribute) {
+                return [
+                    Rule::exists(Transaction::class, 'id'),
+                ];
+            }),
+            'type' => ['nullable', Rule::enum(TransactionType::class)],
+            'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
+            'labels' => ['nullable', 'exists:' . Label::class . ',id'],
+            'labels.*' => Rule::forEach(function () {
+                return [
+                    Rule::exists(Label::class, 'id'),
+                ];
+            }),
+            'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
+        ]);
+
+        $nb_updated = 0;
+
+        if (!empty($data['type'])) {
+            $update_data['type'] = $data['type'];
+        }
+
+        if (!empty($data['category_id'])) {
+            $update_data['category_id'] = $data['category_id'];
+        }
+
+        if (!empty($data['beneficiary_id'])) {
+            $update_data['beneficiary_id'] = $data['beneficiary_id'];
+        }
+
+        if (!empty($update_data)) {
+            $nb_updated = Transaction::whereIn('id', $data['item_ids'])
+                ->update($update_data);
+        }
+
+        if (!empty($data['labels'])) {
+            $labels = Label::findMany($data['labels']);
+
+            foreach ($labels as $label) {
+                $nb_updated ++;
+                $label->transactions()->attach($data['item_ids']);
+                $label->save();
+            }
+        }
+
+        if (empty($nb_updated)) {
+            return response()->json(['message' => 'Rien à mettre à jour'], 426);
+        }
+
+        return response()->json(['updated' => $nb_updated]);
     }
 
     public function delete($transac_id)

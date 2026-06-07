@@ -120,11 +120,17 @@ $(function () {
         const modal = $(e.relatedTarget).data('bs-target');
         $(modal).find('input[name^="item_ids"]').remove();
         $(modal).find('form input, form select, form textarea').val('').prop('checked', '');
+        $(modal).find('.alert-danger').addClass('d-none').empty();
 
         $('.bulk-select:checked').each((i, el) => {
             $(modal).find('form')
                 .prepend(`<input type="hidden" name="item_ids[]" value="${$(el).data('item_id')}" />`);
         });
+
+        if ($(modal).find('.select2')) {
+            $(modal).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
+            $(modal).find('.select2').trigger('change.select2');
+        }
     });
 
     // Soumet les formulaires en modale

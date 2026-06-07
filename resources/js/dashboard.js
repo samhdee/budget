@@ -38,6 +38,41 @@ const init_rev_exp_chart = () => {
     });
 };
 
+const init_projection_chart = () => {
+    const canvas_projection = document.getElementById('dashboard-projection-chart');
+    const projection_dataset = JSON.parse(canvas_projection.dataset.values);
+
+    new Chart(canvas_projection, {
+        type: 'bar',
+        data: {
+            labels: projection_dataset.labels,
+            datasets: [{
+                axis: 'x',
+                label: canvas_projection.dataset.title,
+                data: projection_dataset.values,
+                fill: false,
+                backgroundColor: [
+                    'rgb(255 99 99)',
+                    'rgb(75 192 91)',
+                ],
+            }],
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (value) {
+                            return `${value}${canvas_projection.dataset.unit}`;
+                        }
+                    },
+                }
+            }
+        }
+    });
+};
+
 const init_exp_by_categ_chart = () => {
     const canvas_exp_by_categ = document.getElementById('dashboard-exp-by-categ-chart');
     const exp_by_categ_dataset = JSON.parse(canvas_exp_by_categ.dataset.values);
@@ -68,6 +103,10 @@ const reload_dashboard = async () => {
                 init_rev_exp_chart();
             }
 
+            if ($('#dashboard-projection-chart').length > 0) {
+                init_projection_chart();
+            }
+
             if ($('#dashboard-exp-by-categ-chart').length > 0) {
                 init_exp_by_categ_chart();
             }
@@ -78,6 +117,10 @@ const reload_dashboard = async () => {
 $(function () {
     if ($('#dashboard-rev-exp-chart').length > 0) {
         init_rev_exp_chart();
+    }
+
+    if ($('#dashboard-projection-chart').length > 0) {
+        init_projection_chart();
     }
 
     if ($('#dashboard-exp-by-categ-chart').length > 0) {

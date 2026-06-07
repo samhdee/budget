@@ -1,8 +1,8 @@
 <ul id="transactions-tabs" class="mt-4 nav nav-tabs" role="tablist">
     <li class="nav-item" role="presentation">
         <button
-            class="nav-link active"
             id="general-tab"
+            class="nav-link {{ empty($active_tab) || $active_tab === 'general-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#general-tab-pane"
             type="button"
@@ -16,8 +16,8 @@
 
     <li class="nav-item" role="presentation">
         <button
-            class="nav-link"
             id="transac-expanses-tab"
+            class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-expanses-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#transac-expanses-tab-pane"
             type="button"
@@ -31,8 +31,8 @@
 
     <li class="nav-item" role="presentation">
         <button
-            class="nav-link"
             id="transac-revenus-tab"
+            class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-revenus-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#transac-revenus-tab-pane"
             type="button"
@@ -48,7 +48,7 @@
 <div id="recurrences-tab-content" class="tab-content">
     <div
         id="general-tab-pane"
-        class="tab-pane fade show active container"
+        class="tab-pane fade container {{ empty($active_tab) || $active_tab === 'general-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="general-tab"
         tabindex="0"
@@ -60,7 +60,7 @@
 
     <div
         id="transac-expanses-tab-pane"
-        class="tab-pane fade container"
+        class="tab-pane fade container {{ !empty($active_tab) && $active_tab === 'transac-expanses-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="transac-expanses-tab"
         tabindex="0"
@@ -76,7 +76,7 @@
 
     <div
         id="transac-revenus-tab-pane"
-        class="tab-pane fade container"
+        class="tab-pane fade container {{ !empty($active_tab) && $active_tab === 'transac-revenus-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="transac-revenus-tab"
         tabindex="0"

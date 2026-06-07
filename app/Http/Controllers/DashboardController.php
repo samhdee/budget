@@ -75,7 +75,8 @@ class DashboardController extends Controller
             'first_date' => Transaction::query()
                 ->select(DB::raw('DATE(occurred_at) as occurred_at'))
                 ->orderBy('occurred_at')
-                ->first()
+                ->first(),
+            'active_tab' => $filters['active_tab'] ?? '',
         ];
 
         $expanses = Transaction::getList(
@@ -96,7 +97,36 @@ class DashboardController extends Controller
             ];
         }
 
-        $last_month_recurrences = TransacRecurringPattern::getActiveRecurrences();
+        $last_month_recurrences = TransacRecurringPattern::getActiveMonthlyRecurrences();
+        $recurrences_sum = 0;
+
+        /** @var TransacRecurringPattern $recurrence */
+        foreach ($last_month_recurrences as $recurrence) {
+            $expanse = $expanses->filter(function ($item) use ($recurrence) {
+                return !empty($item->recurring_pattern_id) && $item->recurring_pattern_id === $recurrence->id;
+            })->values();
+
+            $tmp_sum = $recurrence->frequency_count === 1 && $recurrence->frequency_unit === 'month'
+                ? $recurrence->amount
+                : $recurrence->amount * 4 / $recurrence->frequency_count;
+
+            if ($expanse->isNotEmpty()) {
+                $tmp_sum -= $expanse->pluck('amount')->sum();
+            }
+
+            $recurrences_sum += $tmp_sum;
+        }
+
+        if (!empty($recurrences_sum) && $expanses->isNotEmpty() || $revenus->isNotEmpty()) {
+            $data['values_projection'] = [
+                'labels' => ['Dépenses', 'Revenus'],
+                'values' => [
+                    abs($recurrences_sum) + abs($expanses->pluck('amount')->sum()),
+                    $revenus->pluck('amount')->sum()
+                ],
+            ];
+        }
+
 
         $expanses_with_categ = $expanses->filter(function ($item) {
             return !empty($item->category_id) && !empty($item->c_appellation);

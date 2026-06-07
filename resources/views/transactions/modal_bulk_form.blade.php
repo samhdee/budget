@@ -62,6 +62,21 @@
 
                         <label for="transac-bulk-category-id">Catégorie</label>
                     </div>
+
+                    <div class="mt-3 form-field">
+                        <label for="transac-label-ids">Labels</label>
+
+                        <select id="transac-label-ids" name="labels" class="select2 form-select" style="width: 100%;" multiple>
+                            <option value=""></option>
+
+                            @php /** @var Label[] $label */ @endphp
+                            @foreach ($labels as $label)
+                                <option value="{{ $label->id }}">
+                                    {{ $label->appellation }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </form>
             </div>
 

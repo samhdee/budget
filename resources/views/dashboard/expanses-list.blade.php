@@ -13,13 +13,29 @@
 
     <div class="d-flex justify-content-end">
         <div class="d-none bulk-action-wrapper">
-            <button id="bulk-delete" type="button" class="btn btn-sm btn-danger">
+            <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-transac-bulk-form"
+                data-action="bulk"
+            >
+                <i class="fas fa-pencil"></i>
+            </button>
+
+            <button
+                id="bulk-delete"
+                type="button"
+                class="ms-1 btn btn-sm btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-transac-bulk-delete-form"
+            >
                 <i class="fas fa-trash"></i>
             </button>
         </div>
     </div>
 
-    <table class="table table-striped table-bordered align-middle">
+    <table class="mt-2 table table-striped table-bordered align-middle">
         <thead>
             <tr>
                 <th style="width: 2rem;">
