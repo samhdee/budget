@@ -71,7 +71,7 @@ $(function () {
             $(form).find('input, select, textarea').val('');
             $(form).find('.modal-title').text(`Ajouter ${type}`);
 
-            if ($(form).find('.select2')) {
+            if ($(form).find('.select2').length > 0) {
                 $(form).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
                 $(form).find('.select2').trigger('change.select2');
             }
