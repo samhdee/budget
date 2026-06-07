@@ -24,7 +24,6 @@
             </button>
 
             <button
-                id="bulk-delete"
                 type="button"
                 class="ms-1 btn btn-sm btn-danger"
                 data-bs-toggle="modal"

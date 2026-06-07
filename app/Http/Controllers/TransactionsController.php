@@ -62,6 +62,7 @@ class TransactionsController extends Controller
             }),
             'type' => ['nullable', Rule::enum(TransactionType::class)],
             'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
+            'label_id' => ['nullable', 'exists:' . Label::class . ',id'],
             'beneficiary_id' => ['nullable', 'exists:' . Beneficiary::class . ',id'],
         ]);
 
@@ -77,12 +78,18 @@ class TransactionsController extends Controller
             $update_data['beneficiary_id'] = $data['beneficiary_id'];
         }
 
-        if (empty($update_data)) {
+        if (empty($update_data) && empty($data['label_id'])) {
             return response()->json(['message' => 'Rien à mettre à jour']);
         }
 
         $nb_updated = Transaction::whereIn('id', $data['item_ids'])
             ->update($update_data);
+
+        if (!empty($data['label_id'])) {
+            $label = Label::find($data['label_id']);
+            $label->transactions()->attach($data['item_ids']);
+            $label->save();
+        }
 
         return response()->json(['updated' => $nb_updated]);
     }

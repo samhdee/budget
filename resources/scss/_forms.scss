@@ -1,8 +1,10 @@
 @import "mixins";
 
 body {
-    .form-control {
+    .form-control,
+    .form-select {
         color: white;
+        background: $body-secondary-bg;
     }
 
     .form-floating {
@@ -76,8 +78,9 @@ body {
     }
 
     .select2-container--default {
+        .select2-selection--single,
         .select2-selection--multiple {
-            background: $body-secondary-bg;
+            background-color: $body-secondary-bg !important;
             border-color: #fff;
 
             .select2-selection__choice {

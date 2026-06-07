@@ -56,9 +56,12 @@ const init_exp_by_categ_chart = () => {
 };
 
 const reload_dashboard = async () => {
-    $.post(
+    return await $.post(
         'dashboard/filter',
-        {filters: {date_start: $('#transac-date-select').val()}},
+        {filters: {
+            date_start: $('#transac-date-select').val(),
+            active_tab: $('#transactions-tabs .nav-link.active').prop('id'),
+        }},
         response => {
             $('#transac-global-wrapper').html(response);
             if ($('#dashboard-rev-exp-chart').length > 0) {
@@ -86,7 +89,7 @@ $(function () {
         reload_dashboard();
     });
 
-    $(document).on('hidden.bs.modal', '#modal-transac-form', () => {
+    $(document).on('click', '#modal-transac-form *[type="submit"], #modal-transac-bulk-form *[type="submit"]', () => {
         const active_tab = $('#transactions-tabs .nav-link.active').prop('id');
         reload_dashboard().then(() => {
             $(`#${active_tab}`).trigger('click');
