@@ -98,15 +98,13 @@ class Transaction extends Model
     {
         $query = self::query()
             ->select([
-                't.id', 'amount', 'occurred_at', 'type', 't.notes', 'line', 'file', 'beneficiary_id',
-                'recurring_pattern_id', 't.category_id', 'b.raw_name', 'b.pretty_name', 'b.description as benef_desc',
-                'c.appellation as c_appellation', 'c.color as c_color',
+                'transactions.id', 'amount', 'occurred_at', 'type', 'transactions.notes', 'line', 'file',
+                'beneficiary_id', 'recurring_pattern_id', 'category_id',
             ])
-            ->from('transactions as t')
             ->with('recurringPattern:id,active')
-            ->with('labels:id,appellation')
-            ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')
-            ->leftJoin('categories as c', 'c.id', 't.category_id');
+            ->with('beneficiary:id,raw_name,pretty_name,description')
+            ->with('category:id,appellation')
+            ->with('labels:id,appellation');
 
         if (!empty($filters['sign'])) {
             if ($filters['sign'] === 'negative') {
@@ -121,13 +119,17 @@ class Transaction extends Model
         }
 
         if (!empty($filters['category_id'])) {
-            $query->where('t.category_id', $filters['category_id']);
+            $query->whereHas('category', function (Builder $query) use ($filters) {
+                $query->where('categories.id', $filters['category_id']);
+            });
         }
 
         if (!empty($filters['benef_name'])) {
-            $query->where(function (Builder $query) use ($filters) {
-                $query->orWhereLike('b.raw_name', "%{$filters['benef_name']}%")
-                    ->orWhereLike('b.pretty_name', "%{$filters['benef_name']}%");
+            $query->whereHas('beneficiary', function (Builder $query) use ($filters) {
+                $query->where(function (Builder $query) use ($filters) {
+                    $query->orWhereLike('raw_name', "%{$filters['benef_name']}%")
+                        ->orWhereLike('pretty_name', "%{$filters['benef_name']}%");
+                });
             });
         }
 
@@ -140,7 +142,7 @@ class Transaction extends Model
         }
 
         $query->orderByDesc('occurred_at')
-            ->orderByDesc('t.created_at');
+            ->orderByDesc('created_at');
 
         if (!empty($per_page)) {
             return $query->paginate($per_page);

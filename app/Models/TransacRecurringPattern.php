@@ -139,7 +139,7 @@ class TransacRecurringPattern extends Model
             })
             ->where(function (Builder $query) {
                 $query->orWhereNull('ends_at')
-                    ->orWhereDate('ends_at', '>=', Carbon::now());
+                    ->orWhereDate('ends_at', '>=', Carbon::now()->endOfMonth());
             })
             ->get();
     }

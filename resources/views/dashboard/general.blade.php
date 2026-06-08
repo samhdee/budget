@@ -34,8 +34,17 @@
             <canvas
                 id="dashboard-exp-by-categ-chart"
                 data-values='@json($values_exp_by_categ)'
-                data-unit="€"
                 data-title="Dépenses par catégories"
+            ></canvas>
+        </div>
+    @endif
+
+    @if (!empty($values_exp_by_label))
+        <div class="col-5">
+            <canvas
+                id="dashboard-exp-by-label-chart"
+                data-values='@json($values_exp_by_label)'
+                data-title="Dépenses par labels"
             ></canvas>
         </div>
     @endif

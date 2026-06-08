@@ -43,7 +43,7 @@
                 </th>
                 <th style="width: 6rem">Date</th>
                 <th style="width: 7rem">Montant</th>
-                <th style="width: 8rem;">Type</th>
+                <th style="width: 9.6rem;">Type</th>
                 <th>Bénéficiaire</th>
                 <th>Catégorie</th>
                 <th style="width: 12rem">Labels</th>
@@ -67,24 +67,32 @@
                     <td>{{ getTransactionTypeLabel($transaction->type) }}</td>
 
                     <td>
-                        @if (!empty($transaction->beneficiary_id))
+                        @if (!empty($transaction->beneficiary))
                             <a
                                 href="javascript:void(0)"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modal-benef-form"
-                                data-item_id="{{ $transaction->beneficiary_id }}"
-                                data-url="{{ route('benef_get', $transaction->beneficiary_id) }}"
+                                data-item_id="{{ $transaction->beneficiary->id }}"
+                                data-url="{{ route('benef_get', $transaction->beneficiary->id) }}"
                                 data-action="edit"
                                 data-type="bénéficiaire"
                                 data-list="#expanses-list-wrapper"
-                                title="{{ $transaction->raw_name }}"
+                                title="{{ $transaction->beneficiary->raw_name }}"
                             >
-                                {{ !empty($transaction->pretty_name) ? $transaction->pretty_name : $transaction->raw_name }}
+                                {{
+                                    !empty($transaction->beneficiary->pretty_name)
+                                        ? $transaction->beneficiary->pretty_name
+                                        : $transaction->beneficiary->raw_name
+                                }}
                             </a>
                         @endif
                     </td>
 
-                    <td>{{ $transaction->c_appellation }}</td>
+                    <td>
+                        @if (!empty($transaction->category))
+                            {{ $transaction->category->appellation }}
+                        @endif
+                    </td>
 
                     <td>
                         @foreach($transaction->labels as $label)
