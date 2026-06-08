@@ -124,6 +124,12 @@ class Transaction extends Model
             });
         }
 
+        if (!empty($filters['label_id'])) {
+            $query->whereHas('labels', function (Builder $query) use ($filters) {
+                $query->where('labels.id', $filters['label_id']);
+            });
+        }
+
         if (!empty($filters['benef_name'])) {
             $query->whereHas('beneficiary', function (Builder $query) use ($filters) {
                 $query->where(function (Builder $query) use ($filters) {

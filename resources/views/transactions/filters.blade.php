@@ -1,6 +1,7 @@
 @php
     use App\Enums\TransactionType;
     use App\Models\Category;
+    use App\Models\Label;
 @endphp
 
 <div class="d-flex justify-content-between align-items-center">
@@ -37,6 +38,21 @@
             </select>
 
             <label for="transac-filter-type">Catégorie</label>
+        </div>
+
+        <div class="form-floating">
+            <select id="transac-filter-label" name="label_id" class="form-select">
+                <option value="">Tous</option>
+
+                @php /** @var Label $label */ @endphp
+                @foreach($labels as $label)
+                    <option value="{{ $label->id }}">
+                        {{ $label->appellation }}
+                    </option>
+                @endforeach
+            </select>
+
+            <label for="transac-filter-type">Label</label>
         </div>
 
         <div class="filter-wrapper with-reset form-floating">
