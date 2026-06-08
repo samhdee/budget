@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $appellation
  * @property string|null $color
+ * @property float|null $goal
  * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -23,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Category query()
  * @method static Builder<static>|Category whereAppellation($value)
  * @method static Builder<static>|Category whereColor($value)
+ * @method static Builder<static>|Category whereGoal($value)
  * @method static Builder<static>|Category whereCreatedAt($value)
  * @method static Builder<static>|Category whereDeletedAt($value)
  * @method static Builder<static>|Category whereDescription($value)
@@ -36,6 +38,7 @@ class Category extends Model
     protected $fillable = [
         'appellation',
         'color',
+        'goal',
         'description',
     ];
 
@@ -47,7 +50,7 @@ class Category extends Model
     public static function getList(): Collection
     {
         return self::query()
-            ->select(['id', 'appellation'])
+            ->select(['id', 'appellation', 'goal'])
             ->withCount('transactions as nb_transactions')
             ->orderBy('appellation')
             ->get();
@@ -72,7 +75,7 @@ class Category extends Model
     public static function getOne($categ_id): Category
     {
         return self::query()
-            ->select(['appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'goal', 'description'])
             ->where('id', $categ_id)
             ->orderBy('appellation')
             ->firstOrFail();

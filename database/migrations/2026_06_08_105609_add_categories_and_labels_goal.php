@@ -8,13 +8,19 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->decimal('goal', places: 2)->nullable();
+            $table->integer('goal')->nullable();
+        });
+        Schema::table('labels', function (Blueprint $table) {
+            $table->integer('goal')->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('goal');
+        });
+        Schema::table('labels', function (Blueprint $table) {
             $table->dropColumn('goal');
         });
     }

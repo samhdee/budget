@@ -31,6 +31,18 @@
                         <label for="label-appellation">Nom *</label>
                     </div>
 
+                    <div class="mt-4 form-floating form-field">
+                        <input
+                            id="label-goal"
+                            type="number"
+                            name="goal"
+                            class="form-control"
+                            step=".01"
+                            autocomplete="off"
+                        />
+                        <label for="label-goal">But</label>
+                    </div>
+
                     <div class="mt-3 form-floating form-field">
                         <textarea id="label-description" name="description" class="form-control" maxlength="255"></textarea>
                         <label for="label-description">Description</label>

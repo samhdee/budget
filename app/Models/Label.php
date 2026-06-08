@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
@@ -17,11 +18,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property string|null $color
+ * @property float|null $goal
  * @method static Builder<static>|Label newModelQuery()
  * @method static Builder<static>|Label newQuery()
  * @method static Builder<static>|Label query()
  * @method static Builder<static>|Label whereAppellation($value)
  * @method static Builder<static>|Label whereColor($value)
+ * @method static Builder<static>|Label whereGoal($value)
  * @method static Builder<static>|Label whereCreatedAt($value)
  * @method static Builder<static>|Label whereDeletedAt($value)
  * @method static Builder<static>|Label whereDescription($value)
@@ -35,6 +38,7 @@ class Label extends Model
     protected $fillable = [
         'appellation',
         'color',
+        'goal',
         'description',
     ];
 
@@ -51,7 +55,7 @@ class Label extends Model
     public static function getList(): Collection
     {
         return self::query()
-            ->select(['id', 'appellation', 'description'])
+            ->select(['id', 'appellation', 'goal', 'description'])
             ->withCount('transactions as nb_transactions')
             ->orderBy('appellation')
             ->get();
@@ -66,5 +70,19 @@ class Label extends Model
             ->select(['id', 'appellation'])
             ->orderBy('appellation')
             ->get();
+    }
+
+    /**
+     * @param $label_id
+     * @return Label
+     * @throws ModelNotFoundException
+     */
+    public static function getOne($label_id): Label
+    {
+        return self::query()
+            ->select(['id', 'appellation', 'goal', 'description'])
+            ->where('id', $label_id)
+            ->orderBy('appellation')
+            ->firstOrFail();
     }
 }

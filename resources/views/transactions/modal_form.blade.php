@@ -39,8 +39,14 @@
                     </div>
 
                     <div class="mt-3 form-floating form-field">
-                        <input id="transac-amount" type="number" name="amount" class="form-control" step=".01"
-                               required/>
+                        <input
+                            id="transac-amount"
+                            type="number"
+                            name="amount"
+                            class="form-control"
+                            step=".01"
+                           required
+                        />
                         <label for="transac-amount">Montant</label>
                     </div>
 

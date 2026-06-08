@@ -27,11 +27,7 @@ class CategoriesController extends Controller
      */
     public function get($categ_id): JsonResponse
     {
-        return response()->json(['item' => Category::query()
-            ->select(['id', 'appellation', 'description'])
-            ->where('id', $categ_id)
-            ->firstOrFail()
-        ]);
+        return response()->json(['item' => Category::getOne($categ_id)]);
     }
 
     /**
@@ -49,20 +45,23 @@ class CategoriesController extends Controller
                 'required',
                 'max:100',
                 !empty($request->input('id'))
-                    ? Rule::unique(Category::class)->whereNull('deleted_at')->ignore($request->input('id'))
+                    ? Rule::unique(Category::class)->ignore($request->input('id'))
                     : 'unique:' . Category::class
             ],
+            'goal' => ['nullable', 'integer'],
             'description' => ['nullable', 'max:255'],
         ]);
 
         if (!empty($data['id'])) {
             $category = Category::find($data['id']);
             $category->appellation = trim($data['appellation']);
+            $category->goal = !empty($data['goal']) ? trim($data['goal']) : null;
             $category->description = trim($data['description']);
             $category->save();
         } else {
             Category::create([
                 'appellation' => trim($data['appellation']),
+                'goal' => !empty($data['goal']) ? trim($data['goal']) : null,
                 'description' => trim($data['description']),
             ]);
         }

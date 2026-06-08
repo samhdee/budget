@@ -30,11 +30,7 @@ class LabelsController extends Controller
      */
     public function get($label_id): JsonResponse
     {
-        return response()->json(['item' => Label::query()
-            ->select(['id', 'appellation', 'description'])
-            ->where('id', $label_id)
-            ->firstOrFail()
-        ]);
+        return response()->json(['item' => Label::getOne($label_id)]);
     }
 
     /**
@@ -55,6 +51,7 @@ class LabelsController extends Controller
                     ? Rule::unique(Label::class)->whereNull('deleted_at')->ignore($request->input('id'))
                     : 'unique:' . Label::class
             ],
+            'goal' => ['nullable', 'integer'],
             'description' => ['nullable', 'max:255'],
         ]);
 
@@ -63,11 +60,13 @@ class LabelsController extends Controller
             // @FIXME: gestion d’erreur
             $label = Label::findOrFail($data['id']);
             $label->appellation = trim($data['appellation']);
+            $label->goal = !empty($data['goal']) ? trim($data['goal']) : null;
             $label->description = trim($data['description']);
             $label->save();
         } else {
             $label_id = Label::create([
                 'appellation' => trim($data['appellation']),
+                'goal' => !empty($data['goal']) ? trim($data['goal']) : null,
                 'description' => trim($data['description']),
             ]);
         }

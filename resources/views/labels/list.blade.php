@@ -3,6 +3,7 @@
         <tr>
             <th style="width: 12rem">Nom</th>
             <th style="width: 6rem;">Transactions</th>
+            <th style="width: 5rem">But</th>
             <th>Description</th>
             <th style="width: 6rem"></th>
         </tr>
@@ -13,6 +14,13 @@
             <tr>
                 <td>{{ $label->appellation }}</td>
                 <td class="text-center">{{ $label->nb_transactions }}</td>
+
+                <td>
+                    @if (!empty($label->goal))
+                        {{ $label->goal }}€
+                    @endif
+                </td>
+
                 <td>{{ $label->description }}</td>
 
                 <td class="text-center">
