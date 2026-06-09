@@ -8,9 +8,9 @@ body {
                 color: white;
             }
 
-             td:not(.text-danger):not(.text-success) {
-                 color: white;
-             }
+            &:not(.text-danger):not(.text-success) td:not(.text-danger):not(.text-success) {
+                //color: white;
+            }
 
             .form-control {
                 border: none;

@@ -53,7 +53,7 @@ class DashboardController extends Controller
             ? Carbon::parse($date_start)->endOfMonth()->format('Y-m-d')
             : Carbon::now()->endOfMonth()->format('Y-m-d');
 
-        $data = [
+        return [
             'transac_expanses' => Transaction::getList(
                 [
                     'sign' => 'negative',
@@ -78,92 +78,5 @@ class DashboardController extends Controller
                 ->first(),
             'active_tab' => $filters['active_tab'] ?? '',
         ];
-
-        // Graph : dépenses vs. revenus
-        $expanses = Transaction::getList(
-            ['sign' => 'negative', 'date_start' => $date_start, 'date_end' => $date_end], false
-        );
-
-        $revenus = Transaction::getList(
-            ['sign' => 'positive', 'date_start' => $date_start, 'date_end' => $date_end], false
-        );
-
-        if ($expanses->isNotEmpty() || $revenus->isNotEmpty()) {
-            $data['values_exp_vs_rev'] = [
-                'labels' => ['Dépenses', 'Revenus'],
-                'values' => [
-                    abs($expanses->pluck('amount')->sum()),
-                    $revenus->pluck('amount')->sum()
-                ],
-            ];
-        }
-
-        // Graph : projection fin de mois
-        // @TODO: Prendre la date du filtre comme référence (check en fonction de created_at ?)
-        $last_month_recurrences = TransacRecurringPattern::getActiveMonthlyRecurrences();
-        $recurrences_sum = 0;
-
-        /** @var TransacRecurringPattern $recurrence */
-        foreach ($last_month_recurrences as $recurrence) {
-            $expanse = $expanses->filter(function ($item) use ($recurrence) {
-                return !empty($item->recurring_pattern_id) && $item->recurring_pattern_id === $recurrence->id;
-            })->values();
-
-            $tmp_sum = $recurrence->frequency_count === 1 && $recurrence->frequency_unit === 'month'
-                ? $recurrence->amount
-                : $recurrence->amount * 4 / $recurrence->frequency_count;
-
-            if ($expanse->isNotEmpty()) {
-                $tmp_sum -= $expanse->pluck('amount')->sum();
-            }
-
-            $recurrences_sum += $tmp_sum;
-        }
-
-        if (!empty($recurrences_sum) && $expanses->isNotEmpty() || $revenus->isNotEmpty()) {
-            $data['values_projection'] = [
-                'labels' => ['Dépenses', 'Revenus'],
-                'values' => [
-                    abs($recurrences_sum) + abs($expanses->pluck('amount')->sum()),
-                    $revenus->pluck('amount')->sum()
-                ],
-            ];
-        }
-
-        // Graph : dépenses par catégorie
-        $expanses_with_categ = $expanses->filter(function ($item) {
-            return !empty($item->category);
-        })
-            ->values()
-            ->groupBy('category_id');
-
-        /** @var Transaction $expanse */
-        foreach ($expanses_with_categ as $expanse) {
-            $data['values_exp_by_categ']['labels'][] = $expanse->first()->category->appellation;
-            $data['values_exp_by_categ']['values'][] = abs($expanse->pluck('amount')->sum());
-        }
-
-        // Graph : dépenses par label
-        $expanses_with_labels = $expanses->filter(function ($item) {
-            return $item->labels->isNotEmpty();
-        })->values();
-
-        /** @var Transaction $expanse */
-        foreach ($expanses_with_labels as $expanse) {
-            /** @var Label $label */
-            foreach ($expanse->labels as $label) {
-                if (empty($data['values_exp_by_label']['values'][$label->appellation])) {
-                    $data['values_exp_by_label']['values'][$label->appellation] = $expanse->amount;
-                    $data['values_exp_by_label']['labels'][$label->appellation] = $label->appellation;
-                } else {
-                    $data['values_exp_by_label']['values'][$label->appellation] += $expanse->amount;
-                }
-            }
-        }
-
-        $data['values_exp_by_label']['values'] = array_values($data['values_exp_by_label']['values']);
-        $data['values_exp_by_label']['labels'] = array_values($data['values_exp_by_label']['labels']);
-
-        return $data;
     }
 }

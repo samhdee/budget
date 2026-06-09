@@ -16,6 +16,21 @@
 
     <li class="nav-item" role="presentation">
         <button
+            id="transac-goals-tab"
+            class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-goals-tab' ? 'active' : '' }}"
+            data-bs-toggle="tab"
+            data-bs-target="#transac-goals-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="transac-goals-tab-pane"
+            aria-selected="false"
+        >
+            Goals
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button
             id="transac-expanses-tab"
             class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-expanses-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
@@ -54,7 +69,19 @@
         tabindex="0"
     >
         <div id="general-wrapper" class="mt-5 list-wrapper">
-            @include('dashboard.general')
+            @include('dashboard.graphs')
+        </div>
+    </div>
+
+    <div
+        id="transac-goals-tab-pane"
+        class="tab-pane fade container {{ !empty($active_tab) && $active_tab === 'transac-goals-tab' ? 'show active' : '' }}"
+        role="tabpanel"
+        aria-labelledby="transac-goals-tab"
+        tabindex="0"
+    >
+        <div class="mt-4">
+            @include('dashboard.goals')
         </div>
     </div>
 

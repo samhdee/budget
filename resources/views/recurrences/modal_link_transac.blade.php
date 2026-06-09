@@ -9,7 +9,7 @@
     aria-labelledby="recurrence-transacs-form-title"
     aria-hidden="true"
 >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="recurrence-transacs-form-title" class="modal-title fs-4">
@@ -44,14 +44,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <hr class="my-3" />
-
-                    <div>
-                        <input id="recur-transac-search" type="text" class="form-control" />
-
-                        <div id="recur-transac-results" class="mt-2 d-none"></div>
                     </div>
                 </form>
             </div>

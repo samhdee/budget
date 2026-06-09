@@ -47,6 +47,13 @@ class Category extends Model
         return $this->hasMany(Transaction::class, 'category_id');
     }
 
+    public function monthExpanses(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'category_id')
+            ->where('occurred_at', '>=', Carbon::now()->startOfMonth())
+            ->where('amount', '<', 0);
+    }
+
     public static function getList(): Collection
     {
         return self::query()
@@ -62,7 +69,7 @@ class Category extends Model
     public static function getDropdownList(): Collection
     {
         return self::query()
-            ->select(['id', 'appellation', 'color', 'description'])
+            ->select(['id', 'appellation', 'goal'])
             ->orderBy('appellation')
             ->get();
     }

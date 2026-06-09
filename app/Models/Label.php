@@ -52,6 +52,18 @@ class Label extends Model
         );
     }
 
+    public function monthExpanses(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Transaction::class,
+            'labels_transactions',
+            'label_id',
+            'transaction_id'
+        )
+            ->where('occurred_at', '>=', Carbon::now()->startOfMonth())
+            ->where('amount', '<', 0);
+    }
+
     public static function getList(): Collection
     {
         return self::query()
