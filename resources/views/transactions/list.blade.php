@@ -63,7 +63,11 @@
                     </td>
 
                     <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
-                    <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">{{ $transaction->amount }}€</td>
+
+                    <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">
+                        {{ formatAmount($transaction->amount) }}€
+                    </td>
+
                     <td>{{ getTransactionTypeLabel($transaction->type) }}</td>
 
                     <td>

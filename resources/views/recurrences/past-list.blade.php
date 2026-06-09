@@ -37,7 +37,7 @@
                     </td>
 
                     <td>{{ $past_recurrence->label }}</td>
-                    <td>{{ $past_recurrence->amount }}€</td>
+                    <td>{{ formatAmount($past_recurrence->amount) }}€</td>
 
                     <td>
                         <a

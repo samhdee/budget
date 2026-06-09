@@ -27,8 +27,14 @@
 
                 <tr>
                     <td @if ($total > $category->goal) class="text-danger" @endif>{{ $category->appellation }}</td>
-                    <td @if ($total > $category->goal) class="text-danger" @endif>{{ $category->goal }}€</td>
-                    <td @if ($total > $category->goal) class="text-danger" @endif>{{ $total }}€</td>
+
+                    <td @if ($total > $category->goal) class="text-danger" @endif>
+                        {{ formatAmount($category->goal) }}€
+                    </td>
+
+                    <td @if ($total > $category->goal) class="text-danger" @endif>
+                        {{ formatAmount($total) }}€
+                    </td>
                 </tr>
             @endforeach
             </tbody>
@@ -58,8 +64,14 @@
 
                 <tr>
                     <td @if ($total > $label->goal) class="text-danger" @endif>{{ $label->appellation }}</td>
-                    <td @if ($total > $label->goal) class="text-danger" @endif>{{ $label->goal }}€</td>
-                    <td @if ($total > $label->goal) class="text-danger" @endif>{{ $total }}€</td>
+
+                    <td @if ($total > $label->goal) class="text-danger" @endif>
+                        {{ formatAmount($label->goal) }}€
+                    </td>
+
+                    <td @if ($total > $label->goal) class="text-danger" @endif>
+                        {{ formatAmount($total) }}€
+                    </td>
                 </tr>
             @endforeach
             </tbody>

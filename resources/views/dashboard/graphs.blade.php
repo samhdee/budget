@@ -77,10 +77,10 @@
         /** @var Label $label */
         foreach ($expanse->labels as $label) {
             if (empty($values_exp_by_label['values'][$label->appellation])) {
-                $values_exp_by_label['values'][$label->appellation] = $expanse->amount;
+                $values_exp_by_label['values'][$label->appellation] = abs($expanse->amount);
                 $values_exp_by_label['labels'][$label->appellation] = $label->appellation;
             } else {
-                $values_exp_by_label['values'][$label->appellation] += $expanse->amount;
+                $values_exp_by_label['values'][$label->appellation] += abs($expanse->amount);
             }
         }
     }

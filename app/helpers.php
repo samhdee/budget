@@ -43,3 +43,8 @@ function getTransactionTypeLabel($transaction_type): string
         default => 'Autre',
     };
 }
+
+function formatAmount($amount): string
+{
+    return number_format($amount, 2, ',', ' ');
+}

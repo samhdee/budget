@@ -8,10 +8,6 @@ body {
                 color: white;
             }
 
-            &:not(.text-danger):not(.text-success) td:not(.text-danger):not(.text-success) {
-                //color: white;
-            }
-
             .form-control {
                 border: none;
                 background-color: #363535;

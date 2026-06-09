@@ -19,7 +19,7 @@
     </div>
 
     <div>
-        Total : {{ abs($recurrences->pluck('amount')->sum()) }}€
+        Total : {{ formatAmount(abs($recurrences->pluck('amount')->sum())) }}€
     </div>
 
     <table class="mt-3 table table-striped table-bordered align-middle">
@@ -48,7 +48,7 @@
                     </td>
 
                     <td>{{ $recurrence->label }}</td>
-                    <td>{{ $recurrence->amount }}€</td>
+                    <td>{{ formatAmount($recurrence->amount) }}€</td>
 
                     <td>
                         <a

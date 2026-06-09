@@ -52,7 +52,7 @@
                     </td>
 
                     <td>{{ $inactive_recurrence->label }}</td>
-                    <td>{{ $inactive_recurrence->amount }}€</td>
+                    <td>{{ formatAmount($inactive_recurrence->amount) }}€</td>
 
                     <td>
                         <a
