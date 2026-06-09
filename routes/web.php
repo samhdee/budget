@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('transactions')
         ->group(function () {
             Route::get('/', 'index')->name('transac_index');
-            Route::post('/', 'filter')->name('transac_filter');
+            Route::post('/filter', 'filter')->name('transac_filter');
             Route::get('/get/{id}', 'get')->name('transac_get');
             Route::post('/bulk-store', 'bulkStore')->name('transac_bulk_store');
             Route::post('/bulk-delete', 'bulkDelete')->name('transac_bulk_delete');
@@ -43,11 +43,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('recurrences_index');
             Route::get('/filter', 'filter')->name('recurrences_filter');
             Route::get('/get/{id}', 'get')->name('recurrences_get');
-            Route::get('/get-transac/{id}', 'getTransacs')->name('recurrences_get_transacs');
+            Route::get('/{id}/transacs/get', 'getTransacs')->name('recurrences_get_transacs');
+            Route::post('/transacs/search', 'getTransacs')->name('recurrences_get_transacs');
             Route::post('/store', 'store')->name('recurrences_store');
             Route::get('/toggle-active/{recurrence_id}', 'toggleActive')->name('recurrences_toggle_active');
             Route::post('/bulk-toggle-active', 'toggleActive')->name('recurrences_bulk_toggle_active');
-            Route::get('/add-transacs/{recurrence_id}', 'addTransacs')->name('recurrences_add_transacs');
             Route::get('/detect', 'detectRecurrences')->name('recurrences_detect');
         });
 

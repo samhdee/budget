@@ -12,7 +12,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="recurrence-transacs-form-title" class="modal-title fs-4"></h3>
+                <h3 id="recurrence-transacs-form-title" class="modal-title fs-4">
+                    Bénéficiaire : <span id="recur-transac-beneficiary"></span>
+                </h3>
+
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -22,23 +25,34 @@
 
                     <input type="hidden" id="transac-recurrence-id" name="id" />
 
-                    <p>Bénéficiaire : <span id="recur-transac-beneficiary"></span></p>
+                    <div id="recur-transac-template" class="d-none mt-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title recur-transac-date"></div>
 
-                    <fieldset id="recur-transac-template" class="d-none mt-3">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <div class="recur-transac-date"></div>
-                                <p>
-                                    <span class="recur-transac-amount"></span>
-                                    <span class="ms-1 recur-transac-categ"></span>
-                                </p>
-                            </div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p>
+                                            <span class="recur-transac-amount"></span>
+                                            <span class="ms-1 recur-transac-categ"></span>
+                                        </p>
+                                    </div>
 
-                            <div>
-                                <input class="form-check-input recur-transac-check" type="checkbox" role="switch" checked />
+                                    <div>
+                                        <input class="form-check-input recur-transac-check" type="checkbox" role="switch" checked />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </fieldset>
+                    </div>
+
+                    <hr class="my-3" />
+
+                    <div>
+                        <input id="recur-transac-search" type="text" class="form-control" />
+
+                        <div id="recur-transac-results" class="mt-2 d-none"></div>
+                    </div>
                 </form>
             </div>
 

@@ -103,8 +103,8 @@ class Transaction extends Model
             ])
             ->with('recurringPattern:id,active')
             ->with('beneficiary:id,raw_name,pretty_name,description')
-            ->with('category:id,appellation')
-            ->with('labels:id,appellation');
+            ->with('category:id,appellation,goal')
+            ->with('labels:id,appellation,goal');
 
         if (!empty($filters['sign'])) {
             if ($filters['sign'] === 'negative') {

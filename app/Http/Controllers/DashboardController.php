@@ -137,6 +137,7 @@ class DashboardController extends Controller
             ->values()
             ->groupBy('category_id');
 
+        /** @var Transaction $expanse */
         foreach ($expanses_with_categ as $expanse) {
             $data['values_exp_by_categ']['labels'][] = $expanse->first()->category->appellation;
             $data['values_exp_by_categ']['values'][] = abs($expanse->pluck('amount')->sum());
@@ -147,7 +148,9 @@ class DashboardController extends Controller
             return $item->labels->isNotEmpty();
         })->values();
 
+        /** @var Transaction $expanse */
         foreach ($expanses_with_labels as $expanse) {
+            /** @var Label $label */
             foreach ($expanse->labels as $label) {
                 if (empty($data['values_exp_by_label']['values'][$label->appellation])) {
                     $data['values_exp_by_label']['values'][$label->appellation] = $expanse->amount;

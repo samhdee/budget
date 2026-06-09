@@ -31,20 +31,24 @@
 <div class="row justify-content-between">
     @if (!empty($values_exp_by_categ))
         <div class="col-5">
+            <h3 class="text-center">Dépenses par catégories</h3>
+
             <canvas
                 id="dashboard-exp-by-categ-chart"
+                class="mt-3"
                 data-values='@json($values_exp_by_categ)'
-                data-title="Dépenses par catégories"
             ></canvas>
         </div>
     @endif
 
     @if (!empty($values_exp_by_label))
         <div class="col-5">
+            <h3 class="text-center">Dépenses par labels</h3>
+
             <canvas
                 id="dashboard-exp-by-label-chart"
+                class="mt-3"
                 data-values='@json($values_exp_by_label)'
-                data-title="Dépenses par labels"
             ></canvas>
         </div>
     @endif
