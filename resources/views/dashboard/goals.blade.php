@@ -9,34 +9,37 @@
 
         <table class="table table-bordered">
             <thead>
-            <tr>
-                <th>Catégorie</th>
-                <th>But</th>
-                <th>Réel</th>
-            </tr>
+                <tr>
+                    <th>Catégorie</th>
+                    <th>But</th>
+                    <th>Réel</th>
+                </tr>
             </thead>
 
             <tbody>
-            @php /** @var Category $category */ @endphp
-            @foreach($categories as $category)
-                @if (empty($category->goal))
-                    @continue
-                @endif
+                @php /** @var Category $category */ @endphp
+                @foreach($categories as $category)
+                    @if (empty($category->goal))
+                        @continue
+                    @endif
 
-                @php $total = abs($category->monthExpanses()->sum('amount')) @endphp
+                    @php
+                        $total = abs($category->monthExpanses()->sum('amount'));
+                        $color_class = 'text-' . ($total > $category->goal ? 'danger' : 'success');
+                    @endphp
 
-                <tr>
-                    <td @if ($total > $category->goal) class="text-danger" @endif>{{ $category->appellation }}</td>
+                    <tr>
+                        <td class="{{ $color_class }}">{{ $category->appellation }}</td>
 
-                    <td @if ($total > $category->goal) class="text-danger" @endif>
-                        {{ formatAmount($category->goal) }}€
-                    </td>
+                        <td class="{{ $color_class }}">
+                            {{ formatAmount($category->goal) }}€
+                        </td>
 
-                    <td @if ($total > $category->goal) class="text-danger" @endif>
-                        {{ formatAmount($total) }}€
-                    </td>
-                </tr>
-            @endforeach
+                        <td class="{{ $color_class }}">
+                            {{ formatAmount($total) }}€
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -46,34 +49,37 @@
 
         <table class="table table-bordered">
             <thead>
-            <tr>
-                <th>Label</th>
-                <th>But</th>
-                <th>Réel</th>
-            </tr>
+                <tr>
+                    <th>Label</th>
+                    <th>But</th>
+                    <th>Réel</th>
+                </tr>
             </thead>
 
             <tbody>
-            @php /** @var Label $label */ @endphp
-            @foreach($labels as $label)
-                @if (empty($label->goal))
-                    @continue
-                @endif
+                @php /** @var Label $label */ @endphp
+                @foreach($labels as $label)
+                    @if (empty($label->goal))
+                        @continue
+                    @endif
 
-                @php $total = abs($label->monthExpanses()->sum('amount')) @endphp
+                    @php
+                        $total = abs($label->monthExpanses()->sum('amount'));
+                        $color_class = 'text-' . ($total > $label->goal ? 'danger' : 'success');
+                    @endphp
 
-                <tr>
-                    <td @if ($total > $label->goal) class="text-danger" @endif>{{ $label->appellation }}</td>
+                    <tr>
+                        <td class="{{ $color_class }}">{{ $label->appellation }}</td>
 
-                    <td @if ($total > $label->goal) class="text-danger" @endif>
-                        {{ formatAmount($label->goal) }}€
-                    </td>
+                        <td class="{{ $color_class }}">
+                            {{ formatAmount($label->goal) }}€
+                        </td>
 
-                    <td @if ($total > $label->goal) class="text-danger" @endif>
-                        {{ formatAmount($total) }}€
-                    </td>
-                </tr>
-            @endforeach
+                        <td class="{{ $color_class }}">
+                            {{ formatAmount($total) }}€
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
