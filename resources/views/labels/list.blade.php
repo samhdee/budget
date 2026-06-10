@@ -3,7 +3,7 @@
         <tr>
             <th style="width: 12rem">Nom</th>
             <th style="width: 6rem;">Transactions</th>
-            <th style="width: 5rem">But</th>
+            <th style="width: 4.5rem">But</th>
             <th>Description</th>
             <th style="width: 6rem"></th>
         </tr>
@@ -17,7 +17,7 @@
 
                 <td>
                     @if (!empty($label->goal))
-                        {{ $label->goal }}€
+                        {{ formatAmount($label->goal, 0) }}€
                     @endif
                 </td>
 

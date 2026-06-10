@@ -49,6 +49,19 @@ function get_pie_chart(element_id) {
             datasets: [{
                 label: canvas_exp_by_label.dataset.title,
                 data: exp_by_label_dataset.values,
+                backgroundColor: [
+                    '#36a2eb',
+                    '#ff61a3',
+                    '#a14ba2',
+                    '#ff9f40',
+                    '#ffcd56',
+                    '#4bc0c0',
+                    '#159679',
+                    '#9966ff',
+                    '#c75768',
+                    '#7bcc24',
+                    '#406ac7',
+                ],
             }],
         },
     });

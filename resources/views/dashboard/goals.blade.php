@@ -11,8 +11,8 @@
             <thead>
                 <tr>
                     <th>Catégorie</th>
-                    <th>But</th>
-                    <th>Réel</th>
+                    <th style="width: 6rem;">But</th>
+                    <th style="width: 6rem;">Réel</th>
                 </tr>
             </thead>
 
@@ -32,7 +32,7 @@
                         <td class="{{ $color_class }}">{{ $category->appellation }}</td>
 
                         <td class="{{ $color_class }}">
-                            {{ formatAmount($category->goal) }}€
+                            {{ formatAmount($category->goal, 0) }}€
                         </td>
 
                         <td class="{{ $color_class }}">
@@ -51,8 +51,8 @@
             <thead>
                 <tr>
                     <th>Label</th>
-                    <th>But</th>
-                    <th>Réel</th>
+                    <th style="width: 6rem;">But</th>
+                    <th style="width: 6rem;">Réel</th>
                 </tr>
             </thead>
 
@@ -72,7 +72,7 @@
                         <td class="{{ $color_class }}">{{ $label->appellation }}</td>
 
                         <td class="{{ $color_class }}">
-                            {{ formatAmount($label->goal) }}€
+                            {{ formatAmount($label->goal, 0) }}€
                         </td>
 
                         <td class="{{ $color_class }}">

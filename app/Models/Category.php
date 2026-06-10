@@ -57,7 +57,7 @@ class Category extends Model
     public static function getList(): Collection
     {
         return self::query()
-            ->select(['id', 'appellation', 'goal'])
+            ->select(['id', 'appellation', 'goal', 'description'])
             ->withCount('transactions as nb_transactions')
             ->orderBy('appellation')
             ->get();

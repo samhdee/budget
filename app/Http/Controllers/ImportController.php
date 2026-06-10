@@ -77,7 +77,6 @@ class ImportController extends Controller
                         continue;
                     }
 
-                    $benef_result = null;
                     $benef_raw = !empty($line[self::COL_BENEFICIARY])
                         ? $line[self::COL_BENEFICIARY]
                         : $line[self::COL_BENEFICIARY_BIS];
@@ -195,10 +194,11 @@ class ImportController extends Controller
                         }
 
                         $lines++;
+                        $benef_result = null;
 
                         if (!empty($benef_raw_name)) {
                             $benef_result = Beneficiary::query()
-                                ->select(['id', 'category_id'])
+                                ->select(['id', 'category_id', 'label_id'])
                                 ->where('raw_name', $benef_raw_name)
                                 ->first();
 
@@ -207,7 +207,6 @@ class ImportController extends Controller
                             }
                         }
 
-                        // @TODO: Vérifier si la transaction a un recurring pattern
                         $transaction = Transaction::create([
                             'amount' => str_replace(',', '.', $line[self::COL_AMOUNT]),
                             'beneficiary_id' => !empty($benef_result) ? $benef_result->id : null,

@@ -44,7 +44,7 @@ function getTransactionTypeLabel($transaction_type): string
     };
 }
 
-function formatAmount($amount): string
+function formatAmount($amount, $decimals = 2): string
 {
-    return number_format($amount, 2, ',', ' ');
+    return number_format($amount, $decimals, ',', ' ');
 }
