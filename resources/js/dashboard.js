@@ -83,6 +83,14 @@ const init_exp_by_label_chart = () => {
     get_pie_chart('dashboard-exp-by-label-chart');
 };
 
+const init_exp_charges_chart = () => {
+    get_pie_chart('dashboard-exp-charges-chart');
+};
+
+const init_exp_loisirs_chart = () => {
+    get_pie_chart('dashboard-exp-loisirs-chart');
+};
+
 const reload_dashboard = async () => {
     return await $.post(
         'dashboard/filter',
@@ -107,6 +115,14 @@ const reload_dashboard = async () => {
             if ($('#dashboard-exp-by-label-chart').length > 0) {
                 init_exp_by_label_chart();
             }
+
+            if ($('#dashboard-exp-charges-chart').length > 0) {
+                init_exp_charges_chart();
+            }
+
+            if ($('#dashboard-exp-loisirs-chart').length > 0) {
+                init_exp_loisirs_chart();
+            }
         }
     ).promise();
 }
@@ -126,6 +142,14 @@ $(function () {
 
     if ($('#dashboard-exp-by-label-chart').length > 0) {
         init_exp_by_label_chart();
+    }
+
+    if ($('#dashboard-exp-charges-chart').length > 0) {
+        init_exp_charges_chart();
+    }
+
+    if ($('#dashboard-exp-loisirs-chart').length > 0) {
+        init_exp_loisirs_chart();
     }
 
     // Change le mois visualisé

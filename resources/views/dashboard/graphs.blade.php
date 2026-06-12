@@ -5,11 +5,21 @@
 
     // Graph : dépenses vs. revenus
     $expanses = Transaction::getList(
-        ['sign' => 'negative', 'date_start' => $filter_date_start, 'date_end' => $filter_date_end], false
+        [
+            'sign' => 'negative',
+            'date_start' => $filter_date_start,
+            'date_end' => $filter_date_end
+        ],
+        false
     );
 
     $revenus = Transaction::getList(
-        ['sign' => 'positive', 'date_start' => $filter_date_start, 'date_end' => $filter_date_end], false
+        [
+            'sign' => 'positive',
+            'date_start' => $filter_date_start,
+            'date_end' => $filter_date_end
+        ],
+        false
     );
 
     if ($expanses->isNotEmpty() || $revenus->isNotEmpty()) {
@@ -53,7 +63,112 @@
             ],
         ];
     }
+@endphp
 
+<div class="row justify-content-between">
+    @if (!empty($values_exp_vs_rev))
+        <div class="col-5">
+            <canvas
+                id="dashboard-rev-exp-chart"
+                data-values='@json($values_exp_vs_rev)'
+                data-unit="€"
+                data-title="Dépenses vs. Revenus"
+            ></canvas>
+        </div>
+    @endif
+
+    @if (!empty($values_projection))
+        <div class="col-5">
+            <canvas
+                id="dashboard-projection-chart"
+                data-values='@json($values_projection)'
+                data-unit="€"
+                data-title="Projection fin de mois (*)"
+            ></canvas>
+
+            <p class="text-muted fst-italic text-small">
+                (*) Ne compte pas l&rsquo;alimentation
+            </p>
+        </div>
+    @endif
+</div>
+
+<hr class="my-5"/>
+
+@php
+    // Graph : dépenses par catégorie
+    $expanses_charges = $expanses->filter(function ($item) {
+        return $item->labels->isNotEmpty() && !empty($item->category) && $item->category->appellation === 'Charges';
+    })
+        ->values();
+
+    /** @var Transaction $expanse */
+    foreach ($expanses_charges as $expanse) {
+        /** @var Label $label */
+        foreach ($expanse->labels as $label) {
+            if (empty($values_exp_charges['values'][$label->appellation])) {
+                $values_exp_charges['values'][$label->appellation] = abs($expanse->amount);
+                $values_exp_charges['labels'][$label->appellation] = $label->appellation;
+            } else {
+                $values_exp_charges['values'][$label->appellation] += abs($expanse->amount);
+            }
+        }
+    }
+
+    $values_exp_charges['values'] = array_values($values_exp_charges['values']);
+    $values_exp_charges['labels'] = array_values($values_exp_charges['labels']);
+
+    // Graph : dépenses par label
+    $expanses_loisirs = $expanses->filter(function ($item) {
+        return $item->labels->isNotEmpty() && !empty($item->category) && $item->category->appellation === 'Loisirs';
+    })->values();
+
+    /** @var Transaction $expanse */
+    foreach ($expanses_loisirs as $expanse) {
+        /** @var Label $label */
+        foreach ($expanse->labels as $label) {
+            if (empty($values_exp_loisirs['values'][$label->appellation])) {
+                $values_exp_loisirs['values'][$label->appellation] = abs($expanse->amount);
+                $values_exp_loisirs['labels'][$label->appellation] = $label->appellation;
+            } else {
+                $values_exp_loisirs['values'][$label->appellation] += abs($expanse->amount);
+            }
+        }
+    }
+
+    $values_exp_loisirs['values'] = array_values($values_exp_loisirs['values']);
+    $values_exp_loisirs['labels'] = array_values($values_exp_loisirs['labels']);
+@endphp
+
+<div class="row justify-content-between">
+    @if (!empty($values_exp_charges))
+        <div class="col-5">
+            <h3 class="text-center">Charges - Dépenses par labels</h3>
+
+            <canvas
+                id="dashboard-exp-charges-chart"
+                class="mt-3"
+                data-values='@json($values_exp_charges)'
+            ></canvas>
+        </div>
+    @endif
+
+    @if (!empty($values_exp_loisirs))
+        <div class="col-5">
+            <h3 class="text-center">Loisirs - Dépenses par labels</h3>
+
+            <canvas
+                id="dashboard-exp-loisirs-chart"
+                class="mt-3"
+                data-values='@json($values_exp_loisirs)'
+            ></canvas>
+        </div>
+    @endif
+</div>
+
+<hr class="my-5"/>
+
+@php
     // Graph : dépenses par catégorie
     $expanses_with_categ = $expanses->filter(function ($item) {
         return !empty($item->category);
@@ -88,36 +203,6 @@
     $values_exp_by_label['values'] = array_values($values_exp_by_label['values']);
     $values_exp_by_label['labels'] = array_values($values_exp_by_label['labels']);
 @endphp
-
-<div class="row justify-content-between">
-    @if (!empty($values_exp_vs_rev))
-        <div class="col-5">
-            <canvas
-                id="dashboard-rev-exp-chart"
-                data-values='@json($values_exp_vs_rev)'
-                data-unit="€"
-                data-title="Dépenses vs. Revenus"
-            ></canvas>
-        </div>
-    @endif
-
-    @if (!empty($values_projection))
-        <div class="col-5">
-            <canvas
-                id="dashboard-projection-chart"
-                data-values='@json($values_projection)'
-                data-unit="€"
-                data-title="Projection fin de mois (*)"
-            ></canvas>
-
-            <p class="text-muted fst-italic text-small">
-                (*) Ne compte pas l&rsquo;alimentation
-            </p>
-        </div>
-    @endif
-</div>
-
-<hr class="my-5"/>
 
 <div class="row justify-content-between">
     @if (!empty($values_exp_by_categ))
