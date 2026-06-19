@@ -10,9 +10,10 @@ $(function () {
 
         $.get($(open_button).data('url'))
             .done(response => {
-                $(modal).find('#recur-transac-beneficiary').text(response.item[0].beneficiary.pretty_name.length > 0
-                    ? response.item[0].beneficiary.pretty_name
-                    : response.item[0].beneficiary.raw_name
+                $(modal).find('#recur-transac-beneficiary').text(
+                    response.item[0].beneficiary.pretty_name !== null
+                        ? response.item[0].beneficiary.pretty_name
+                        : response.item[0].beneficiary.raw_name
                 );
 
                 const template = $('#recur-transac-template');

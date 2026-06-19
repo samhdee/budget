@@ -114,13 +114,22 @@ class Beneficiary extends Model
     }
 
     /**
+     * @param bool $without_non_recurring
      * @return Collection
      */
-    public static function getDropdownList(): Collection
+    public static function getDropdownList(bool $without_non_recurring = false): Collection
     {
-        return self::query()
-            ->select(['id', 'raw_name', 'pretty_name'])
-            ->orderBy('raw_name')
+        $query = self::query()
+            ->select(['id', 'raw_name', 'pretty_name']);
+
+        if (!empty($without_non_recurring)) {
+            $query->where(function (Builder $query) {
+                $query->orWhere('non_recurring', '!=', 1)
+                    ->orWhereNull('non_recurring');
+            });
+        }
+
+        return $query->orderBy('raw_name')
             ->get();
     }
 

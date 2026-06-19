@@ -189,7 +189,7 @@ class Transaction extends Model
             ->select(['id', 'amount', DB::raw('DATE_FORMAT(occurred_at, "%d/%m/%Y") as occurred_at'), 'category_id', 'beneficiary_id'])
             ->with(['category:id,appellation', 'beneficiary:id,raw_name,pretty_name'])
             ->where('recurring_pattern_id', $recurrence_id)
-            ->orderByDesc('occurred_at')
+            ->orderByDesc('transactions.occurred_at')
             ->get();
     }
 

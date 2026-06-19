@@ -4,24 +4,6 @@
     use App\Models\Transaction;
 
     // Graph : dépenses vs. revenus
-    $expanses = Transaction::getList(
-        [
-            'sign' => 'negative',
-            'date_start' => $filter_date_start,
-            'date_end' => $filter_date_end
-        ],
-        false
-    );
-
-    $revenus = Transaction::getList(
-        [
-            'sign' => 'positive',
-            'date_start' => $filter_date_start,
-            'date_end' => $filter_date_end
-        ],
-        false
-    );
-
     if ($expanses->isNotEmpty() || $revenus->isNotEmpty()) {
         $values_exp_vs_rev = [
             'labels' => ['Dépenses', 'Revenus'],
@@ -39,7 +21,7 @@
 
     /** @var TransacRecurringPattern $recurrence */
     foreach ($last_month_recurrences as $recurrence) {
-        $expanse = $expanses->filter(function ($item) use ($recurrence) {
+        $related_expanses = $expanses->filter(function ($item) use ($recurrence) {
             return !empty($item->recurring_pattern_id) && $item->recurring_pattern_id === $recurrence->id;
         })->values();
 
@@ -47,8 +29,8 @@
             ? $recurrence->amount
             : $recurrence->amount * 4 / $recurrence->frequency_count;
 
-        if ($expanse->isNotEmpty()) {
-            $tmp_sum -= $expanse->pluck('amount')->sum();
+        if ($related_expanses->isNotEmpty()) {
+            $tmp_sum -= $related_expanses->pluck('amount')->sum();
         }
 
         $recurrences_sum += $tmp_sum;
@@ -87,7 +69,7 @@
             ></canvas>
 
             <p class="text-muted fst-italic text-small">
-                (*) Ne compte pas l&rsquo;alimentation
+                (*) Projection approximative
             </p>
         </div>
     @endif
@@ -102,19 +84,21 @@
     })
         ->values();
 
-    /** @var Transaction $expanse */
-    foreach ($expanses_charges as $expanse) {
+    /** @var Transaction $related_expanses */
+    foreach ($expanses_charges as $related_expanses) {
         /** @var Label $label */
-        foreach ($expanse->labels as $label) {
+        foreach ($related_expanses->labels as $label) {
             if (empty($values_exp_charges['values'][$label->appellation])) {
-                $values_exp_charges['values'][$label->appellation] = abs($expanse->amount);
+                $values_exp_charges['values'][$label->appellation] = abs($related_expanses->amount);
                 $values_exp_charges['labels'][$label->appellation] = $label->appellation;
             } else {
-                $values_exp_charges['values'][$label->appellation] += abs($expanse->amount);
+                $values_exp_charges['values'][$label->appellation] += abs($related_expanses->amount);
             }
         }
     }
 
+    ksort($values_exp_charges['values']);
+    ksort($values_exp_charges['labels']);
     $values_exp_charges['values'] = array_values($values_exp_charges['values']);
     $values_exp_charges['labels'] = array_values($values_exp_charges['labels']);
 
@@ -123,19 +107,21 @@
         return $item->labels->isNotEmpty() && !empty($item->category) && $item->category->appellation === 'Loisirs';
     })->values();
 
-    /** @var Transaction $expanse */
-    foreach ($expanses_loisirs as $expanse) {
+    /** @var Transaction $related_expanses */
+    foreach ($expanses_loisirs as $related_expanses) {
         /** @var Label $label */
-        foreach ($expanse->labels as $label) {
+        foreach ($related_expanses->labels as $label) {
             if (empty($values_exp_loisirs['values'][$label->appellation])) {
-                $values_exp_loisirs['values'][$label->appellation] = abs($expanse->amount);
+                $values_exp_loisirs['values'][$label->appellation] = abs($related_expanses->amount);
                 $values_exp_loisirs['labels'][$label->appellation] = $label->appellation;
             } else {
-                $values_exp_loisirs['values'][$label->appellation] += abs($expanse->amount);
+                $values_exp_loisirs['values'][$label->appellation] += abs($related_expanses->amount);
             }
         }
     }
 
+    ksort($values_exp_loisirs['values']);
+    ksort($values_exp_loisirs['labels']);
     $values_exp_loisirs['values'] = array_values($values_exp_loisirs['values']);
     $values_exp_loisirs['labels'] = array_values($values_exp_loisirs['labels']);
 @endphp
@@ -176,10 +162,10 @@
         ->values()
         ->groupBy('category_id');
 
-    /** @var Transaction $expanse */
-    foreach ($expanses_with_categ as $expanse) {
-        $values_exp_by_categ['labels'][] = $expanse->first()->category->appellation;
-        $values_exp_by_categ['values'][] = abs($expanse->pluck('amount')->sum());
+    /** @var Transaction $related_expanses */
+    foreach ($expanses_with_categ as $related_expanses) {
+        $values_exp_by_categ['labels'][] = $related_expanses->first()->category->appellation;
+        $values_exp_by_categ['values'][] = abs($related_expanses->pluck('amount')->sum());
     }
 
     // Graph : dépenses par label
@@ -187,15 +173,15 @@
         return $item->labels->isNotEmpty();
     })->values();
 
-    /** @var Transaction $expanse */
-    foreach ($expanses_with_labels as $expanse) {
+    /** @var Transaction $related_expanses */
+    foreach ($expanses_with_labels as $related_expanses) {
         /** @var Label $label */
-        foreach ($expanse->labels as $label) {
+        foreach ($related_expanses->labels as $label) {
             if (empty($values_exp_by_label['values'][$label->appellation])) {
-                $values_exp_by_label['values'][$label->appellation] = abs($expanse->amount);
+                $values_exp_by_label['values'][$label->appellation] = abs($related_expanses->amount);
                 $values_exp_by_label['labels'][$label->appellation] = $label->appellation;
             } else {
-                $values_exp_by_label['values'][$label->appellation] += abs($expanse->amount);
+                $values_exp_by_label['values'][$label->appellation] += abs($related_expanses->amount);
             }
         }
     }

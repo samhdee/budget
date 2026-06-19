@@ -45,11 +45,10 @@
                 <th style="width: 7rem">Montant</th>
                 <th style="width: 9.6rem;">Type</th>
                 <th>Bénéficiaire</th>
-                <th>Catégorie</th>
+                <th style="width: 8rem;">Catégorie</th>
                 <th style="width: 12rem">Labels</th>
-                <th style="width: 2rem;">
-                    <i class="fas fa-repeat"></i>
-                </th>
+                <th style="width: 10rem">Notes</th>
+                <th style="width: 2rem;"><i class="fas fa-repeat"></i></th>
                 <th style="width: 6rem"></th>
             </tr>
         </thead>
@@ -64,7 +63,7 @@
 
                     <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
 
-                    <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">
+                    <td class="text-danger">
                         {{ formatAmount($transaction->amount) }}€
                     </td>
 
@@ -103,6 +102,8 @@
                             <span class="badge text-bg-info">{{ $label->appellation }}</span>
                         @endforeach
                     </td>
+
+                    <td>{{ $transaction->notes }}</td>
 
                     <td class="text-center">
                         @if (!empty($transaction->recurringPattern && !empty($transaction->recurringPattern->active)))

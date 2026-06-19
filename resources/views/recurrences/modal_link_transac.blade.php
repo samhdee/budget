@@ -32,10 +32,8 @@
 
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <p>
-                                            <span class="recur-transac-amount"></span>
-                                            <span class="ms-1 recur-transac-categ"></span>
-                                        </p>
+                                        <span class="recur-transac-amount"></span>
+                                        <span class="ms-1 recur-transac-categ"></span>
                                     </div>
 
                                     <div>

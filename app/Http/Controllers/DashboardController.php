@@ -67,6 +67,23 @@ class DashboardController extends Controller
                 'date_start' => $date_start,
                 'date_end' => $date_end
             ]),
+            'expanses' => Transaction::getList(
+                [
+                    'sign' => 'negative',
+                    'date_start' => $date_start,
+                    'date_end' => $date_end,
+                ],
+                false
+            ),
+            'revenus' => Transaction::getList(
+                [
+                    'sign' => 'positive',
+                    'date_start' => $date_start,
+                    'date_end' => $date_end,
+                ],
+                false
+            ),
+            'active_recurrences' => TransacRecurringPattern::getList(),
             'filter_date_start' => $date_start,
             'filter_date_end' => $date_end,
             'beneficiaries' => Beneficiary::getDropdownList(),
@@ -76,7 +93,7 @@ class DashboardController extends Controller
                 ->select(DB::raw('DATE(occurred_at) as occurred_at'))
                 ->orderBy('occurred_at')
                 ->first(),
-            'active_tab' => $filters['active_tab'] ?? '',
+            'active_tab' => $filters['active_tab'] ?? 'general-tab',
         ];
     }
 }

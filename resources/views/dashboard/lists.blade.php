@@ -2,7 +2,7 @@
     <li class="nav-item" role="presentation">
         <button
             id="general-tab"
-            class="nav-link {{ empty($active_tab) || $active_tab === 'general-tab' ? 'active' : '' }}"
+            class="nav-link {{$active_tab === 'general-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#general-tab-pane"
             type="button"
@@ -17,7 +17,7 @@
     <li class="nav-item" role="presentation">
         <button
             id="transac-goals-tab"
-            class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-goals-tab' ? 'active' : '' }}"
+            class="nav-link {{ $active_tab === 'transac-goals-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#transac-goals-tab-pane"
             type="button"

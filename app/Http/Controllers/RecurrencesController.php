@@ -25,7 +25,7 @@ class RecurrencesController extends Controller
             'recurrences' => TransacRecurringPattern::getList(),
             'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
             'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
-            'beneficiaries' => Beneficiary::getDropdownList(),
+            'beneficiaries' => Beneficiary::getDropdownList(true),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
         ]);
@@ -94,7 +94,10 @@ class RecurrencesController extends Controller
             $prev_trans_date = Carbon::parse($previous_transacs->first()->occurred_at);
             $diff_in_days = $prev_trans_date->diffInDays($transaction->occurred_at);
 
-            if ($diff_in_days >= 117) {
+            if ($diff_in_days >= 360) {
+                $new_recurrence->frequency_count = 12;
+                $new_recurrence->frequency_unit = 'month';
+            } elseif ($diff_in_days >= 117) {
                 $new_recurrence->frequency_count = 4;
                 $new_recurrence->frequency_unit = 'month';
             } elseif ($diff_in_days >= 87) {
@@ -103,7 +106,7 @@ class RecurrencesController extends Controller
             } elseif ($diff_in_days >= 57) {
                 $new_recurrence->frequency_count = 2;
                 $new_recurrence->frequency_unit = 'month';
-            } elseif ($diff_in_days >= 27) {
+            } elseif ($diff_in_days >= 26) {
                 $new_recurrence->frequency_count = 1;
                 $new_recurrence->frequency_unit = 'month';
             } elseif ($diff_in_days >= 12) {
