@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
+use function validator;
 
 class RecurrencesController extends Controller
 {
@@ -41,16 +42,6 @@ class RecurrencesController extends Controller
             'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
             'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
         ]);
-    }
-
-    public function get($recurrence_id)
-    {
-        return response()->json(['item' => TransacRecurringPattern::getOne($recurrence_id)]);
-    }
-
-    public function getTransacs($recurrence_id)
-    {
-        return response()->json(['item' => Transaction::getFromRecurrence($recurrence_id)]);
     }
 
     /**
@@ -129,6 +120,46 @@ class RecurrencesController extends Controller
             ->with('message', "{$nb_found} récurrence(s) trouvée(s) !");
     }
 
+    public function get($recurrence_id)
+    {
+        validator(\request()->route()->parameters(), [
+            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+        ])->validate();
+
+        return response()->json(['item' => TransacRecurringPattern::getOne($recurrence_id)]);
+    }
+
+    public function getTransacs($recurrence_id)
+    {
+        validator(\request()->route()->parameters(), [
+            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+        ])->validate();
+
+        return response()->json(['item' => Transaction::getFromRecurrence($recurrence_id)]);
+    }
+
+    public function searchTransacs($recurrence_id)
+    {
+        validator(\request()->route()->parameters(), [
+            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+        ])->validate();
+
+        $recurrence = TransacRecurringPattern::query()
+            ->select(['beneficiary_id'])
+            ->with('beneficiary:id,raw_name')
+            ->where('id', $recurrence_id)
+            ->firstOrFail();
+
+        return Transaction::query()
+            ->select(['id', 'amount', 'category_id', 'beneficiary_id'])
+            ->with([
+                'beneficiary:id,raw_name,pretty_name',
+                'category:id,appellation'
+            ])
+            ->where('beneficiary_id', $recurrence->beneficiary_id)
+            ->get();
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -137,7 +168,7 @@ class RecurrencesController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+            'id' => ['nullable', 'integer', 'exists:' . TransacRecurringPattern::class],
             'label' => ['nullable', 'max:255'],
             'amount' => ['required', 'decimal:2'],
             'beneficiary_id' => ['required', 'exists:' . Beneficiary::class . ',id'],
@@ -146,8 +177,17 @@ class RecurrencesController extends Controller
             'ends_at' => ['nullable', 'date'],
         ]);
 
-        return response()->json([
-            'updated' => TransacRecurringPattern::where('id', $data['id'])
+        if (empty($data['id'])) {
+            $recurrence = new TransacRecurringPattern();
+            $recurrence->label = $data['label'];
+            $recurrence->amount = $data['amount'];
+            $recurrence->beneficiary_id = $data['beneficiary_id'];
+            $recurrence->frequency_count = $data['frequency_count'];
+            $recurrence->frequency_unit = $data['frequency_unit'];
+            $recurrence->ends_at = $data['ends_at'];
+            $nb_updated = $recurrence->save();
+        } else {
+            $nb_updated = TransacRecurringPattern::where('id', $data['id'])
                 ->update([
                     'label' => $data['label'],
                     'amount' => $data['amount'],
@@ -155,13 +195,26 @@ class RecurrencesController extends Controller
                     'frequency_count' => $data['frequency_count'],
                     'frequency_unit' => $data['frequency_unit'],
                     'ends_at' => $data['ends_at'],
-                ]),
+                ]);
+        }
+
+        return response()->json([
+            'updated' => $nb_updated,
             'view' => view('recurrences.lists', [
                 'recurrences' => TransacRecurringPattern::getList(),
                 'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
                 'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
             ])->render(),
         ]);
+    }
+
+    public function syncTransacs($recurrence_id)
+    {
+        validator(\request()->route()->parameters(), [
+            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+        ])->validate();
+
+        $recurrence = TransacRecurringPattern::find($recurrence_id);
     }
 
     /**
@@ -173,7 +226,7 @@ class RecurrencesController extends Controller
     public function toggleActive(Request $request, ?int $recurrence_id = null)
     {
         if (!empty($recurrence_id)) {
-            \validator(\request()->route()->parameters(), [
+            validator(\request()->route()->parameters(), [
                 'recurrence_id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class . ',id'],
             ])->validate();
             $data['item_ids'] = [$recurrence_id];
@@ -214,6 +267,4 @@ class RecurrencesController extends Controller
             ])->render()
         ]);
     }
-
-
 }

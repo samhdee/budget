@@ -31,8 +31,23 @@
 
     <li class="nav-item" role="presentation">
         <button
+            id="recurrences-tab"
+            class="nav-link {{ $active_tab === 'recurrences-tab' ? 'active' : '' }}"
+            data-bs-toggle="tab"
+            data-bs-target="#recurrences-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="recurrences-tab-pane"
+            aria-selected="false"
+        >
+            Récurrences
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button
             id="transac-expanses-tab"
-            class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-expanses-tab' ? 'active' : '' }}"
+            class="nav-link {{ $active_tab === 'transac-expanses-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#transac-expanses-tab-pane"
             type="button"
@@ -47,7 +62,7 @@
     <li class="nav-item" role="presentation">
         <button
             id="transac-revenus-tab"
-            class="nav-link {{ !empty($active_tab) && $active_tab === 'transac-revenus-tab' ? 'active' : '' }}"
+            class="nav-link {{ $active_tab === 'transac-revenus-tab' ? 'active' : '' }}"
             data-bs-toggle="tab"
             data-bs-target="#transac-revenus-tab-pane"
             type="button"
@@ -63,7 +78,7 @@
 <div id="recurrences-tab-content" class="tab-content">
     <div
         id="general-tab-pane"
-        class="tab-pane fade container {{ empty($active_tab) || $active_tab === 'general-tab' ? 'show active' : '' }}"
+        class="tab-pane fade container {{$active_tab === 'general-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="general-tab"
         tabindex="0"
@@ -75,7 +90,7 @@
 
     <div
         id="transac-goals-tab-pane"
-        class="tab-pane fade container {{ !empty($active_tab) && $active_tab === 'transac-goals-tab' ? 'show active' : '' }}"
+        class="tab-pane fade container {{ $active_tab === 'transac-goals-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="transac-goals-tab"
         tabindex="0"
@@ -86,8 +101,20 @@
     </div>
 
     <div
+        id="recurrences-tab-pane"
+        class="tab-pane fade container {{ $active_tab === 'recurrences-tab' ? 'show active' : '' }}"
+        role="tabpanel"
+        aria-labelledby="recurrences-tab"
+        tabindex="0"
+    >
+        <div class="mt-4">
+            @include('dashboard.recurrences')
+        </div>
+    </div>
+
+    <div
         id="transac-expanses-tab-pane"
-        class="tab-pane fade container {{ !empty($active_tab) && $active_tab === 'transac-expanses-tab' ? 'show active' : '' }}"
+        class="tab-pane fade container {{ $active_tab === 'transac-expanses-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="transac-expanses-tab"
         tabindex="0"
@@ -103,7 +130,7 @@
 
     <div
         id="transac-revenus-tab-pane"
-        class="tab-pane fade container {{ !empty($active_tab) && $active_tab === 'transac-revenus-tab' ? 'show active' : '' }}"
+        class="tab-pane fade container {{ $active_tab === 'transac-revenus-tab' ? 'show active' : '' }}"
         role="tabpanel"
         aria-labelledby="transac-revenus-tab"
         tabindex="0"

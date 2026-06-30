@@ -13,8 +13,18 @@
         <h1>Récurrences</h1>
 
         <div class="mt-4 d-flex justify-content-end">
-            <a href="{{ route('recurrences_detect') }}" class="btn btn-sm btn-primary">
-                <i class="me-1 fas fa-arrows-rotate"></i> Détecter les récurrences
+            <a
+                href="{{ route('recurrences_store') }}"
+                class="btn btn-sm btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-recurrence-form"
+                data-action="create"
+            >
+                <i class="me-1 fas fa-plus-circle"></i> Ajouter
+            </a>
+
+            <a href="{{ route('recurrences_detect') }}" class="ms-2 btn btn-sm btn-primary">
+                <i class="me-1 fas fa-arrows-rotate"></i> Détecter
             </a>
         </div>
 
