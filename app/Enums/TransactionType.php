@@ -12,5 +12,6 @@ enum TransactionType: string
     case collection = 'collection';
     case withdrawal = 'withdrawal';
     case mortgage = 'mortgage';
+    case check = 'check';
     case other = 'other';
 }

@@ -22,7 +22,21 @@
                 @if (Session()->has('message'))
                     <div class="alert alert-success alert-dismissible">
                         {{ Session::get('message') }}
-                        <button type="button" class="btn btn-close"></button>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if (Session()->has('error'))
+                    <div class="alert alert-danger alert-dismissible">
+                        {!! Session::get('error') !!}
+                        <button type="button" class="btn btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if (Session()->has('warning'))
+                    <div class="alert alert-warning alert-dismissible">
+                        {{ Session::get('warning') }}
+                        <button type="button" class="btn btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 

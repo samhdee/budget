@@ -124,7 +124,7 @@
                         class="ms-1 btn btn-sm btn-danger btn-action confirm-before-action"
                         data-bs-toggle="modal"
                         data-bs-target="#modal-transac-delete"
-                        data-url="{{ route('transac_get', $transaction->id) }}"
+                        data-url="{{ route('transac_delete', $transaction->id) }}"
                         data-message="Supprimer cette transaction ?"
                     >
                         <i class="fas fa-trash"></i>

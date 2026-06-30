@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\TransactionType;
 use App\Models\Beneficiary;
 use App\Models\Transaction;
-use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,10 +17,9 @@ class ImportController extends Controller
 {
     private const int COL_DATE = 0;
     private const int COL_AMOUNT = 1;
-    private const int COL_TRANSAC_TYPE = 2;
     private const int COL_BENEFICIARY = 4;
     private const int COL_BENEFICIARY_BIS = 5;
-    private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b|COTISATION\sMENSUELLE\b)#';
+    private const string FIND_TRANSAC_TYPE = '#^(CB\s+RETRAIT\b|CB\b|PRLV\sSEPA\b|VIR\sSEPA\b|PRET\sIMMOBILIER\b|VIR\sINST\sWero\b|VIR\sINST\b|VIR\.PERMANENT\b|VIREMENT\b|COTISATION\sMENSUELLE\b|REM\sCHQ\b)#';
     private const string FIND_CB_BENEF = '#CB\s+([\w.*\-\s]+)#';
     private const string FIND_PRLVT_BENEF = '#PRLV\sSEPA\s([\w\-\s.]+)#';
     private const string FIND_VIRT_PERMA_BENEF = '#VIR\.PERMANENT\s([\w\-\s]+)#';
@@ -29,7 +27,6 @@ class ImportController extends Controller
     private const string FIND_VIRT_SIMPLE_BENEF = '#VIREMENT\s([\w\-\s]+)#';
     private const string FIND_VIRT_INST_BENEF = '#VIR\sINST\s([\w\-\s]+)#';
     private const string FIND_VIRT_WERO_BENEF = '#VIR\sINST\sWero\s([\w\-\s]+)#';
-    private const string FIND_WITHDRAWAL = '#CB\s+RETRAIT\sDU#';
 
     /**
      * @return View
@@ -174,6 +171,10 @@ class ImportController extends Controller
                                 $type = TransactionType::perma_transfer->name;
                                 break;
 
+                            case 'REM CHQ':
+                                $type = TransactionType::check->name;
+                                break;
+
                             case 'CB RETRAIT':
                                 $type = TransactionType::withdrawal->name;
                                 break;
@@ -241,17 +242,20 @@ class ImportController extends Controller
             }
         }
 
-        $message = '';
+        $message_bag = [];
 
         if (!empty($lines)) {
-            $message .= "{$lines} lignes importées avec succès !";
+            $message_bag['message'] = "{$lines} lignes importées avec succès !";
         }
 
         if (!empty($errors)) {
-            $message .= 'Des erreurs ont eu lieu. Lignes en erreur : <pre>' . print_r($errors, true) . '</pre>';
+            $message_bag['error'] = 'Des erreurs ont eu lieu. Lignes en erreur : <pre>' . print_r($errors, true) . '</pre>';
         }
 
+        if (empty($message_bag)) {
+            $message_bag['warning'] = 'Aucune ligne trouvée.';
+        }
 
-        return redirect(route('import_index'))->with(['message' => $message]);
+        return redirect(route('import_index'))->with($message_bag);
     }
 }

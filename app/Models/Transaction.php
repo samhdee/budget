@@ -174,16 +174,16 @@ class Transaction extends Model
                 'labels:id,appellation',
                 'recurringPattern:id,active',
             ])
-            ->join('beneficiaries as b', 'b.id', 't.beneficiary_id')
+            ->leftJoin('beneficiaries as b', 'b.id', 't.beneficiary_id')
             ->where('t.id', $id)
             ->firstOrFail();
     }
 
     /**
-     * @param $recurrence_id
+     * @param int $recurrence_id
      * @return Collection
      */
-    public static function getFromRecurrence($recurrence_id): Collection
+    public static function getFromRecurrence(int $recurrence_id): Collection
     {
         return self::query()
             ->select(['id', 'amount', DB::raw('DATE_FORMAT(occurred_at, "%d/%m/%Y") as occurred_at'), 'category_id', 'beneficiary_id'])

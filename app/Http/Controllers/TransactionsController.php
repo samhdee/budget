@@ -10,7 +10,6 @@ use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class TransactionsController extends Controller
@@ -41,7 +40,7 @@ class TransactionsController extends Controller
         ]);
     }
 
-    public function get($id)
+    public function get(int $id)
     {
         return response()->json(['item' => Transaction::getOne($id)]);
     }
@@ -168,7 +167,7 @@ class TransactionsController extends Controller
         return response()->json(['updated' => $nb_updated]);
     }
 
-    public function delete($transac_id)
+    public function delete(int $transac_id)
     {
         \validator(\request()->route()->parameters(), [
             'id' => ['required', 'integer', 'exists:' . Transaction::class],
