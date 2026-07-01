@@ -97,10 +97,12 @@
         }
     }
 
-    ksort($values_exp_charges['values']);
-    ksort($values_exp_charges['labels']);
-    $values_exp_charges['values'] = array_values($values_exp_charges['values']);
-    $values_exp_charges['labels'] = array_values($values_exp_charges['labels']);
+    if (!empty($values_exp_charges)) {
+        ksort($values_exp_charges['values']);
+        ksort($values_exp_charges['labels']);
+        $values_exp_charges['values'] = array_values($values_exp_charges['values']);
+        $values_exp_charges['labels'] = array_values($values_exp_charges['labels']);
+    }
 
     // Graph : dépenses par label
     $expanses_loisirs = $expanses->filter(function ($item) {
@@ -120,10 +122,12 @@
         }
     }
 
-    ksort($values_exp_loisirs['values']);
-    ksort($values_exp_loisirs['labels']);
-    $values_exp_loisirs['values'] = array_values($values_exp_loisirs['values']);
-    $values_exp_loisirs['labels'] = array_values($values_exp_loisirs['labels']);
+    if (!empty($values_exp_loisirs)) {
+        ksort($values_exp_loisirs['values']);
+        ksort($values_exp_loisirs['labels']);
+        $values_exp_loisirs['values'] = array_values($values_exp_loisirs['values']);
+        $values_exp_loisirs['labels'] = array_values($values_exp_loisirs['labels']);
+    }
 @endphp
 
 <div class="row justify-content-between">
@@ -186,8 +190,10 @@
         }
     }
 
-    $values_exp_by_label['values'] = array_values($values_exp_by_label['values']);
-    $values_exp_by_label['labels'] = array_values($values_exp_by_label['labels']);
+    if (!empty($values_exp_by_label)) {
+        $values_exp_by_label['values'] = array_values($values_exp_by_label['values']);
+        $values_exp_by_label['labels'] = array_values($values_exp_by_label['labels']);
+    }
 @endphp
 
 <div class="row justify-content-between">
