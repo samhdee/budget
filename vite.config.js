@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/scss/app.scss',
                 'resources/scss/dashboard.scss',
+                'resources/scss/recurrences.scss',
                 'resources/js/app.js',
                 'resources/js/beneficiaries.js',
                 'resources/js/categories.js',

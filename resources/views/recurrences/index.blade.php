@@ -5,7 +5,7 @@
 @endsection
 
 @section('vite_imports')
-    @vite(['resources/js/recurrences.js'])
+    @vite(['resources/scss/recurrences.scss', 'resources/js/recurrences.js'])
 @endsection
 
 @section('content')
@@ -13,13 +13,8 @@
         <h1>Récurrences</h1>
 
         <div class="mt-4 d-flex justify-content-end">
-            <a
-                href="{{ route('recurrences_store') }}"
-                class="btn btn-sm btn-success"
-                data-bs-toggle="modal"
-                data-bs-target="#modal-recurrence-form"
-                data-action="create"
-            >
+            <a href="{{ route('recurrences_store') }}" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                data-bs-target="#modal-recurrence-form" data-action="create">
                 <i class="me-1 fas fa-plus-circle"></i> Ajouter
             </a>
 

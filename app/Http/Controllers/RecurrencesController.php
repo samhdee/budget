@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
@@ -120,25 +121,43 @@ class RecurrencesController extends Controller
             ->with('message', "{$nb_found} récurrence(s) trouvée(s) !");
     }
 
-    public function get($recurrence_id)
+    /**
+     * get
+     *
+     * @param  mixed $recurrence_id
+     * @return void
+     */
+    public function get(int $recurrence_id)
     {
         validator(\request()->route()->parameters(), [
             'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
         ])->validate();
 
-        return response()->json(['item' => TransacRecurringPattern::getOne($recurrence_id)]);
+        return response()->json(['items' => TransacRecurringPattern::getOne($recurrence_id)]);
     }
 
-    public function getTransacs($recurrence_id)
+    /**
+     * getTransacs
+     *
+     * @param  mixed $recurrence_id
+     * @return void
+     */
+    public function getTransacs(int $recurrence_id)
     {
         validator(\request()->route()->parameters(), [
             'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
         ])->validate();
 
-        return response()->json(['item' => Transaction::getFromRecurrence($recurrence_id)]);
+        return response()->json(['items' => Transaction::getFromRecurrence($recurrence_id)]);
     }
 
-    public function searchTransacs($recurrence_id)
+    /**
+     * searchTransacs
+     *
+     * @param  mixed $recurrence_id
+     * @return void
+     */
+    public function searchTransacs(int $recurrence_id)
     {
         validator(\request()->route()->parameters(), [
             'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
@@ -150,14 +169,17 @@ class RecurrencesController extends Controller
             ->where('id', $recurrence_id)
             ->firstOrFail();
 
-        return Transaction::query()
-            ->select(['id', 'amount', 'category_id', 'beneficiary_id'])
+        return response()->json(['data' => Transaction::query()
+            ->select(['id', 'amount', 'category_id', 'beneficiary_id', DB::raw('DATE_FORMAT(occurred_at, "%d/%m/%Y") as occurred_at')])
             ->with([
                 'beneficiary:id,raw_name,pretty_name',
                 'category:id,appellation'
             ])
             ->where('beneficiary_id', $recurrence->beneficiary_id)
-            ->get();
+            ->whereDoesntHave('recurringPattern')
+            ->orderByDesc('transactions.occurred_at')
+            ->get()
+        ]);
     }
 
     /**
@@ -208,13 +230,24 @@ class RecurrencesController extends Controller
         ]);
     }
 
-    public function syncTransacs($recurrence_id)
+    public function addTransac(string $recurrence_id, string $transaction_id)
     {
         validator(\request()->route()->parameters(), [
-            'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
+            'recurrence_id' => ['required', 'exists:' . TransacRecurringPattern::class . ',id'],
+            'transaction_id' => [
+                'required',
+                Rule::exists('transactions', 'id')->whereNull('recurring_pattern_id'),
+            ]
         ])->validate();
 
-        $recurrence = TransacRecurringPattern::find($recurrence_id);
+        $updated = Transaction::where('id', $transaction_id)
+            ->update(['recurring_pattern_id' => $recurrence_id]);
+
+        if (!empty($updated)) {
+            return response()->json(['updated' => true, 'items' => Transaction::getFromRecurrence($recurrence_id)]);
+        } else {
+            return response()->json(['message' => 'Une erreur inattendue est survenue.', 400]);
+        }
     }
 
     /**
