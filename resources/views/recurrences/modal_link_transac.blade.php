@@ -8,7 +8,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="recurrence-transacs-form-title" class="modal-title fs-4">
-                    Bénéficiaire : <span id="recur-transac-beneficiary"></span>
+                    <span id="recur-transac-label"></span>
                 </h3>
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -32,30 +32,47 @@
                             </button>
                         </div>
 
+                        <div id="recur-add-transac-template" class="d-none mt-3 card">
+                        <div class="card-body d-flex justify-content-between">
+                            <div>
+                                <span class="recur-transac-date"></span> :
+                                <span class="recur-transac-amount"></span>
+                                <span class="ms-1 recur-transac-categ"></span>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-success transac-action transac-add"
+                                    data-transaction_id=""
+                                >
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                         <div id="recur-transac-search-results" class="position-relative"></div>
                     </div>
 
                     <hr class="my-4" />
 
                     <div id="recur-transac-template" class="d-none mt-3 card">
-                        <div class="card-body">
-                            <div class="card-title recur-transac-date"></div>
+                        <div class="card-body d-flex justify-content-between">
+                            <div>
+                                <span class="recur-transac-date"></span> :
+                                <span class="recur-transac-amount"></span>
+                                <span class="ms-1 recur-transac-categ"></span>
+                            </div>
 
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <span class="recur-transac-amount"></span>
-                                    <span class="ms-1 recur-transac-categ"></span>
-                                </div>
-
-                                <div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-danger transac-remove"
-                                        data-recurrence_id=""
-                                    >
-                                        <i class="fas fa-circle-minus"></i>
-                                    </button>
-                                </div>
+                            <div>
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-danger transac-action transac-remove"
+                                    data-transaction_id=""
+                                >
+                                    <i class="fas fa-circle-minus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>

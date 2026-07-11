@@ -36,12 +36,10 @@ class RecurrencesController extends Controller
     /**
      * @return View
      */
-    public function filter()
+    public function list()
     {
-        return view('recurrences.lists', [
+        return view('recurrences.active-list', [
             'recurrences' => TransacRecurringPattern::getList(),
-            'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
-            'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
         ]);
     }
 
@@ -133,7 +131,7 @@ class RecurrencesController extends Controller
             'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
         ])->validate();
 
-        return response()->json(['items' => TransacRecurringPattern::getOne($recurrence_id)]);
+        return response()->json(['item' => TransacRecurringPattern::getOne($recurrence_id)]);
     }
 
     /**
@@ -148,7 +146,10 @@ class RecurrencesController extends Controller
             'id' => ['required', 'integer', 'exists:' . TransacRecurringPattern::class],
         ])->validate();
 
-        return response()->json(['items' => Transaction::getFromRecurrence($recurrence_id)]);
+        return response()->json([
+            'label' => TransacRecurringPattern::query()->select('label')->where('id', $recurrence_id)->first()->label,
+            'item' => Transaction::getFromRecurrence($recurrence_id)
+        ]);
     }
 
     /**
@@ -169,17 +170,7 @@ class RecurrencesController extends Controller
             ->where('id', $recurrence_id)
             ->firstOrFail();
 
-        return response()->json(['data' => Transaction::query()
-            ->select(['id', 'amount', 'category_id', 'beneficiary_id', DB::raw('DATE_FORMAT(occurred_at, "%d/%m/%Y") as occurred_at')])
-            ->with([
-                'beneficiary:id,raw_name,pretty_name',
-                'category:id,appellation'
-            ])
-            ->where('beneficiary_id', $recurrence->beneficiary_id)
-            ->whereDoesntHave('recurringPattern')
-            ->orderByDesc('transactions.occurred_at')
-            ->get()
-        ]);
+        return response()->json(['data' => Transaction::getFromBeneficiary($recurrence->beneficiary_id)]);
     }
 
     /**
@@ -243,11 +234,43 @@ class RecurrencesController extends Controller
         $updated = Transaction::where('id', $transaction_id)
             ->update(['recurring_pattern_id' => $recurrence_id]);
 
+        $transactions = Transaction::getFromRecurrence($recurrence_id);
+
         if (!empty($updated)) {
-            return response()->json(['updated' => true, 'items' => Transaction::getFromRecurrence($recurrence_id)]);
-        } else {
-            return response()->json(['message' => 'Une erreur inattendue est survenue.', 400]);
+            return response()->json([
+                'updated' => true,
+                'items_with' => $transactions,
+                'items_without' => Transaction::getFromBeneficiary($transactions->first()->beneficiary_id),
+            ]);
         }
+
+        return response()->json(['message' => 'Une erreur inattendue est survenue.', 400]);
+    }
+
+    public function removeTransac(string $recurrence_id, string $transaction_id)
+    {
+        validator(\request()->route()->parameters(), [
+            'recurrence_id' => ['required', 'exists:' . TransacRecurringPattern::class . ',id'],
+            'transaction_id' => [
+                'required',
+                Rule::exists('transactions', 'id')->whereNotNull('recurring_pattern_id'),
+            ]
+        ])->validate();
+
+        $updated = Transaction::where('id', $transaction_id)
+            ->update(['recurring_pattern_id' => null]);
+
+        $transactions = Transaction::getFromRecurrence($recurrence_id);
+
+        if (!empty($updated)) {
+            return response()->json([
+                'updated' => true,
+                'items_with' => $transactions,
+                'items_without' => Transaction::getFromBeneficiary($transactions->first()->beneficiary_id),
+            ]);
+        }
+
+        return response()->json(['message' => 'Une erreur inattendue est survenue.', 400]);
     }
 
     /**

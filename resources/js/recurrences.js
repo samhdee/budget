@@ -2,16 +2,15 @@ import "./helpers/forms.js";
 import "./helpers/filters.js";
 import { spinner } from "./helpers/helpers.js";
 
-const hydrate_transac_list = data => {
-    $("#modal-recurrence-transacs-form #recur-transacs-list").empty();
-    const template = $("#recur-transac-template");
+const hydrate_transac_list = (data, template, container) => {
+    $(container).empty();
 
     for (let i in data) {
         const template_clone = $(template).clone();
         $(template_clone).prop('id', '');
         $(template_clone)
-            .find(".transac-remove")
-            .data('recurrence_id', data[i].id);
+            .find(".transac-action")
+            .prop('data-transaction_id', data[i].id);
         $(template_clone)
             .find(".recur-transac-date")
             .text(data[i].occurred_at);
@@ -22,11 +21,11 @@ const hydrate_transac_list = data => {
         if (data[i].category !== null) {
             $(template_clone)
                 .find(".recur-transac-categ")
-                .text(data[i].category.appellation);
+                .text(`(${data[i].category.appellation})`);
         }
 
         $(template_clone).removeClass("d-none");
-        $("#recur-transacs-list").append(template_clone);
+        $(container).append(template_clone);
     }
 }
 
@@ -43,14 +42,9 @@ $(function () {
 
         $.get($(open_button).data("url")).done((response) => {
             $(modal)
-                .find("#recur-transac-beneficiary")
-                .text(
-                    response.items[0].beneficiary.pretty_name !== null
-                        ? response.items[0].beneficiary.pretty_name
-                        : response.items[0].beneficiary.raw_name,
-                );
-
-            hydrate_transac_list(response.items);
+                .find("#recur-transac-label")
+                .text(response.label);
+            hydrate_transac_list(response.item, '#recur-transac-template', '#modal-recurrence-transacs-form #recur-transacs-list');
         });
     });
 
@@ -70,49 +64,61 @@ $(function () {
                         '<i class="fas fa-ban"></i> Aucun résultat' +
                     '</div>');
                 } else {
-                    for (let i in response.data) {
-                        const amount = Math.abs(response.data[i].amount);
-
-                        $(search_results).append(
-                            `<div class="transac-search-result-item d-flex justify-content-between">
-                                <div>
-                                    ${response.data[i].occurred_at} : ${amount}€
-                                </div>
-
-                                <div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-success transac-item-add"
-                                        data-transaction_id="${response.data[i].id}"
-                                    >
-                                        <i class="fa fa-plus-circle"></i>
-                                    </button>
-                                </div>
-                            </div>`
-                        );
-                    }
+                    hydrate_transac_list(response.data, '#recur-add-transac-template', '#recur-transac-search-results');
                 }
             },
         );
     });
 
     // Ajoute une transaction à la récurrence
-    $(document).on('click', '#modal-recurrence-transacs-form .transac-item-add', e => {
+    $(document).on('click', '#modal-recurrence-transacs-form .transac-add', e => {
         e.preventDefault();
-        const button = $(e.currentTarget);
-        const recurrence_id = $('#modal-recurrence-transacs-form #transac-recurrence-id').val();
-        const transaction_id = $(button).data('transaction_id');
+
         $('#recurrence-transac-form .alert-danger').addClass('d-none').empty();
         $("#modal-recurrence-transacs-form #recur-transacs-list").html(spinner());
 
+        const button = $(e.currentTarget);
+        const recurrence_id = $('#modal-recurrence-transacs-form #transac-recurrence-id').val();
+        const transaction_id = $(button).prop('data-transaction_id');
+
         $.get(`recurrences/${recurrence_id}/transac/add/${transaction_id}`)
             .done(response => {
-                hydrate_transac_list(response.items);
-                $(button).parents('.transac-search-result-item').remove();
+                $.get('recurrences/list').done(response => {
+                    $('#recurrences-active-tab-pane').html(response);
+                });
+
+                hydrate_transac_list(response.items_with, '#recur-transac-template', '#recur-transacs-list');
+
+                if (!$('#recur-transac-search-results').hasClass('d-none')) {
+                    hydrate_transac_list(response.items_without, '#recur-add-transac-template', "#recur-transac-search-results");
+                }
             }).fail(response => {
                 $('#recurrence-transac-form .alert-danger')
                     .removeClass('d-none')
                     .text(response.responseJSON.message);
             });
+    });
+
+    // Retire une transaction de la liste
+    $(document).on('click', '#recur-transacs-list .transac-remove', e => {
+        e.preventDefault();
+
+        $('#recurrence-transac-form .alert-danger').addClass('d-none').empty();
+        $("#modal-recurrence-transacs-form #recur-transacs-list").html(spinner());
+
+        const button = $(e.currentTarget);
+        const recurrence_id = $('#modal-recurrence-transacs-form #transac-recurrence-id').val();
+        const transaction_id = $(button).prop('data-transaction_id');
+
+        $.get(`recurrences/${recurrence_id}/transac/remove/${transaction_id}`).done(response => {
+            $.get('recurrences/list').done(response => {
+                $('#recurrences-active-tab-pane').html(response);
+            });
+            hydrate_transac_list(response.items_with, '#recur-transac-template', "#recur-transacs-list");
+
+            if (!$('#recur-transac-search-results').hasClass('d-none')) {
+                hydrate_transac_list(response.items_without, '#recur-add-transac-template', "#recur-transac-search-results");
+            }
+        });
     });
 });

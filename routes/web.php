@@ -41,12 +41,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('recurrences')
         ->group(function () {
             Route::get('/', 'index')->name('recurrences_index');
-            Route::get('/filter', 'filter')->name('recurrences_filter');
+            Route::get('/list', 'list')->name('recurrences_list');
             Route::get('/get/{id}', 'get')->name('recurrences_get');
             Route::get('/{id}/transacs/get', 'getTransacs')->name('recurrences_get_transacs');
             Route::get('/{id}/transacs/search', 'searchTransacs')->name('recurrences_search_transacs');
             Route::get('/{recurrence_id}/transac/add/{transaction_id}', 'addTransac')->name('recurrences_add_transac');
-            Route::get('/{id}/transac/remove', 'removeTransac')->name('recurrences_remove_transac');
+            Route::get('/{recurrence_id}/transac/remove/{transaction_id}', 'removeTransac')->name('recurrences_remove_transac');
             Route::post('/store', 'store')->name('recurrences_store');
             Route::get('/toggle-active/{recurrence_id}', 'toggleActive')->name('recurrences_toggle_active');
             Route::post('/bulk-toggle-active', 'toggleActive')->name('recurrences_bulk_toggle_active');

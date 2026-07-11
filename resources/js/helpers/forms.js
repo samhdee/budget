@@ -95,22 +95,22 @@ $(function () {
                     }
                 }
 
+                if ($(form).find('.select2').length > 0) {
+                    $(form).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
+                    $(form).find('.select2').trigger('change.select2');
+                }
+
                 let title = ($(open_button).data('action') === 'delete' ? 'Supprimer ' : 'Éditer ');
 
                 if (typeof type !== 'undefined') {
                     title += type;
                 }
 
-                if (typeof response.item['appellation'] !== 'undefined') {
+                if (typeof response.item !== 'undefined' && typeof response.item['appellation'] !== 'undefined') {
                     title += ` <span class="fst-italic">${response.item['appellation']}</span>`;
                 }
 
                 $(e.currentTarget).find('.modal-title').html(title);
-
-                if ($(form).find('.select2')) {
-                    $(form).find('.select2').select2({dropdownParent: '#' + $(e.currentTarget).prop('id')});
-                    $(form).find('.select2').trigger('change.select2');
-                }
             });
         }
     });
@@ -119,7 +119,8 @@ $(function () {
     $(document).on('show.bs.modal', '.modal-bulk-form', e => {
         const modal = $(e.relatedTarget).data('bs-target');
         $(modal).find('input[name^="item_ids"]').remove();
-        $(modal).find('form input, form select, form textarea').val('').prop('checked', '');
+        $(modal).find('form input:not([type="checkbox"]), form select, form textarea').val('');
+        $(modal).find('form input[type="checkbox"]').prop('checked', '');
         $(modal).find('.alert-danger').addClass('d-none').empty();
 
         $('.bulk-select:checked').each((i, el) => {

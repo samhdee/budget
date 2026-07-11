@@ -193,6 +193,20 @@ class Transaction extends Model
             ->get();
     }
 
+    public static function getFromBeneficiary(int $beneficiary_id)
+    {
+        return self::query()
+            ->select(['id', 'amount', 'category_id', 'beneficiary_id', DB::raw('DATE_FORMAT(occurred_at, "%d/%m/%Y") as occurred_at')])
+            ->with([
+                'beneficiary:id,raw_name,pretty_name',
+                'category:id,appellation'
+            ])
+            ->where('beneficiary_id', $beneficiary_id)
+            ->whereDoesntHave('recurringPattern')
+            ->orderByDesc('transactions.occurred_at')
+            ->get();
+    }
+
     /**
      * @param Transaction $transaction
      * @param bool $with_recurrence

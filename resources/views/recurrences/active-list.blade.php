@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 @endphp
 
-<div class="content-wrapper">
+<div class="mt-4 list-wrapper content-wrapper">
     <div class="d-flex justify-content-end">
         <div class="d-none bulk-action-wrapper">
             <button

@@ -53,9 +53,7 @@
         aria-labelledby="recurrences-active-tab"
         tabindex="0"
     >
-        <div class="mt-4 list-wrapper">
-            @include('recurrences.active-list')
-        </div>
+        @include('recurrences.active-list')
     </div>
 
     <div

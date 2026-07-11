@@ -65,8 +65,7 @@
                     </div>
 
                     <div class="mt-3 form-field">
-                        <input id="benef-bulk-non-recurring" type="checkbox" class="form-check-inline"
-                               name="non_recurring"/>
+                        <input id="benef-bulk-non-recurring" type="checkbox" class="form-check-inline" name="non_recurring" />
                         <label for="benef-bulk-non-recurring" class="ms-1 form-label">Non récurrent</label>
                     </div>
                 </div>
