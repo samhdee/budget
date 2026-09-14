@@ -7,6 +7,7 @@ use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Label;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,10 +23,11 @@ class TransactionsController extends Controller
     public function index(): View
     {
         return view('transactions.index', [
-            'transactions' => Transaction::getList(),
+            'transactions' => Transaction::getList(['sign' => 'negative', 'month' => Carbon::now()->format('Y-m')]),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
+            'first_date' => Transaction::getFirstDate(),
         ]);
     }
 

@@ -14,6 +14,15 @@
                 </a>
             </li>
 
+            <li class="ms-1">
+                <a
+                    class="nav-link {{ str_starts_with(Route::currentRouteName(), 'transac_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
+                    href="{{ route('transac_index') }}"
+                >
+                    Transactions
+                </a>
+            </li>
+
             <li class="ms-1 nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                    aria-expanded="false">
@@ -21,18 +30,10 @@
                 </a>
 
                 <ul class="dropdown-menu">
-                    <li>
-                        <a
-                            class="me-2 dropdown-item {{ str_starts_with(Route::currentRouteName(), 'transac_') || str_starts_with(Route::currentRouteName(), 'transactions') ? 'active' : '' }}"
-                            href="{{ route('transac_index') }}"
-                        >
-                            Transactions
-                        </a>
-                    </li>
 
                     <li>
                         <a
-                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'recurrences_') ? 'active' : '' }}"
+                            class="dropdown-item {{ str_starts_with (Route::currentRouteName(), 'recurrences_') ? 'active' : '' }}"
                             href="{{ route('recurrences_index') }}"
                         >
                             Récurrences
@@ -41,7 +42,7 @@
 
                     <li>
                         <a
-                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'benef_') ? 'active' : '' }}"
+                            class="dropdown-item {{ str_starts_with (Route::currentRouteName(), 'benef_') ? 'active' : '' }}"
                             href="{{ route('benef_index') }}"
                         >
                             Bénéficiaires
@@ -50,7 +51,7 @@
 
                     <li>
                         <a
-                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'categ_') ? 'active' : '' }}"
+                            class="dropdown-item {{ str_starts_with (Route::currentRouteName(), 'categ_') ? 'active' : '' }}"
                             href="{{ route('categ_index') }}"
                         >
                             Catégories
@@ -59,7 +60,7 @@
 
                     <li>
                         <a
-                            class="me-2 dropdown-item {{ str_starts_with (Route::currentRouteName(), 'labels_') ? 'active' : '' }}"
+                            class="dropdown-item {{ str_starts_with (Route::currentRouteName(), 'labels_') ? 'active' : '' }}"
                             href="{{ route('labels_index') }}"
                         >
                             Labels

@@ -2,6 +2,7 @@
     use App\Enums\TransactionType;
     use App\Models\Category;
     use App\Models\Label;
+    use Carbon\Carbon;
 @endphp
 
 <div class="d-flex justify-content-between align-items-center">
@@ -12,14 +13,10 @@
         data-target="#transac-list-wrapper"
     >
         <div class="form-floating">
-            <select id="transac-filter-type" name="type" class="form-select">
-                <option value="">Tous</option>
-
-                @foreach(TransactionType::cases() as $transac_type)
-                    <option value="{{ $transac_type->name }}">
-                        {{ getTransactionTypeLabel($transac_type->name) }}
-                    </option>
-                @endforeach
+            <select id="transac-filter-type" name="sign" class="form-select">
+                <option value="">Tout</option>
+                <option value="negative" selected>Débit</option>
+                <option value="positive">Crédit</option>
             </select>
 
             <label for="transac-filter-type">Type</label>
@@ -66,22 +63,26 @@
 
             <label for="transac-filter-benef">Bénéficiaire</label>
 
-            <button type="button" class="filter-reset d-none btn btn-sm btn-close-white"
-                    data-target="#transac-filter-benef">
+            <button
+                type="button"
+                class="filter-reset d-none btn btn-sm btn-close-white"
+                data-target="#transac-filter-benef"
+            >
                 <i class="fas fa-xmark-circle"></i>
             </button>
         </div>
 
-        <div class="d-flex gap-1">
-            <div class="form-floating">
-                <input id="transac-filter-date-start" name="date_start" type="date" class="form-control"/>
-                <label for="transac-filter-date-start">Début</label>
-            </div>
+        <div class="d-flex gap-1 form-floating">
+            <input
+                type="month"
+                name="month"
+                class="form-control"
+                min="{{ Carbon::parse($first_date->occurred_at)->startOfMonth()->format('Y-m') }}"
+                max="{{ Carbon::now()->format('Y-m') }}"
+                value="{{ Carbon::now()->format('Y-m') }}"
+            />
 
-            <div class="form-floating">
-                <input id="transac-filter-date-end" name="date_end" type="date" class="form-control"/>
-                <label for="transac-filter-date-end">Fin</label>
-            </div>
+            <label for="transac-filter-month">Mois</label>
         </div>
 
         <div>

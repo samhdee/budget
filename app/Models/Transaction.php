@@ -89,6 +89,14 @@ class Transaction extends Model
         return $this->hasOne(TransacRecurringPattern::class, 'id', 'recurring_pattern_id');
     }
 
+    public static function getFirstDate()
+    {
+        return self::query()
+            ->select(DB::raw('DATE(occurred_at) as occurred_at'))
+            ->orderBy('occurred_at')
+            ->first();
+    }
+
     /**
      * @param array $filters
      * @param int|bool $per_page
@@ -137,6 +145,11 @@ class Transaction extends Model
                         ->orWhereLike('pretty_name', "%{$filters['benef_name']}%");
                 });
             });
+        }
+
+        if (!empty($filters['month'])) {
+            $query->whereDate('occurred_at', '>=', Carbon::createFromDate($filters['month'] . '-01'))
+                ->whereDate('occurred_at', '<=', Carbon::createFromDate($filters['month'] . '-01')->endOfMonth());
         }
 
         if (!empty($filters['date_start'])) {
