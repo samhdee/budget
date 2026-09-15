@@ -81,8 +81,7 @@
     // Graph : dépenses par catégorie
     $expanses_charges = $expanses->filter(function ($item) {
         return $item->labels->isNotEmpty() && !empty($item->category) && $item->category->appellation === 'Charges';
-    })
-        ->values();
+    })->values();
 
     /** @var Transaction $related_expanses */
     foreach ($expanses_charges as $related_expanses) {

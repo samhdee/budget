@@ -7,7 +7,7 @@
     }
 @endphp
 
-<div class="w-75 mx-auto content-wrapper">
+<div class="w-50 mx-auto content-wrapper">
     <div>
         Total : {{ formatAmount(abs($active_recurrences->pluck('amount')->sum())) }}€
     </div>
@@ -19,13 +19,13 @@
                 <th style="width: 6rem;">Montant</th>
                 <th style="width: 6rem;">Période</th>
                 <th style="width: 6rem;">Date de fin</th>
-                <th {{--style="width: 3rem;"--}}></th>
+                <th style="width: 3rem;"></th>
             </tr>
         </thead>
 
         <tbody>
             @php /** @var TransacRecurringPattern $recurrence */ @endphp
-            @forelse($active_recurrences as $recurrence)
+            @forelse ($active_recurrences as $recurrence)
                 <tr>
                     <td>{{ $recurrence->label }}</td>
                     <td>{{ formatAmount($recurrence->amount) }}€</td>
@@ -40,13 +40,23 @@
                         @endif
                     </td>
 
-                    <td>
+                    <td class="text-center">
                         @php
                             $related_expanses = $expanses->filter(function ($item) use ($recurrence) {
                                 return !empty($item->recurring_pattern_id) && $item->recurring_pattern_id === $recurrence->id;
                             })->values();
-                            dump($related_expanses->toArray());
+                            $tmp_sum = $recurrence->frequency_count === 1 && $recurrence->frequency_unit === 'month'
+                                ? $recurrence->amount
+                                : $recurrence->amount * 4 / $recurrence->frequency_count;
+
+                            if ($related_expanses->isNotEmpty()) {
+                                $tmp_sum -= $related_expanses->pluck('amount')->sum();
+                            }
                         @endphp
+
+                        @if ($related_expanses->isNotEmpty())
+                            <i class="text-success fas fa-check"></i>
+                        @endif
                     </td>
                 </tr>
             @empty

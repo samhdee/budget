@@ -16,6 +16,21 @@
 
     <li class="nav-item" role="presentation">
         <button
+            id="transac-comparisons-tab"
+            class="nav-link"
+            data-bs-toggle="tab"
+            data-bs-target="#transac-comparisons-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="transac-comparisons-tab-pane"
+            aria-selected="false"
+        >
+            Comparaisons
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button
             id="transac-goals-tab"
             class="nav-link"
             data-bs-toggle="tab"
@@ -55,6 +70,18 @@
     >
         <div id="general-wrapper" class="mt-5 list-wrapper">
             @include('dashboard.graphs')
+        </div>
+    </div>
+
+    <div
+        id="transac-comparisons-tab-pane"
+        class="tab-pane fade container"
+        role="tabpanel"
+        aria-labelledby="transac-comparisons-tab"
+        tabindex="0"
+    >
+        <div class="mt-4">
+            @include('dashboard.comparisons')
         </div>
     </div>
 

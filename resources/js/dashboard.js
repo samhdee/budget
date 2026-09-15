@@ -152,6 +152,10 @@ $(function () {
         init_exp_loisirs_chart();
     }
 
+    $('.dashboard-exp-by-label').each(function (i, el) {
+        get_bar_chart($(el).attr('id'));
+    });
+
     // Change le mois visualisé
     $(document).on('change', '#transac-date-select', () => {
         reload_dashboard();
