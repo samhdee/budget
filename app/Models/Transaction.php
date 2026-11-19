@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\TransactionType;
+use App\Enums\AmountSign;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -97,6 +97,28 @@ class Transaction extends Model
             ->first();
     }
 
+    public static function getMonthTotal(\Carbon\Carbon $month, AmountSign $sign)
+    {
+        $query = self::query()
+            ->select(DB::raw('SUM(ABS(amount)) as sum_amount'))
+            ->whereDate('occurred_at', '>=', $month->startOfMonth())
+            ->whereDate('occurred_at', '<=', $month->endOfMonth());
+
+        if ($sign === AmountSign::negative) {
+            $query->where('amount', '<', 0);
+        } else {
+            $query->where('amount', '>=', 0);
+        }
+
+        $result = $query->first();
+
+        if (empty($result)) {
+            return 0;
+        }
+
+        return $result->sum_amount;
+    }
+
     /**
      * @param array $filters
      * @param int|bool $per_page
@@ -115,10 +137,10 @@ class Transaction extends Model
             ->with('labels:id,appellation,goal');
 
         if (!empty($filters['sign'])) {
-            if ($filters['sign'] === 'negative') {
+            if ($filters['sign'] === AmountSign::negative->value) {
                 $query->where('amount', '<', 0);
             } else {
-                $query->where('amount', '>', 0);
+                $query->where('amount', '>=', 0);
             }
         }
 
@@ -148,8 +170,10 @@ class Transaction extends Model
         }
 
         if (!empty($filters['month'])) {
-            $query->whereDate('occurred_at', '>=', Carbon::createFromDate($filters['month'] . '-01'))
-                ->whereDate('occurred_at', '<=', Carbon::createFromDate($filters['month'] . '-01')->endOfMonth());
+            $month = Carbon::createFromDate($filters['month'] . '-01');
+
+            $query->whereDate('occurred_at', '>=', $month)
+                ->whereDate('occurred_at', '<=', $month->endOfMonth());
         }
 
         if (!empty($filters['date_start'])) {

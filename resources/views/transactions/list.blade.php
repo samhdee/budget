@@ -11,7 +11,11 @@
         {{ $transactions->links() }}
     </div>
 
-    <div class="d-flex justify-content-end">
+    <div class="mt-2 d-flex justify-content-between">
+        <div>
+            Total : {{ formatAmount($transactions_total) }}€
+        </div>
+
         <div class="d-none bulk-action-wrapper">
             <button
                 type="button"

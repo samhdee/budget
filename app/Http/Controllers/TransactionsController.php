@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AmountSign;
 use App\Enums\TransactionType;
 use App\Models\Beneficiary;
 use App\Models\Category;
@@ -22,23 +23,28 @@ class TransactionsController extends Controller
      */
     public function index(): View
     {
+        $now = Carbon::now();
+
         return view('transactions.index', [
-            'transactions' => Transaction::getList(['sign' => 'negative', 'month' => Carbon::now()->format('Y-m')]),
+            'transactions' => Transaction::getList(['sign' => 'negative', 'month' => $now->format('Y-m')]),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
             'first_date' => Transaction::getFirstDate(),
+            'transactions_total' => Transaction::getMonthTotal($now->clone(), AmountSign::negative),
         ]);
     }
 
     public function filter(Request $request)
     {
         // @TODO: Ajouter des règles de validation
+        $month = Carbon::createFromDate($request->input('filters')['month'] . '-01');
         return view('transactions.list', [
             'transactions' => Transaction::getList($request->input('filters')),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
+            'transactions_total' => Transaction::getMonthTotal($month, AmountSign::tryFrom($request->input('filters')['sign'])),
         ]);
     }
 
