@@ -81,7 +81,8 @@ body {
         .select2-selection--single,
         .select2-selection--multiple {
             background-color: $body-secondary-bg !important;
-            border-color: #fff;
+            border-color: #dee2e6;
+            height: 58px;
 
             .select2-selection__choice {
                 background: $body-bg;

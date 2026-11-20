@@ -38,10 +38,10 @@
         </div>
 
         <div class="filter-wrapper form-floating">
-            <select id="benef-filter-categ" name="category_id" class="form-select">
+            <select id="benef-filter-categ" name="category_id" class="form-select" style="width: 160px;">
                 <option value=""></option>
 
-                @foreach($categories as $category)
+                @foreach ($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->appellation }}</option>
                 @endforeach
             </select>
@@ -53,7 +53,7 @@
             <select id="benef-filter-label" name="label_id" class="form-select">
                 <option value=""></option>
 
-                @foreach($labels as $label)
+                @foreach ($labels as $label)
                     <option value="{{ $label->id }}">{{ $label->appellation }}</option>
                 @endforeach
             </select>

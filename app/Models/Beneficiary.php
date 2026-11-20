@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -66,18 +67,23 @@ class Beneficiary extends Model
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
-    public function label(): HasOne
+    public function labels(): BelongsToMany
     {
-        return $this->hasOne(Label::class, 'id', 'label_id');
+        return $this->belongsToMany(
+            Label::class,
+            'labels_beneficiaries',
+            'beneficiary_id',
+            'label_id'
+        );
     }
 
     public static function getList($filters = []): LengthAwarePaginator
     {
         $query = self::query()
-            ->select(['id', 'raw_name', 'pretty_name', 'non_recurring', 'description', 'category_id', 'label_id'])
+            ->select(['id', 'raw_name', 'pretty_name', 'non_recurring', 'description', 'category_id'])
             ->with([
                 'category:id,appellation',
-                'label:id,appellation',
+                'labels:id,appellation,goal',
             ])
             ->withCount('transactions as nb_transactions');
 
@@ -103,8 +109,8 @@ class Beneficiary extends Model
         }
 
         if (!empty($filters['label_id'])) {
-            $query->whereHas('label', function (Builder $query) use ($filters) {
-                $query->where('id', $filters['label_id']);
+            $query->whereHas('labels', function (Builder $query) use ($filters) {
+                $query->where('labels.id', $filters['label_id']);
             });
         }
 
@@ -141,7 +147,8 @@ class Beneficiary extends Model
     public static function getOne($benef_id): Beneficiary
     {
         return self::query()
-            ->select(['id', 'raw_name', 'pretty_name', 'category_id', 'label_id', 'description', 'non_recurring'])
+            ->select(['id', 'raw_name', 'pretty_name', 'category_id', 'description', 'non_recurring'])
+            ->with(['labels:id,appellation'])
             ->where('id', $benef_id)
             ->firstOrFail();
     }

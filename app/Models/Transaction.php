@@ -93,7 +93,7 @@ class Transaction extends Model
     {
         return self::query()
             ->select(DB::raw('DATE(occurred_at) as occurred_at'))
-            ->orderBy('occurred_at')
+            ->oldest('occurred_at')
             ->first();
     }
 

@@ -64,6 +64,16 @@ class Label extends Model
             ->where('amount', '<', 0);
     }
 
+    public function beneficiaries(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Beneficiary::class,
+            'labels_beneficiaries',
+            'label_id',
+            'beneficiary_id'
+        );
+    }
+
     public static function getList(): Collection
     {
         return self::query()

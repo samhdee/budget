@@ -13,7 +13,7 @@
 
     <div class="mt-2 d-flex justify-content-between">
         <div>
-            Total : {{ formatAmount($transactions_total) }}€
+            Total : <span class="fw-bold">{{ formatAmount($transactions_total) }}€</span>
         </div>
 
         <div class="d-none bulk-action-wrapper">

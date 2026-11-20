@@ -54,8 +54,8 @@
             <th>Nom moche</th>
             <th>Nom joli</th>
             <th>Catég. par défaut</th>
-            <th>Label par défaut</th>
-            <th style="width: 6.5rem;">Transactions</th>
+            <th>Label(s) par défaut</th>
+            <th style="width: 8rem;">Nb. transactions</th>
             <th style="width: 2rem;"><i class="fas fa-repeat"></i></th>
             <th style="width: 6rem;"></th>
         </thead>
@@ -82,6 +82,7 @@
                                         class="ms-1 btn btn-sm btn-primary btn-action confirm-before-action"
                                         data-url="{{ route('benef_categ_sync', $beneficiary->id) }}"
                                         data-message="Synchroniser les catégories ?"
+                                        title="Synchroniser les catégories aux transactions du bénéficiaire ?"
                                     >
                                         <i class="fas fa-link"></i>
                                     </button>
@@ -90,9 +91,13 @@
                     </td>
 
                     <td>
-                        @if (!empty($beneficiary->label))
+                        @if ($beneficiary->labels->isNotEmpty())
                             <div class="d-flex justify-content-between">
-                                <div>{{ $beneficiary->label->appellation }}</div>
+                                <div>
+                                    @foreach($beneficiary->labels as $label)
+                                        <span class="badge text-bg-info">{{ $label->appellation }}</span>
+                                    @endforeach
+                                </div>
 
                                 <div>
                                     <button
@@ -100,6 +105,7 @@
                                         class="ms-1 btn btn-sm btn-primary btn-action confirm-before-action"
                                         data-url="{{ route('benef_label_sync', $beneficiary->id) }}"
                                         data-message="Synchroniser les labels ?"
+                                        title="Synchroniser les labels aux transactions du bénéficiaire ?"
                                     >
                                         <i class="fas fa-link"></i>
                                     </button>
@@ -143,7 +149,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center text-muted">
+                    <td colspan="8" class="text-center text-muted">
                         <i class="me-1 fas fa-ban"></i> Aucun résultat
                     </td>
                 </tr>

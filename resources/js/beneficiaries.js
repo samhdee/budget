@@ -5,7 +5,6 @@ import { getFilteredList } from "./helpers/filters.js";
 import { showFlashMessage } from "./helpers/helpers.js";
 
 $(function() {
-
     // Lie les transactions des bénéfs à la catégorie par défaut du bénéf
     $(document).on('click', '.sync-categories', e => {
         e.preventDefault();

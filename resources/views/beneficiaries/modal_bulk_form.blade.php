@@ -49,8 +49,10 @@
                         <label for="benef-bulk-category-id">Catégorie par défaut</label>
                     </div>
 
-                    <div class="mt-3 form-floating form-field">
-                        <select id="benef-label-id" name="label_id" class="form-select" style="width: 100%">
+                    <div class="mt-3 form-field">
+                        <label for="benef-labels-ids">Label(s) par défaut</label>
+
+                        <select id="benef-labels-ids" name="labels" class="select2 form-select" style="width: 100%;" multiple>
                             <option value=""></option>
 
                             @php /** @var Label[] $label */ @endphp
@@ -60,8 +62,6 @@
                                 </option>
                             @endforeach
                         </select>
-
-                        <label for="benef-label-id">Label par défaut</label>
                     </div>
 
                     <div class="mt-3 form-field">

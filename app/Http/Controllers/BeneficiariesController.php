@@ -56,7 +56,12 @@ class BeneficiariesController extends Controller
             ],
             'pretty_name' => ['nullable', 'max:255'],
             'category_id' => ['nullable', 'integer', 'exists:' . Category::class . ',id'],
-            'label_id' => ['nullable', 'integer', 'exists:' . Label::class . ',id'],
+            'labels.*' => Rule::forEach(function () {
+                return [
+                    Rule::exists(Label::class, 'id'),
+                ];
+            }),
+            'labels' => ['nullable', 'exists:' . Label::class . ',id'],
             'description' => ['nullable', 'max:255'],
             'non_recurring' => ['nullable', Rule::in(['on'])],
         ]);
@@ -67,19 +72,30 @@ class BeneficiariesController extends Controller
             $benef->raw_name = trim($data['raw_name']);
             $benef->pretty_name = trim($data['pretty_name']);
             $benef->category_id = $data['category_id'];
-            $benef->label_id = $data['label_id'];
+
+            $benef->labels()->detach();
+
+            if (!empty($data['labels'])) {
+                $benef->labels()->attach($data['labels']);
+            }
+
             $benef->description = trim($data['description']);
             $benef->non_recurring = !empty($data['non_recurring']);
             $benef->save();
         } else {
-            $benef_id = Beneficiary::create([
+            $benef = Beneficiary::create([
                 'raw_name' => trim($data['raw_name']),
                 'pretty_name' => trim($data['pretty_name']),
                 'category_id' => $data['category_id'],
-                'label_id' => $data['label_id'],
                 'description' => trim($data['description']),
                 'non_recurring' => !empty($data['non_recurring']),
             ]);
+
+            if (!empty($data['labels'])) {
+                $benef->labels()->attach($data['labels']);
+            }
+
+            $benef_id = $benef->id;
         }
 
         return response()->json(['updated' => $benef_id]);
@@ -95,18 +111,23 @@ class BeneficiariesController extends Controller
             }),
             'pretty_name' => ['nullable', 'max:255'],
             'category_id' => ['nullable', 'exists:' . Category::class . ',id'],
-            'label_id' => ['nullable', 'exists:' . Label::class . ',id'],
+            'labels.*' => Rule::forEach(function () {
+                return [
+                    Rule::exists(Label::class, 'id'),
+                ];
+            }),
+            'labels' => ['nullable', 'exists:' . Label::class . ',id'],
             'non_recurring' => ['nullable', Rule::in(['on'])],
         ]);
+
+        if (empty($data)) {
+            return response()->json(['message' => 'Rien à mettre à jour.'], 406);
+        }
 
         $update_data = [];
 
         if (!empty($data['category_id'])) {
             $update_data['category_id'] = $data['category_id'];
-        }
-
-        if (!empty($data['label_id'])) {
-            $update_data['label_id'] = $data['label_id'];
         }
 
         if (!empty($data['pretty_name'])) {
@@ -117,12 +138,16 @@ class BeneficiariesController extends Controller
             $update_data['non_recurring'] = 1;
         }
 
-        if (empty($data)) {
-            return response()->json(['message' => 'Rien à mettre à jour.'], 406);
-        }
-
         $updated = Beneficiary::whereIn('id', $data['item_ids'])
             ->update($update_data);
+
+        if (!empty($data['labels'])) {
+            $benefs = Beneficiary::find($data['item_ids']);
+
+            $benefs->each(function (Beneficiary $beneficiary) use ($data) {
+                $beneficiary->labels()->attach($data['labels']);
+            });
+        }
 
         return response()->json(['updated' => $updated]);
     }
@@ -135,7 +160,7 @@ class BeneficiariesController extends Controller
     public function syncCategories(Request $request, ?int $benef_id = null): JsonResponse
     {
         if (!empty($benef_id)) {
-            \validator(\request()->route()->parameters(), [
+            validator(\request()->route()->parameters(), [
                 'benef_id' => ['required', 'integer', 'exists:' . Beneficiary::class . ',id'],
             ])->validate();
 
@@ -180,7 +205,7 @@ class BeneficiariesController extends Controller
     public function syncLabels(Request $request, ?int $benef_id = null): JsonResponse
     {
         if (!empty($benef_id)) {
-            \validator(\request()->route()->parameters(), [
+            validator(\request()->route()->parameters(), [
                 'benef_id' => ['required', 'integer', 'exists:' . Beneficiary::class . ',id'],
             ])->validate();
 
@@ -200,14 +225,15 @@ class BeneficiariesController extends Controller
         }
 
         $beneficiaries = Beneficiary::query()
-            ->select(['id', 'category_id', 'label_id', 'raw_name'])
+            ->select(['id', 'category_id', 'raw_name'])
+            ->with('labels:id')
             ->whereIn('id', $data['item_ids'])
             ->get();
 
         $nb_updated = 0;
 
         foreach ($beneficiaries as $beneficiary) {
-            if (empty($beneficiary->label_id)) {
+            if ($beneficiary->labels->isEmpty()) {
                 continue;
             }
 
@@ -220,11 +246,12 @@ class BeneficiariesController extends Controller
                 ->get();
 
             foreach ($transactions as $transaction) {
-                $transaction->labels()->attach($beneficiary->label_id);
+                $transaction->labels()->attach($beneficiary->labels);
                 $transaction->save();
                 $nb_updated++;
             }
         }
+
         return response()->json(['updated' => $nb_updated]);
     }
 
