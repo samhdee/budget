@@ -3,8 +3,9 @@ import { spinner } from "./helpers.js";
 /**
  * Récupère les valeurs des filtres et les applique
  * @param page
+ * @param sort
  */
-export const getFilteredList = (page = null) => {
+export const getFilteredList = (page = null, sort = {}) => {
     const wrapper = $('.filters-wrapper');
     const list_wrapper = $(wrapper).data('target');
     $(list_wrapper).html(spinner());
@@ -27,7 +28,7 @@ export const getFilteredList = (page = null) => {
 
     $.post(
         url,
-        {filters},
+        {filters, sort},
         response => {
             $(list_wrapper).html(response);
         }
@@ -77,4 +78,13 @@ $(function () {
             .val('')
             .trigger('change');
     });
+
+    // Trie la liste
+    $(document).on('click', 'a.sort-list', e => {
+        e.preventDefault();
+        getFilteredList(null, {
+            column: $(e.currentTarget).data('sort_col'),
+            direction: $(e.currentTarget).data('sort_dir')
+        });
+    })
 });

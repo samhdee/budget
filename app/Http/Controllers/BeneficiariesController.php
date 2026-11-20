@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SortDirection;
 use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Label;
@@ -20,15 +21,19 @@ class BeneficiariesController extends Controller
             'beneficiaries' => Beneficiary::getList(),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
+            'sort_dir_nb_transac' => 'desc',
+            'sort_dir_raw_name' => 'asc',
         ]);
     }
 
     public function filter(Request $request)
     {
         return view('beneficiaries.list', [
-            'beneficiaries' => Beneficiary::getList($request->input('filters')),
+            'beneficiaries' => Beneficiary::getList($request->input('filters'), $request->input('sort')),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
+            'sort_dir_nb_transac' => $this->getSortDir($request, SortDirection::desc),
+            'sort_dir_raw_name' => $this->getSortDir($request, SortDirection::asc),
         ]);
     }
 

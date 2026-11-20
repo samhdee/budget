@@ -1,23 +1,29 @@
 @import "mixins";
 
 body {
-    .table {
-        tr {
-            th {
-                background-color: $lavender;
-                color: white;
-            }
-
-            .form-control {
-                border: none;
-                background-color: #363535;
-            }
-        }
-
-        &.align-middle {
+    #main-container {
+        .table {
             tr {
                 th {
-                    vertical-align: middle;
+                    background-color: $lavender;
+                    color: white;
+
+                    a.sort-list {
+                        color: white;
+                    }
+                }
+
+                .form-control {
+                    border: none;
+                    background-color: #363535;
+                }
+            }
+
+            &.align-middle {
+                tr {
+                    th {
+                        vertical-align: middle;
+                    }
                 }
             }
         }

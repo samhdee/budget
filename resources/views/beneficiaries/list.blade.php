@@ -51,11 +51,29 @@
                 <input type="checkbox" class="form-check bulk-select-all" />
             </th>
 
-            <th>Nom moche</th>
+            <th>
+                <a
+                    href="#"
+                    class="sort-list"
+                    data-sort_col="raw_name"
+                    data-sort_dir={{ $sort_dir_raw_name }}
+                >
+                    Nb. transactions
+                </a>
+            </th>
             <th>Nom joli</th>
             <th>Catég. par défaut</th>
             <th>Label(s) par défaut</th>
-            <th style="width: 8rem;">Nb. transactions</th>
+            <th style="width: 8rem;">
+                <a
+                    href="#"
+                    class="sort-list"
+                    data-sort_col="nb_transactions"
+                    data-sort_dir={{ $sort_dir_nb_transac }}
+                >
+                    Nb. transactions
+                </a>
+            </th>
             <th style="width: 2rem;"><i class="fas fa-repeat"></i></th>
             <th style="width: 6rem;"></th>
         </thead>

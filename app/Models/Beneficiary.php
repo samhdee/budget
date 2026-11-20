@@ -77,7 +77,7 @@ class Beneficiary extends Model
         );
     }
 
-    public static function getList($filters = []): LengthAwarePaginator
+    public static function getList($filters = [], $sort = []): LengthAwarePaginator
     {
         $query = self::query()
             ->select(['id', 'raw_name', 'pretty_name', 'non_recurring', 'description', 'category_id'])
@@ -114,9 +114,14 @@ class Beneficiary extends Model
             });
         }
 
-        return $query->orderBy('raw_name')
-            ->orderBy('pretty_name')
-            ->paginate();
+        if (!empty($sort)) {
+            $query->orderBy($sort['column'], $sort['direction']);
+        } else {
+            $query->orderBy('raw_name')
+                ->orderBy('pretty_name');
+        }
+
+        return $query->paginate();
     }
 
     /**
