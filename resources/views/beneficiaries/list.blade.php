@@ -58,7 +58,7 @@
                     data-sort_col="raw_name"
                     data-sort_dir={{ $sort_dir_raw_name }}
                 >
-                    Nb. transactions
+                    Nom moche
                 </a>
             </th>
             <th>Nom joli</th>
