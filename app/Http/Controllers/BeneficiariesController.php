@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Validator;
 
 class BeneficiariesController extends Controller
 {
@@ -251,6 +250,7 @@ class BeneficiariesController extends Controller
                 ->get();
 
             foreach ($transactions as $transaction) {
+                $transaction->labels()->detach($beneficiary->labels);
                 $transaction->labels()->attach($beneficiary->labels);
                 $transaction->save();
                 $nb_updated++;
