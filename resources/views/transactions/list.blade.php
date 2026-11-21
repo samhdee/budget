@@ -66,7 +66,7 @@
                         <input type="checkbox" class="form-check bulk-select" data-item_id="{{ $transaction->id }}"/>
                     </td>
 
-                    <td>{{ Carbon::createFromFormat('Y-m-d', $transaction->occurred_at)->format('d/m/Y') }}</td>
+                    <td>{{ $transaction->occurred_at->format('d/m/Y') }}</td>
 
                     <td class="text-{{ $transaction->amount < 0 ? 'danger' : 'success' }}">
                         {{ formatAmount($transaction->amount) }}€

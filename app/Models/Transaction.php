@@ -64,6 +64,18 @@ class Transaction extends Model
         'recurring_pattern_id',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'occurred_at' => 'datetime',
+        ];
+    }
+
     public function beneficiary(): HasOne
     {
         return $this->hasOne(Beneficiary::class, 'id', 'beneficiary_id');

@@ -61,19 +61,33 @@
                     Nom moche
                 </a>
             </th>
+
             <th>Nom joli</th>
             <th>Catég. par défaut</th>
             <th>Label(s) par défaut</th>
-            <th style="width: 8rem;">
+
+            <th style="width: 6.5rem;">
                 <a
                     href="#"
                     class="sort-list"
                     data-sort_col="nb_transactions"
                     data-sort_dir={{ $sort_dir_nb_transac }}
                 >
-                    Nb. transactions
+                    Transactions
                 </a>
             </th>
+
+            <th style="width: 9.5rem;">
+                <a
+                    href="#"
+                    class="sort-list"
+                    data-sort_col="created_at"
+                    data-sort_dir={{ $sort_dir_created_at }}
+                >
+                    Ajouté le
+                </a>
+            </th>
+
             <th style="width: 2rem;"><i class="fas fa-repeat"></i></th>
             <th style="width: 6rem;"></th>
         </thead>
@@ -133,6 +147,10 @@
                     </td>
 
                     <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
+                    
+                    <td>
+                        {{ $beneficiary->created_at->format('d/m/Y H:i:s') }}
+                    </td>
 
                     <td class="text-center">
                         @if (!empty($beneficiary->non_recurring))

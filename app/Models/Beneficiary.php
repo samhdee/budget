@@ -80,7 +80,7 @@ class Beneficiary extends Model
     public static function getList($filters = [], $sort = []): LengthAwarePaginator
     {
         $query = self::query()
-            ->select(['id', 'raw_name', 'pretty_name', 'non_recurring', 'description', 'category_id'])
+            ->select(['id', 'raw_name', 'pretty_name', 'non_recurring', 'description', 'category_id', 'created_at'])
             ->with([
                 'category:id,appellation',
                 'labels:id,appellation,goal',

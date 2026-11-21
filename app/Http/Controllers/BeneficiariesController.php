@@ -22,6 +22,7 @@ class BeneficiariesController extends Controller
             'labels' => Label::getDropdownList(),
             'sort_dir_nb_transac' => 'desc',
             'sort_dir_raw_name' => 'asc',
+            'sort_dir_created_at' => 'asc',
         ]);
     }
 
@@ -33,6 +34,7 @@ class BeneficiariesController extends Controller
             'labels' => Label::getDropdownList(),
             'sort_dir_nb_transac' => $this->getSortDir($request, SortDirection::desc),
             'sort_dir_raw_name' => $this->getSortDir($request, SortDirection::asc),
+            'sort_dir_created_at' => $this->getSortDir($request, SortDirection::asc),
         ]);
     }
 
