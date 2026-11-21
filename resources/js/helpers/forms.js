@@ -56,7 +56,7 @@ export function showFormErrors(container, errors) {
 }
 
 $(function () {
-    // Renseigne ou vide le formulaire d'édition de categ
+    // Renseigne ou vide le formulaire d'édition d'un item
     $(document).on('shown.bs.modal', '.modal-form', e => {
         const open_button = $(e.relatedTarget);
         const form = $(e.currentTarget).find('form');
@@ -76,7 +76,7 @@ $(function () {
                 $(form).find('.select2').trigger('change.select2');
             }
         } else if (typeof $(open_button).data('url') !== 'undefined') {
-            // Récupère et affiche les infos de la categorie
+            // Récupère et affiche les infos de l'item
             // @TODO: Ajouter la gestion d'erreur
             $.get($(open_button).data('url')).then(response => {
                 for (const i in response.item) {
@@ -119,7 +119,8 @@ $(function () {
     $(document).on('show.bs.modal', '.modal-bulk-form', e => {
         const modal = $(e.relatedTarget).data('bs-target');
         $(modal).find('input[name^="item_ids"]').remove();
-        $(modal).find('form input:not([type="checkbox"]), form select, form textarea').val('');
+        $(modal).find('form input:not([type="checkbox"]), form select:not(.select2), form textarea').val('');
+        $(modal).find('form select.select2 option:selected').prop('selected', '');
         $(modal).find('form input[type="checkbox"]').prop('checked', '');
         $(modal).find('.alert-danger').addClass('d-none').empty();
 
@@ -177,7 +178,7 @@ $(function () {
         });
     });
 
-    // Coche toutes les checkboxes
+    // Coche toutes les checkboxes de la liste
     $(document).on('change', '.bulk-select-all', e => {
         const wrapper = $(e.target).parents('.content-wrapper');
 

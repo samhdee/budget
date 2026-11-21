@@ -147,7 +147,7 @@
                     </td>
 
                     <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
-                    
+
                     <td>
                         {{ $beneficiary->created_at->format('d/m/Y H:i:s') }}
                     </td>
