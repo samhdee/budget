@@ -31,7 +31,7 @@ class TransactionsController extends Controller
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
             'first_date' => Transaction::getFirstDate(),
-            'transactions_total' => Transaction::getMonthTotal($now->clone(), AmountSign::negative),
+            'transactions_total' => Transaction::getMonthTotal(['sign' => 'negative', 'month' => $now->format('Y-m')]),
         ]);
     }
 

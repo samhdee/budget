@@ -280,7 +280,7 @@ class Transaction extends Model
             ->get();
     }
 
-    public static function getFromBeneficiary(int $beneficiary_id)
+    public static function getFromBeneficiary(int $beneficiary_id): Collection
     {
         return self::query()
             ->select(['id', 'amount', 'category_id', 'beneficiary_id', DB::raw('DATE_FORMAT(occurred_at, "%d/%m/%Y") as occurred_at')])

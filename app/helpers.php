@@ -64,8 +64,8 @@ if (!function_exists('getTransactionTypeLabel')) {
  * @return string
  */
 if (!function_exists('formatAmount')) {
-    function formatAmount(float $amount, $decimals = 2): string
+    function formatAmount(?float $amount, $decimals = 2): string
     {
-        return number_format($amount, $decimals, ',', ' ');
+        return !empty($amount) ?  number_format($amount, $decimals, ',', ' ') : '0,00';
     }
 }
