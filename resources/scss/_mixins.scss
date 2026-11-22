@@ -4,7 +4,7 @@ $lavender: #a06cd5;
 
 $primary: #25a5e3;
 $danger: #f56476;
-$warning: #f5b700;
+$warning: #f55e00;
 $warning-bg-subtle: #fbdeb3;
 $success: #298f46;
 
@@ -48,5 +48,10 @@ $dropdown-bg: $violet;
 $dropdown-link-hover-color: $violet;
 $dropdown-link-active-bg: #fff;
 $dropdown-link-active-color: $violet;
+
+// Texte
+.text-light-warning {
+    color: #f5b700 !important;
+}
 
 @import "bootstrap/scss/bootstrap";
