@@ -50,7 +50,7 @@
         </div>
 
         <div class="filter-wrapper form-floating">
-            <select id="benef-filter-label" name="label_id" class="form-select">
+            <select id="benef-filter-label" name="label_id" class="select2">
                 <option value=""></option>
 
                 @foreach ($labels as $label)

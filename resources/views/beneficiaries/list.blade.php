@@ -77,7 +77,7 @@
                 </a>
             </th>
 
-            <th style="width: 9.5rem;">
+            <th style="width: 8.5rem;">
                 <a
                     href="#"
                     class="sort-list"
@@ -149,7 +149,7 @@
                     <td class="text-center">{{ $beneficiary->nb_transactions }}</td>
 
                     <td>
-                        {{ $beneficiary->created_at->format('d/m/Y H:i:s') }}
+                        {{ $beneficiary->created_at->format('d/m/Y H:i') }}
                     </td>
 
                     <td class="text-center">
