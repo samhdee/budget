@@ -11,9 +11,11 @@ const hydrate_transac_list = (data, template, container) => {
         $(template_clone)
             .find(".transac-action")
             .prop('data-transaction_id', data[i].id);
+        const occurred_at_date = data[i].occurred_at.split('T');
+        const occurred_at_split = occurred_at_date[0].split('-');
         $(template_clone)
             .find(".recur-transac-date")
-            .text(data[i].occurred_at);
+            .text(occurred_at_split[2] + '/' + occurred_at_split[1] + '/' + occurred_at_split[0]);
         $(template_clone)
             .find(".recur-transac-amount")
             .text(Math.abs(data[i].amount) + '€');
@@ -44,7 +46,11 @@ $(function () {
             $(modal)
                 .find("#recur-transac-label")
                 .text(response.label);
-            hydrate_transac_list(response.item, '#recur-transac-template', '#modal-recurrence-transacs-form #recur-transacs-list');
+            hydrate_transac_list(
+                response.item,
+                '#recur-transac-template',
+                '#modal-recurrence-transacs-form #recur-transacs-list'
+            );
         });
     });
 

@@ -19,7 +19,7 @@
     </div>
 
     <div>
-        Total : {{ formatAmount(abs($recurrences->pluck('amount')->sum())) }}€
+        Total : <span class="fw-bold">{{ formatAmount(abs($recurrences->pluck('amount')->sum())) }}€</span>
     </div>
 
     <table class="mt-3 table table-striped table-bordered align-middle">
