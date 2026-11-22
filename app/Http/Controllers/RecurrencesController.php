@@ -228,6 +228,9 @@ class RecurrencesController extends Controller
                 'recurrences' => TransacRecurringPattern::getList(),
                 'past_recurrences' => TransacRecurringPattern::getList(['past' => true]),
                 'inactive_recurrences' => TransacRecurringPattern::getList(['active' => 0]),
+                'sort_dir_label' => $this->getSortDir($request, SortDirection::asc),
+                'sort_dir_amount' => $this->getSortDir($request, SortDirection::asc),
+                'sort_dir_created_at' => $this->getSortDir($request, SortDirection::asc),
             ])->render(),
         ]);
     }
