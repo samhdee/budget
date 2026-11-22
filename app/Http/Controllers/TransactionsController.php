@@ -38,13 +38,12 @@ class TransactionsController extends Controller
     public function filter(Request $request)
     {
         // @TODO: Ajouter des règles de validation
-        $month = Carbon::createFromDate($request->input('filters')['month'] . '-01');
         return view('transactions.list', [
             'transactions' => Transaction::getList($request->input('filters')),
             'beneficiaries' => Beneficiary::getDropdownList(),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
-            'transactions_total' => Transaction::getMonthTotal($month, AmountSign::tryFrom($request->input('filters')['sign'])),
+            'transactions_total' => Transaction::getMonthTotal($request->input('filters')),
         ]);
     }
 

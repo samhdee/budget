@@ -109,17 +109,49 @@ class Transaction extends Model
             ->first();
     }
 
-    public static function getMonthTotal(\Carbon\Carbon $month, AmountSign $sign)
+    public static function getMonthTotal($filters)
     {
         $query = self::query()
-            ->select(DB::raw('SUM(ABS(amount)) as sum_amount'))
-            ->whereDate('occurred_at', '>=', $month->startOfMonth())
-            ->whereDate('occurred_at', '<=', $month->endOfMonth());
+            ->select(DB::raw('SUM(ABS(amount)) as sum_amount'));
 
-        if ($sign === AmountSign::negative) {
-            $query->where('amount', '<', 0);
-        } else {
-            $query->where('amount', '>=', 0);
+        if (!empty($filters['sign'])) {
+            if ($filters['sign'] === AmountSign::negative->value) {
+                $query->where('amount', '<', 0);
+            } else {
+                $query->where('amount', '>=', 0);
+            }
+        }
+
+        if (!empty($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        if (!empty($filters['category_id'])) {
+            $query->whereHas('category', function (Builder $query) use ($filters) {
+                $query->where('categories.id', $filters['category_id']);
+            });
+        }
+
+        if (!empty($filters['label_id'])) {
+            $query->whereHas('labels', function (Builder $query) use ($filters) {
+                $query->where('labels.id', $filters['label_id']);
+            });
+        }
+
+        if (!empty($filters['benef_name'])) {
+            $query->whereHas('beneficiary', function (Builder $query) use ($filters) {
+                $query->where(function (Builder $query) use ($filters) {
+                    $query->orWhereLike('raw_name', "%{$filters['benef_name']}%")
+                        ->orWhereLike('pretty_name', "%{$filters['benef_name']}%");
+                });
+            });
+        }
+
+        if (!empty($filters['month'])) {
+            $month = Carbon::createFromDate($filters['month'] . '-01');
+
+            $query->whereDate('occurred_at', '>=', $month)
+                ->whereDate('occurred_at', '<=', $month->endOfMonth());
         }
 
         $result = $query->first();
@@ -146,7 +178,10 @@ class Transaction extends Model
             ->with('recurringPattern:id,active')
             ->with('beneficiary:id,raw_name,pretty_name,description')
             ->with('category:id,appellation,goal')
-            ->with('labels:id,appellation,goal');
+            ->with(['labels' => function ($query)
+            {
+                $query->orderBy('appellation');
+            }]);
 
         if (!empty($filters['sign'])) {
             if ($filters['sign'] === AmountSign::negative->value) {
