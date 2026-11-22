@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RecurrenceFreqUnit;
+use App\Enums\SortDirection;
 use App\Models\Beneficiary;
 use App\Models\Category;
 use App\Models\Label;
@@ -30,16 +31,22 @@ class RecurrencesController extends Controller
             'beneficiaries' => Beneficiary::getDropdownList(true),
             'categories' => Category::getDropdownList(),
             'labels' => Label::getDropdownList(),
+            'sort_dir_created_at' => 'asc',
+            'sort_dir_label' => 'asc',
+            'sort_dir_amount' => 'asc',
         ]);
     }
 
     /**
      * @return View
      */
-    public function list()
+    public function list(Request $request)
     {
         return view('recurrences.active-list', [
-            'recurrences' => TransacRecurringPattern::getList(),
+            'recurrences' => TransacRecurringPattern::getList(sort: $request->input('sort')),
+            'sort_dir_label' => $this->getSortDir($request, SortDirection::asc),
+            'sort_dir_amount' => $this->getSortDir($request, SortDirection::asc),
+            'sort_dir_created_at' => $this->getSortDir($request, SortDirection::asc),
         ]);
     }
 
@@ -123,7 +130,7 @@ class RecurrencesController extends Controller
      * get
      *
      * @param  mixed $recurrence_id
-     * @return void
+     * @return JsonResponse
      */
     public function get(int $recurrence_id)
     {
@@ -138,7 +145,7 @@ class RecurrencesController extends Controller
      * getTransacs
      *
      * @param  mixed $recurrence_id
-     * @return void
+     * @return JsonResponse
      */
     public function getTransacs(int $recurrence_id)
     {
@@ -147,7 +154,11 @@ class RecurrencesController extends Controller
         ])->validate();
 
         return response()->json([
-            'label' => TransacRecurringPattern::query()->select('label')->where('id', $recurrence_id)->first()->label,
+            'label' => TransacRecurringPattern::query()
+                ->select('label')
+                ->where('id', $recurrence_id)
+                ->first()
+                ->label,
             'item' => Transaction::getFromRecurrence($recurrence_id)
         ]);
     }

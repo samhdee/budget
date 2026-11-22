@@ -29,12 +29,47 @@
                     <input class="form-check bulk-select-all" type="checkbox" />
                 </th>
 
-                <th>Label</th>
-                <th style="width: 6rem;">Montant</th>
+                <th>
+                    <a
+                        href="{{ route('recurrences_list') }}"
+                        class="sort-list-without-filters"
+                        data-sort_col="label"
+                        data-sort_dir="{{ $sort_dir_label }}"
+                        data-target="#recurrences-active-tab-pane"
+                    >
+                        Label
+                    </a>
+                </th>
+
+                <th style="width: 6rem;">
+                    <a
+                        href="{{ route('recurrences_list') }}"
+                        class="sort-list-without-filters"
+                        data-sort_col="amount"
+                        data-sort_dir="{{ $sort_dir_amount }}"
+                        data-target="#recurrences-active-tab-pane"
+                    >
+                        Montant
+                    </a>
+                </th>
+
                 <th>Bénéficiaire</th>
                 <th style="width: 6rem;">Période</th>
                 <th style="width: 6rem">Transactions</th>
                 <th style="width: 6rem;">Date de fin</th>
+
+                <th style="width: 8.5rem;">
+                    <a
+                        href="{{ route('recurrences_list') }}"
+                        class="sort-list-without-filters"
+                        data-sort_col="created_at"
+                        data-sort_dir="{{ $sort_dir_created_at }}"
+                        data-target="#recurrences-active-tab-pane"
+                    >
+                        Date d’ajout
+                    </a>
+                </th>
+
                 <th style="width: 8.7rem;"></th>
             </tr>
         </thead>
@@ -70,10 +105,14 @@
 
                     <td class="text-center">
                         @if (!empty($recurrence->ends_at))
-                            {{ Carbon::parse($recurrence->ends_at)->format('d/m/Y') }}
+                            {{ $recurrence->ends_at->format('d/m/Y') }}
                         @else
                             -
                         @endif
+                    </td>
+
+                    <td>
+                        {{ $recurrence->created_at->format('d/m/Y H:i') }}
                     </td>
 
                     <td>

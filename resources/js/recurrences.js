@@ -89,7 +89,7 @@ $(function () {
 
         $.get(`recurrences/${recurrence_id}/transac/add/${transaction_id}`)
             .done(response => {
-                $.get('recurrences/list').done(response => {
+                $.post('recurrences/list').done(response => {
                     $('#recurrences-active-tab-pane').html(response);
                 });
 
@@ -117,7 +117,7 @@ $(function () {
         const transaction_id = $(button).prop('data-transaction_id');
 
         $.get(`recurrences/${recurrence_id}/transac/remove/${transaction_id}`).done(response => {
-            $.get('recurrences/list').done(response => {
+            $.post('recurrences/list').done(response => {
                 $('#recurrences-active-tab-pane').html(response);
             });
             hydrate_transac_list(response.items_with, '#recur-transac-template', "#recur-transacs-list");

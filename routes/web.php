@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('recurrences')
         ->group(function () {
             Route::get('/', 'index')->name('recurrences_index');
-            Route::get('/list', 'list')->name('recurrences_list');
+            Route::post('/list', 'list')->name('recurrences_list');
             Route::get('/get/{id}', 'get')->name('recurrences_get');
             Route::get('/{id}/transacs/get', 'getTransacs')->name('recurrences_get_transacs');
             Route::get('/{id}/transacs/search', 'searchTransacs')->name('recurrences_search_transacs');

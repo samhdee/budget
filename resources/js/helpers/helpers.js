@@ -18,3 +18,22 @@ export const showFlashMessage = (type, message) => {
         </div>`
     )
 }
+
+$(function () {
+    // Trie une liste sans filtres
+    $(document).on('click', 'a.sort-list-without-filters', e => {
+        e.preventDefault();
+
+        $.post(
+            $(e.target).prop('href'),
+            {
+                sort: {
+                    column: $(e.currentTarget).data('sort_col'),
+                    direction: $(e.currentTarget).data('sort_dir')
+                }
+            }
+        ).done(response => {
+            $($(e.target).data('target')).html(response);
+        })
+    });
+})

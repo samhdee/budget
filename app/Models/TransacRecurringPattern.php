@@ -61,6 +61,18 @@ class TransacRecurringPattern extends Model
         'ends_at',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'ends_at' => 'datetime',
+        ];
+    }
+
     public function beneficiary(): BelongsTo
     {
         return $this->belongsTo(Beneficiary::class);
@@ -84,14 +96,15 @@ class TransacRecurringPattern extends Model
 
     /**
      * @param array $filters
+     * @param array $sort
      * @return Collection
      */
-    public static function getList(array $filters = []): Collection
+    public static function getList(array $filters = [], $sort = []): Collection
     {
         $query = self::query()
             ->select([
                 'transac_recurring_patterns.id', 'label', 'beneficiary_id', 'amount', 'frequency_unit',
-                'frequency_count', 'ends_at', 'raw_name', 'pretty_name',
+                'frequency_count', 'ends_at', 'raw_name', 'pretty_name', 'transac_recurring_patterns.created_at',
             ])
             ->join('beneficiaries as b', 'b.id', 'beneficiary_id')
             ->whereHas('transactions')
@@ -113,10 +126,15 @@ class TransacRecurringPattern extends Model
             });
         }
 
-        return $query->orderBy('label')
-            ->orderBy('b.raw_name')
-            ->orderBy('b.pretty_name')
-            ->get();
+        if (!empty($sort)) {
+            $query->orderBy($sort['column'], $sort['direction']);
+        } else {
+            $query->orderBy('label')
+                ->orderBy('b.raw_name')
+                ->orderBy('b.pretty_name');
+        }
+
+        return $query->get();
     }
 
     public static function getOne($recurrence_id): ?TransacRecurringPattern

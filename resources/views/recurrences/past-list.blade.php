@@ -60,7 +60,7 @@
 
                     <td class="text-center">
                         @if (!empty($past_recurrence->ends_at))
-                            {{ Carbon::parse($past_recurrence->ends_at)->format('d/m/Y') }}
+                            {{ $past_recurrence->ends_at->format('d/m/Y') }}
                         @else
                             -
                         @endif
