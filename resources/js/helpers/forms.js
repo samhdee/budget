@@ -90,6 +90,9 @@ $(function () {
                         for (const j in response.item[i]) {
                             $(form_element).find(`option[value="${response.item[i][j].id}"]`).prop('selected', true);
                         }
+                    } else if ($(form_element).prop('type') === 'date') {
+                        const formatted_date = response.item[i].split('T');
+                        $(form_element).val(formatted_date[0]);
                     } else {
                         $(form_element).val(response.item[i]);
                     }
