@@ -199,7 +199,8 @@ class ImportController extends Controller
 
                         if (!empty($benef_raw_name)) {
                             $benef_result = Beneficiary::query()
-                                ->select(['id', 'category_id', 'label_id'])
+                                ->select(['id', 'category_id'])
+                                ->with('labels:id')
                                 ->where('raw_name', $benef_raw_name)
                                 ->first();
 
@@ -218,8 +219,8 @@ class ImportController extends Controller
                             'file' => $file,
                         ]);
 
-                        if (!empty($benef_result->label_id)) {
-                            $transaction->labels()->attach($benef_result->label_id);
+                        if ($benef_result->labels->isNotEmpty()) {
+                            $transaction->labels()->attach($benef_result->labels);
                         }
 
                         $similar_transacs = Transaction::getSimilar($transaction, true);
